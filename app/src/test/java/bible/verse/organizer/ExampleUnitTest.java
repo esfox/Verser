@@ -1,4 +1,4 @@
-package organizer.verse.bible.verser;
+package bible.verse.organizer;
 
 import org.junit.Test;
 

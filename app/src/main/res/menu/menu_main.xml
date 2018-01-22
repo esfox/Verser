@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
-      tools:context="organizer.verse.bible.verser.MainActivity">
+      tools:context="bible.verse.organizer.organizer.bible.verse.organizer.MainActivity">
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"

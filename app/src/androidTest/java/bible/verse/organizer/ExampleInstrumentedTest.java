@@ -1,4 +1,4 @@
-package organizer.verse.bible.verser;
+package bible.verse.organizer;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

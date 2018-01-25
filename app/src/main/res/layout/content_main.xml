@@ -14,10 +14,4 @@
     tools:context="bible.verse.organizer.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <TextView
-        android:id="@+id/text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-        android:text="Hello World!"/>
 </RelativeLayout>

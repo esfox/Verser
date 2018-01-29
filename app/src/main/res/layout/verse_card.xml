@@ -10,7 +10,7 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/home_card_height"
+        android:layout_height="@dimen/verse_card_height"
         android:clickable="true"
         android:focusable="true"
         android:foreground="?attr/selectableItemBackground"

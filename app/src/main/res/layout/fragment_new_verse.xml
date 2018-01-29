@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    tools:ignore="TextFields">
 
+    <!--Temporarily an EditText, to be replaced by Spinners-->
     <EditText
-        android:id="@+id/verse_name"
+        android:id="@+id/new_verse_reference"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="22dp"
-        tools:hint="Verse Name"/>
+        tools:hint="Verse Reference"/>
 
     <!--<View-->
     <!--android:layout_width="match_parent"-->
@@ -19,12 +22,14 @@
     <!--android:background="@android:color/darker_gray"/>-->
 
     <EditText
-        android:id="@+id/verse"
+        android:id="@+id/new_verse_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/verse_name"
-        android:layout_alignLeft="@+id/verse_name"
-        android:layout_alignRight="@id/verse_name"
+        android:layout_alignEnd="@+id/new_verse_reference"
+        android:layout_alignLeft="@+id/new_verse_reference"
+        android:layout_alignRight="@id/new_verse_reference"
+        android:layout_alignStart="@+id/new_verse_reference"
+        android:layout_below="@+id/new_verse_reference"
         tools:text="11 He has made everything beautiful in its time."/>
 
     <android.support.design.widget.FloatingActionButton
@@ -32,9 +37,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:src="@drawable/check_white_24dp"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/check"
         app:fabSize="normal"
         app:useCompatPadding="true"/>
 

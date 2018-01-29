@@ -3,5 +3,8 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
-    <dimen name="home_card_height">138dp</dimen>
+    <dimen name="verse_card_height">138dp</dimen>
+    <dimen name="category_item_height">72dp</dimen>
+    <!--category_item_height - 24dp (padding)-->
+    <dimen name="category_item_icon_size">48dp</dimen>
 </resources>

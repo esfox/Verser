@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/category_item_height"
+    android:gravity="center_vertical"
+    android:padding="12dp"
+    tools:ignore="ContentDescription">
+
+    <!--<ImageView-->
+        <!--android:layout_width="@dimen/category_item_height"-->
+        <!--android:layout_height="@dimen/category_item_height"-->
+        <!--tools:src="@drawable/check"/>-->
+
+    <ImageView
+        android:id="@+id/category_item_icon"
+        android:layout_width="@dimen/category_item_icon_size"
+        android:layout_height="@dimen/category_item_icon_size"
+        tools:src="@drawable/tag_background"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginStart="12dp"
+        android:layout_toLeftOf="@+id/category_item_options"
+        android:layout_toStartOf="@+id/category_item_options"
+        android:layout_toRightOf="@+id/category_item_icon"
+        android:layout_toEndOf="@+id/category_item_icon"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/category_item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            tools:text="Category Name"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            tools:text="100 verses"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/category_item_options"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:padding="12dp"
+        android:tint="#737373"
+        android:src="@drawable/more"/>
+
+</RelativeLayout>

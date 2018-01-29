@@ -12,17 +12,6 @@
     android:paddingRight="16dp"
     tools:background="#cccccc">
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:hint="Card Number"
-            />
-    </android.support.design.widget.TextInputLayout>
-
     <LinearLayout
         android:id="@+id/new_verse_title_layer"
         android:layout_width="match_parent"
@@ -120,4 +109,8 @@
                 tools:text="+ tag" />
         </RelativeLayout>
     </RelativeLayout>
+<<<<<<< HEAD
 </LinearLayout>
+=======
+</LinearLayout>
+>>>>>>> 69f5e4133d5663db495e132c288340cbd9123916

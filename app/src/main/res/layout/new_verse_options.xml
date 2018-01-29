@@ -1,45 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/cardview_light_background">
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:orientation="vertical"
+    android:paddingTop="8dp"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    tools:background="#cccccc">
 
-    <RelativeLayout
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="25dp">
+        android:layout_height="wrap_content"
+        >
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:hint="Card Number"
+            />
+    </android.support.design.widget.TextInputLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/new_verse_title_layer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
-        >
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp">
 
         <TextView
             android:id="@+id/new_verse_title_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/new_verse_title"
+            android:layout_marginRight="8dp"
+            android:layout_marginEnd="8dp"
             android:textSize="20sp"
-            tools:text="Title" />
+            tools:text="Title:" />
 
         <EditText
             android:id="@+id/new_verse_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/new_verse_title_text"
-            android:layout_toRightOf="@id/new_verse_title_text"
-            android:text="test"/>
-    </RelativeLayout>
+            android:hint="Add a title..."
+            tools:ignore="HardcodedText"/>
 
-    <RelativeLayout
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/new_verse_category_layer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/new_verse_title_layer"
-        android:layout_marginBottom="30dp">
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
 
         <TextView
             android:id="@+id/new_verse_category_text"
@@ -51,16 +65,13 @@
         <Spinner
             android:id="@+id/new_verse_category_spinner"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/new_verse_category_text"
-            android:layout_toRightOf="@id/new_verse_category_text" />
-    </RelativeLayout>
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/new_verse_category_layer"
-        android:layout_marginBottom="30dp"
         android:id="@+id/relativeLayout">
 
         <TextView
@@ -69,19 +80,19 @@
             android:layout_height="wrap_content"
             android:paddingBottom="10dp"
             android:textSize="20sp"
-            tools:text="Tags:" />
+            tools:text="Tags" />
 
         <RelativeLayout
             android:id="@+id/new_verse_add_tag_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/new_verse_add_tag_text">
+            android:layout_below="@+id/new_verse_add_tag_text">
 
-            <!--TODO Place all tags here-->
+            <!--Place all tags here-->
             <!--<LinearLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content">-->
-                <!---->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content">-->
+            <!---->
             <!--</LinearLayout>-->
 
             <ImageView
@@ -109,5 +120,4 @@
                 tools:text="+ tag" />
         </RelativeLayout>
     </RelativeLayout>
-    </RelativeLayout>
-</RelativeLayout>
+</LinearLayout>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="8dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="12dp"
+    android:paddingBottom="12dp"
+    android:paddingEnd="12dp"
+    android:paddingStart="16dp">
+
+    <TextView
+        android:id="@+id/verse_entry_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:layout_gravity="end"
+        tools:text="Category"/>
+
+    <TextView
+        android:id="@+id/verse_entry_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:maxLines="15"
+        android:scrollbars = "vertical"
+        tools:text="John 3:16"/>
+
+    <TextView
+        android:id="@+id/verse_entry_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines = "23"
+        android:scrollbars = "vertical"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat"
+        tools:text="For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life."/>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_above="@id/verse_entry_lower_menu"/>
+
+        <LinearLayout
+            android:id="@+id/verse_entry_lower_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="15dp"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/verse_entry_edit_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/ic_mode_edit_black_24dp"
+                    tools:contentDescription="Edit" />
+
+                <TextView
+                    android:id="@+id/verse_entry_edit_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:textAppearance="@style/TextAppearance.AppCompat"
+                    android:layout_below="@+id/verse_entry_edit_icon"
+                    tools:text="Edit" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/verse_entry_favorite_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/ic_star_black_24dp"
+                    tools:contentDescription="Favorite"/>
+
+                <TextView
+                    android:id="@+id/verse_entry_favorite_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:textAppearance="@style/TextAppearance.AppCompat"
+                    android:layout_below="@+id/verse_entry_favorite_icon"
+                    tools:text="Favorite" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/verse_entry_delete_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/ic_delete_forever_black_24dp"
+                    tools:contentDescription="Delete"/>
+
+                <TextView
+                    android:id="@+id/verse_entry_delete_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:textAppearance="@style/TextAppearance.AppCompat"
+                    android:layout_below="@+id/verse_entry_delete_icon"
+                    tools:text="Delete" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

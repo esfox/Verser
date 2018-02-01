@@ -16,57 +16,78 @@
         android:id="@+id/verse_entry_category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="12sp"
         android:layout_gravity="end"
+        android:textSize="12sp"
         tools:text="Category"/>
 
     <TextView
         android:id="@+id/verse_entry_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingBottom="12dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:maxLines="15"
-        android:scrollbars = "vertical"
         tools:text="John 3:16"/>
-
-    <TextView
-        android:id="@+id/verse_entry_content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:maxLines = "23"
-        android:scrollbars = "vertical"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat"
-        tools:text="For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life."/>
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
+        <!--for verse_entry_content later-->
+        <!--android:layout_above="@id/verse_entry_menu_divider"-->
+        <!--android:maxLines = "23"-->
+        <!--android:scrollbars = "vertical"-->
+        <TextView
+            android:id="@+id/verse_entry_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat"
+            tools:text="For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life."/>
+
+        <!--android:layout_above="@id/verse_entry_menu_divider"-->
+        <LinearLayout
+            android:id="@+id/verse_card_tag_area"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/verse_entry_content"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp"
+            android:orientation="horizontal">
+
+            <include layout="@layout/tag"/>
+            <include layout="@layout/tag"/>
+            <include layout="@layout/tag"/>
+
+        </LinearLayout>
+
         <View
+            android:id="@+id/verse_entry_menu_divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@android:color/darker_gray"
-            android:layout_above="@id/verse_entry_lower_menu"/>
+            android:layout_above="@id/verse_entry_lower_menu"
+            android:background="@android:color/darker_gray"/>
 
         <LinearLayout
             android:id="@+id/verse_entry_lower_menu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="15dp"
             android:layout_alignParentBottom="true"
+            android:paddingTop="12dp"
             android:orientation="horizontal"
             android:weightSum="3">
 
-            <RelativeLayout
+            <LinearLayout
+                android:id="@+id/verse_entry_edit_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
 
                 <ImageView
                     android:id="@+id/verse_entry_edit_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
+                    android:paddingBottom="2dp"
                     android:src="@drawable/ic_mode_edit_black_24dp"
                     tools:contentDescription="Edit" />
 
@@ -74,23 +95,24 @@
                     android:id="@+id/verse_entry_edit_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
                     android:textAppearance="@style/TextAppearance.AppCompat"
-                    android:layout_below="@+id/verse_entry_edit_icon"
                     tools:text="Edit" />
 
-            </RelativeLayout>
+            </LinearLayout>
 
-            <RelativeLayout
+            <LinearLayout
+                android:id="@+id/verse_entry_favorite_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
 
                 <ImageView
                     android:id="@+id/verse_entry_favorite_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
+                    android:paddingBottom="2dp"
                     android:src="@drawable/ic_star_black_24dp"
                     tools:contentDescription="Favorite"/>
 
@@ -98,23 +120,24 @@
                     android:id="@+id/verse_entry_favorite_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
                     android:textAppearance="@style/TextAppearance.AppCompat"
-                    android:layout_below="@+id/verse_entry_favorite_icon"
                     tools:text="Favorite" />
 
-            </RelativeLayout>
+            </LinearLayout>
 
-            <RelativeLayout
+            <LinearLayout
+                android:id="@+id/verse_entry_delete_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
 
                 <ImageView
                     android:id="@+id/verse_entry_delete_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
+                    android:paddingBottom="2dp"
                     android:src="@drawable/ic_delete_forever_black_24dp"
                     tools:contentDescription="Delete"/>
 
@@ -122,12 +145,10 @@
                     android:id="@+id/verse_entry_delete_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
                     android:textAppearance="@style/TextAppearance.AppCompat"
-                    android:layout_below="@+id/verse_entry_delete_icon"
                     tools:text="Delete" />
 
-            </RelativeLayout>
+            </LinearLayout>
 
         </LinearLayout>
 

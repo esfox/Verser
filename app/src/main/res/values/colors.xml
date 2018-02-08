@@ -5,13 +5,14 @@
     <color name="colorPrimary">#795548</color>
     <color name="colorPrimaryDark">#5D4037</color>
     <color name="colorPrimaryLight">#D7CCC8</color>
-    <color name="colorAccent">#448AFF</color>
+    <color name="colorAccent">#4CAF50</color>
     <color name="colorBackground">#F0F0F0</color>
     <color name="textColorPrimary">#212121</color>
     <color name="textColorSecondary">#555555</color>
     <color name="textColorTertiary">#818181</color>
-    <color name="textColorLight">#FFFFFF</color>
+    <color name="textColorLight">#ffffff</color>
     <color name="dividerColor">#BDBDBD</color>
+    <color name="iconColor">#737373</color>
 
     <!--Initial Colors-->
     <!--<color name="colorPrimary">#329600</color>-->

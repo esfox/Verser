@@ -52,7 +52,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:padding="12dp"
-        android:tint="#737373"
+        android:tint="@color/textColorSecondary"
         android:src="@drawable/more"/>
 
 </RelativeLayout>

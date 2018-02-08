@@ -10,6 +10,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import bible.verse.organizer.fragments.Home;
 import bible.verse.organizer.organizer.R;
 
 public class MainActivity extends AppCompatActivity
@@ -23,7 +27,16 @@ public class MainActivity extends AppCompatActivity
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
 
-        //TODO: Launch Home fragment
+        launchHomeFragment();
+    }
+
+    private void launchHomeFragment()
+    {
+        //Create class (static fields) for Fragment tags
+        getSupportFragmentManager()
+            .beginTransaction()
+            .add(R.id.parent_layout, new Home(), "Home")
+            .commit();
     }
 
     @Override

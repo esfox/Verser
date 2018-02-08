@@ -14,7 +14,6 @@ public class ViewVerse extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
-        View layout = inflater.inflate(R.layout.fragment_view_verse, container, false);
-        return layout;
+        return inflater.inflate(R.layout.fragment_view_verse, container, false);
     }
 }

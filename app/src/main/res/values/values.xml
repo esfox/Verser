@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="background_material_light">#454545</color>
+    <item name="visible" type="id"/>
+    <item name="masked" type="id"/>
 </resources>

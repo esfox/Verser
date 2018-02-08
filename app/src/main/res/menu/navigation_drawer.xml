@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      tools:ignore="HardcodedText">
+
+    <item
+        android:id="@+id/navigation_drawer_home"
+        android:icon="@drawable/home"
+        android:title="Home"/>
+
+    <item
+        android:id="@+id/navigation_drawer_favorites"
+        android:icon="@drawable/favorite"
+        android:title="Favorites"/>
+
+    <item
+        android:id="@+id/navigation_drawer_categories"
+        android:icon="@drawable/category"
+        android:title="Categories"/>
+
+    <item
+        android:id="@+id/navigation_drawer_tags"
+        android:icon="@drawable/tag"
+        android:title="Tags"/>
+
+    <item
+        android:id="@+id/navigation_drawer_settings"
+        android:icon="@drawable/settings"
+        android:title="Settings"/>
+
+</menu>

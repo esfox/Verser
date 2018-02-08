@@ -21,7 +21,7 @@
         tools:text="Category"/>
 
     <TextView
-        android:id="@+id/verse_entry_name"
+        android:id="@+id/verse_entry_citation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="12dp"
@@ -33,22 +33,22 @@
         android:layout_height="wrap_content">
 
         <!--for verse_entry_content later-->
-        <!--android:layout_above="@id/verse_entry_menu_divider"-->
+        <!--android:layout_above="@+id/verse_entry_menu_divider"-->
         <!--android:maxLines = "23"-->
         <!--android:scrollbars = "vertical"-->
         <TextView
-            android:id="@+id/verse_entry_content"
+            android:id="@+id/verse_entry_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/Base.TextAppearance.AppCompat"
             tools:text="For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life."/>
 
-        <!--android:layout_above="@id/verse_entry_menu_divider"-->
+        <!--android:layout_above="@+id/verse_entry_menu_divider"-->
         <LinearLayout
             android:id="@+id/verse_card_tag_area"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/verse_entry_content"
+            android:layout_below="@+id/verse_entry_text"
             android:paddingTop="16dp"
             android:paddingBottom="8dp"
             android:orientation="horizontal">
@@ -63,7 +63,7 @@
             android:id="@+id/verse_entry_menu_divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_above="@id/verse_entry_lower_menu"
+            android:layout_above="@+id/verse_entry_lower_menu"
             android:background="@android:color/darker_gray"/>
 
         <LinearLayout
@@ -80,6 +80,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:clickable="true"
                 android:orientation="vertical"
                 android:gravity="center">
 
@@ -88,7 +89,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingBottom="2dp"
-                    android:src="@drawable/ic_mode_edit_black_24dp"
+                    android:src="@drawable/edit_24dp"
                     tools:contentDescription="Edit" />
 
                 <TextView
@@ -113,7 +114,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingBottom="2dp"
-                    android:src="@drawable/ic_star_black_24dp"
+                    android:src="@drawable/star_24dp"
                     tools:contentDescription="Favorite"/>
 
                 <TextView
@@ -138,7 +139,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingBottom="2dp"
-                    android:src="@drawable/ic_delete_forever_black_24dp"
+                    android:src="@drawable/delete_24dp"
                     tools:contentDescription="Delete"/>
 
                 <TextView

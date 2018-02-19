@@ -2,6 +2,7 @@
 <TextView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/verse_index_item"
     android:layout_width="48dp"
     android:layout_height="48dp"
     android:orientation="vertical"

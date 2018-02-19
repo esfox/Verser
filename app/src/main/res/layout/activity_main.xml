@@ -31,4 +31,27 @@
         <!--app:itemBackground="?attr/selectableItemBackground"-->
         <!--app:menu="@menu/navigation_drawer"/>-->
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/temporary_read"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Read"/>
+        <Button
+            android:id="@+id/temporary_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Update"/>
+        <Button
+            android:id="@+id/temporary_reset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Reset"/>
+
+    </LinearLayout>
+
 </android.support.v4.widget.DrawerLayout>

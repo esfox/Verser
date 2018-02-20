@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity
         Button update = (Button) findViewById(R.id.temporary_update);
         Button reset = (Button) findViewById(R.id.temporary_reset);
         final DataStorer dataStorer = new DataStorer(this);
+        dataStorer.resetStorageFile();
 
         read.setOnClickListener(new View.OnClickListener() {
             @Override

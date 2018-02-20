@@ -3,25 +3,34 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home_parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-   >
-
-    <!--TODO: Make functional-->
-    <android.support.design.widget.NavigationView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        android:theme="@style/NavigationViewStyle"
-        android:background="@color/colorBackground"
-        app:headerLayout="@layout/navigation_drawer_header"
-        app:menu="@menu/navigation_drawer"/>
+    android:orientation="vertical">
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay"
+            app:elevation="0dp">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/home_toolbar"
+                android:layout_width="match_parent"
+                android:background="?attr/colorPrimary"
+                android:layout_height="?attr/actionBarSize"
+                app:contentInsetStartWithNavigation="0dp"
+                app:navigationIcon="@drawable/navigation_drawer_icon"
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                app:title="@string/app_name"/>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <include layout="@layout/toolbar_shadow_view"/>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/home_new_verse"
@@ -42,7 +51,20 @@
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:clipToPadding="false"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:listitem="@layout/verse_card"/>
 
     </android.support.design.widget.CoordinatorLayout>
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/home_navigation_drawer"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        android:theme="@style/NavigationViewStyle"
+        android:background="@color/colorBackground"
+        app:headerLayout="@layout/navigation_drawer_header"
+        app:menu="@menu/navigation_drawer"/>
+
 </android.support.v4.widget.DrawerLayout>

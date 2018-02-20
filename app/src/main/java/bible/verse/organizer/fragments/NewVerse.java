@@ -1,6 +1,7 @@
 package bible.verse.organizer.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -12,6 +13,8 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -84,6 +87,9 @@ public class NewVerse extends Fragment implements
         loadVerseIndex();
         loadBooks();
 
+        //Setup ActionBar
+        setupActionBar(layout);
+
         //Initialize parent layout for using in Snackbars
         parent = layout.findViewById(R.id.new_verse_parent);
 
@@ -148,6 +154,35 @@ public class NewVerse extends Fragment implements
                 showSnackbar("Mark as Favorite");
                 break;
         }
+    }
+
+    //Setup ActionBar
+    private void setupActionBar(View layout)
+    {
+        Toolbar toolbar = layout.findViewById(R.id.new_verse_toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+
+                //Cancel Confirmation Dialog
+                new AlertDialog.Builder(getContext())
+                    .setTitle("Discard your changes?")
+                    .setMessage("You have not saved this verse yet. " +
+                        "Are you sure you want to cancel adding a new verse?")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i)
+                        {
+                            getActivity().getSupportFragmentManager().popBackStack();
+                        }
+                    })
+                    .setNegativeButton("No", null)
+                    .show();
+            }
+        });
     }
 
     //Setup verse citation and verse text EditTexts
@@ -306,7 +341,7 @@ public class NewVerse extends Fragment implements
             public void onPageSelected(int page)
             {
                 //Show keyboard if in book selection page and hide keyboard if not
-                toggleKeyboard(bookSearch, page == BOOK_SELECTION);
+//                toggleKeyboard(bookSearch, page == BOOK_SELECTION);
 
                 //Toggle color of page buttons
                 toggleVerseIndexPageButtonState(icons, labels, page, activeColor, normalColor);
@@ -397,22 +432,22 @@ public class NewVerse extends Fragment implements
         });
 
         //Toggle keyboard when book search input has been focused
-        bookSearch.setOnFocusChangeListener(new View.OnFocusChangeListener()
-        {
-            @Override
-            public void onFocusChange(final View view, boolean hasFocus)
-            {
-                if(hasFocus)
-                    view.post(new Runnable()
-                    {
-                        @Override
-                        public void run()
-                        {
-                            toggleKeyboard(view, true);
-                        }
-                    });
-            }
-        });
+//        bookSearch.setOnFocusChangeListener(new View.OnFocusChangeListener()
+//        {
+//            @Override
+//            public void onFocusChange(final View view, boolean hasFocus)
+//            {
+//                if(hasFocus)
+//                    view.post(new Runnable()
+//                    {
+//                        @Override
+//                        public void run()
+//                        {
+//                            toggleKeyboard(view, true);
+//                        }
+//                    });
+//            }
+//        });
 
         //Initialize numbers grid in drop down (chapters/verses)
         final GridView

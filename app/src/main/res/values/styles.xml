@@ -9,7 +9,6 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorControlNormal">@color/iconColor</item>
         <item name="colorControlActivated">@color/colorAccent</item>
-        <item name="colorControlHighlight">@color/colorAccent</item>
         <item name="android:colorBackground">@color/colorBackground</item>
 
         <!--Text Colors-->
@@ -20,6 +19,9 @@
         <!--Button Style-->
         <item name="colorButtonNormal">@color/colorAccent</item>
         <item name="android:buttonStyle">@style/Widget.AppCompat.Button.Colored</item>
+
+        <!--AlertDialog Theme-->
+        <item name="alertDialogTheme">@style/AlertDialogTheme</item>
 
     </style>
 
@@ -34,6 +36,21 @@
 
     <style name="NavigationViewStyle">
         <item name="android:scrollbarThumbVertical">@android:color/transparent</item>
+    </style>
+
+    <style name="AlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="buttonBarButtonStyle">@style/AlertDialogButtonStyle</item>
+        <item name="android:windowTitleStyle">@style/AlertDialogTitleStyle</item>
+    </style>
+
+    <style name="AlertDialogTitleStyle" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="AlertDialogButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
 </resources>

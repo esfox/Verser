@@ -8,6 +8,26 @@
     android:layout_height="match_parent"
     tools:ignore="TextFields,HardcodedText,UseCompoundDrawables,ContentDescription,Deprecated">
 
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:elevation="0dp">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/new_verse_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:contentInsetStartWithNavigation="0dp"
+            app:navigationIcon="@drawable/close"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:title="Add New Verse"/>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/toolbar_shadow_view"/>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/new_verse_done"
         android:layout_width="wrap_content"
@@ -21,7 +41,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="?attr/actionBarSize">
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/new_verse_citation"
@@ -226,7 +247,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:layout_marginRight="8dp"
-                    android:src="@drawable/favorite"
+                    android:src="@drawable/favorite_outlined"
                     android:tint="@color/textColorSecondary"/>
 
                 <TextView

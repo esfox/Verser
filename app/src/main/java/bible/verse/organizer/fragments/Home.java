@@ -1,14 +1,25 @@
 package bible.verse.organizer.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import bible.verse.organizer.utilities.DataStorer;
+import bible.verse.organizer.utilities.Formatter;
 import bible.verse.organizer.organizer.R;
+import bible.verse.organizer.utilities.Parser;
 
 public class Home extends Fragment
 {
@@ -19,6 +30,76 @@ public class Home extends Fragment
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
         View layout = inflater.inflate(R.layout.fragment_home, container, false);
+
+        final DrawerLayout drawerLayout = layout.findViewById(R.id.home_parent);
+
+        Toolbar toolbar = layout.findViewById(R.id.home_toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                drawerLayout.openDrawer(GravityCompat.START);
+            }
+        });
+
+        final DataStorer dataStorer = new DataStorer(getContext());
+        final Formatter formatter = new Formatter();
+
+        final NavigationView drawer = layout.findViewById(R.id.home_navigation_drawer);
+        drawer.setNavigationItemSelectedListener
+            (new NavigationView.OnNavigationItemSelectedListener()
+        {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item)
+            {
+                drawerLayout.closeDrawer(GravityCompat.START);
+
+                String message = "";
+
+                switch(item.getItemId())
+                {
+                    case R.id.navigation_drawer_home:
+                        message = "Home";
+                        break;
+
+                    case R.id.navigation_drawer_favorites:
+                        message = "Favorites";
+                        break;
+
+                    case R.id.navigation_drawer_categories:
+                        message = "Categories";
+                        break;
+
+                    case R.id.navigation_drawer_tags:
+                        new Parser().parse(dataStorer.read());
+                        Log.d("DataStorer", "Read data has been parsed.");
+//                        message = "Tags";
+                        break;
+
+                    case R.id.navigation_drawer_settings:
+                        Log.d("DataStorer", "Read: " + dataStorer.read());
+//                        message = "Settings";
+                        break;
+
+                    case R.id.navigation_drawer_about:
+                          dataStorer.update(formatter.formatMockData());
+                        Log.d("DataStorer", "Update");
+//                        message = "About";
+                        break;
+
+                    case R.id.navigation_drawer_help:
+                        dataStorer.resetStorageFile();
+                        Log.d("DataStorer", "Reset");
+//                        message = "Help";
+                        break;
+                }
+
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+
+                return false;
+            }
+        });
 
         final FloatingActionButton newVerse = layout.findViewById(R.id.home_new_verse);
         newVerse.setOnClickListener(new View.OnClickListener()

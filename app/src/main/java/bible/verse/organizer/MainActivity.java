@@ -2,72 +2,42 @@ package bible.verse.organizer;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 
 import bible.verse.organizer.fragments.Home;
-import bible.verse.organizer.objects.DataStorer;
 import bible.verse.organizer.organizer.R;
 
 public class MainActivity extends AppCompatActivity
 {
+//    private Toolbar appBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
+//        appBar = (Toolbar) findViewById(R.id.parent_toolbar);
+//        setSupportActionBar(appBar);
 
         launchHomeFragment();
     }
 
-    private void executeTestGround ()
-    {
-        Button read = (Button) findViewById(R.id.temporary_read);
-        Button update = (Button) findViewById(R.id.temporary_update);
-        Button reset = (Button) findViewById(R.id.temporary_reset);
-        final DataStorer dataStorer = new DataStorer(this);
-        dataStorer.resetStorageFile();
-
-        read.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String x = dataStorer.read();
-                Log.d("TestingGround", x);
-            }
-        });
-
-        update.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dataStorer.update("wow");
-                Log.d("TestingGround", "Updated");
-            }
-        });
-
-        reset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dataStorer.resetStorageFile();
-                Log.d ("TestingGround", "Reset");
-            }
-        });
-    }
-
     private void launchHomeFragment()
     {
-        executeTestGround();
         //Create class (static fields) for Fragment tags
+        //TODO: Create class (static fields) for Fragment tags
         getSupportFragmentManager()
             .beginTransaction()
-            .add(R.id.parent_layout, new Home(), "Home")
+            .replace(R.id.parent_layout, new Home(), "Home")
             .commit();
     }
+
+//    public Toolbar getAppBar()
+//    {
+//        return appBar;
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -79,13 +49,13 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings)
+        switch(item.getItemId())
         {
-            return true;
-        }
+            case R.id.action_settings:
+                return true;
 
-        return super.onOptionsItemSelected(item);
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

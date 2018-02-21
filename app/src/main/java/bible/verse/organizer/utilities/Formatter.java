@@ -1,8 +1,8 @@
-package bible.verse.organizer.objects;
+package bible.verse.organizer.utilities;
 
-public class Unparser
+public class Formatter
 {
-    public Unparser() {}
+    public Formatter() {}
 
     private String formattedData = "";
 

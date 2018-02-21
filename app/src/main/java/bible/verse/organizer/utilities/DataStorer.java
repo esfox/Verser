@@ -1,4 +1,4 @@
-package bible.verse.organizer.objects;
+package bible.verse.organizer.utilities;
 
 import android.content.Context;
 import android.util.Log;
@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.nio.charset.Charset;
 
 public class DataStorer
 {
@@ -28,28 +27,28 @@ public class DataStorer
         String filename = "entrylist.txt";
 
         file = new File(context.getFilesDir(), filename);
-        try {
-            file.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         FileOutputStream fileOutputStream;
 
-        try {
+        try
+        {
             fileOutputStream = context.openFileOutput(filename, Context.MODE_APPEND);
             fileOutputStream.close();
         }
-        catch (IOException e) {
+        catch (IOException e)
+        {
             Log.e("Exception", "File write failed: " + e.toString());
         }
     }
 
-    public String read (){
+    public String read ()
+    {
         InputStream inputStream = null;
-        try {
+        try
+        {
             inputStream = new FileInputStream(file);
-        } catch (FileNotFoundException e) {
+        }
+        catch (FileNotFoundException e)
+        {
             e.printStackTrace();
         }
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -61,9 +60,12 @@ public class DataStorer
         while (!done)
         {
             String line = null;
-            try {
+            try
+            {
                 line = reader.readLine();
-            } catch (IOException e) {
+            }
+            catch (IOException e)
+            {
                 e.printStackTrace();
             }
             done = (line == null);
@@ -72,14 +74,20 @@ public class DataStorer
                 stringBuilder.append(line);
         }
 
-        try {
+        try
+        {
             reader.close();
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             e.printStackTrace();
         }
-        try {
+        try
+        {
             inputStream.close();
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             e.printStackTrace();
         }
 
@@ -89,21 +97,29 @@ public class DataStorer
     public void update(String formattedData)
     {
         FileOutputStream fileOutputStream = null;
-        try {
+        try
+        {
             fileOutputStream = new FileOutputStream(file, true);
-        } catch (FileNotFoundException e) {
+        }
+        catch (FileNotFoundException e)
+        {
             e.printStackTrace();
         }
-        ;
 
-        try {
+        try
+        {
             fileOutputStream.write(formattedData.getBytes());
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             e.printStackTrace();
         }
-        try {
+        try
+        {
             fileOutputStream.close();
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             e.printStackTrace();
         }
     }
@@ -111,9 +127,12 @@ public class DataStorer
     public void resetStorageFile ()
     {
         PrintWriter writer = null;
-        try {
+        try
+        {
             writer = new PrintWriter(file);
-        } catch (FileNotFoundException e) {
+        }
+        catch (FileNotFoundException e)
+        {
             e.printStackTrace();
         }
         writer.print("");

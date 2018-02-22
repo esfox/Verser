@@ -42,7 +42,7 @@ public class DataStorage
         Log.i("DataStorage", "Successfully created storage file");
     }
 
-    public String read ()
+    public String read()
     {
         String fileContent = null;
         try
@@ -92,7 +92,7 @@ public class DataStorage
         Log.i("DataStorage", "Successfully updated storage file");
     }
 
-    public void resetStorageFile ()
+    public void resetStorageFile()
     {
         PrintWriter writer = null;
         try

@@ -3,12 +3,12 @@ package bible.verse.organizer.objects;
 public class Verse
 {
     private String
-    id,
-    citation,
-    text,
-    title,
-    category,
-    notes;
+        id,
+        citation,
+        text,
+        title,
+        category,
+        notes;
 
     private String[] tags;
     private boolean favorited;
@@ -92,5 +92,4 @@ public class Verse
     {
         this.favorited = favorited;
     }
-
 }

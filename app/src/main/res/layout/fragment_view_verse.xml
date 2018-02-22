@@ -27,7 +27,7 @@
             tools:text="Category"/>
 
         <TextView
-            android:id="@+id/view_verse_name"
+            android:id="@+id/view_verse_citation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="12dp"
@@ -36,7 +36,7 @@
 
         <!--for view_verse_content later-->
         <TextView
-            android:id="@+id/view_verse_content"
+            android:id="@+id/view_verse_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -54,11 +54,14 @@
             android:layout_marginTop="16dp"
             android:orientation="horizontal">
 
-            <include layout="@layout/tag"/>
+            <include layout="@layout/tag"
+                android:id="@+id/view_verse_temporary_tag1"/>
 
-            <include layout="@layout/tag"/>
+            <include layout="@layout/tag"
+                android:id="@+id/view_verse_temporary_tag2"/>
 
-            <include layout="@layout/tag"/>
+            <include layout="@layout/tag"
+                android:id="@+id/view_verse_temporary_tag3"/>
 
         </LinearLayout>
     </LinearLayout>
@@ -153,6 +156,7 @@
                 android:paddingTop="8dp">
 
                 <ImageView
+                    android:id="@+id/view_verse_star"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"

@@ -13,6 +13,7 @@
     <color name="textColorLight">#ffffff</color>
     <color name="dividerColor">#BDBDBD</color>
     <color name="iconColor">#737373</color>
+    <color name="favoriteOn">#ffff00</color>
 
     <color name="favoriteColor">#FFC400</color>
 

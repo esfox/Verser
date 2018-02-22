@@ -15,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import bible.verse.organizer.utilities.DataStorage;
+import bible.verse.organizer.utilities.Formatter;
 import bible.verse.organizer.organizer.R;
 
 public class Home extends Fragment

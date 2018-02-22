@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity
 
     private void launchHomeFragment()
     {
+        //Create class (static fields) for Fragment tags
         //TODO: Create class (static fields) for Fragment tags
         getSupportFragmentManager()
             .beginTransaction()

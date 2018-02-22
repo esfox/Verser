@@ -1,4 +1,4 @@
-package bible.verse.organizer;
+package bible.verse.organizer.utilities;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -135,8 +135,10 @@ public class Parser
 
     private List<Verse> verses;
 
-    private void parse()
+    public void parse(String formattedData)
     {
+        verses = new ArrayList<>();
+
         /*
         * THE FOLLOWING CHARACTERS SHOULD NOT BE PRINTED AS IS IN THE TXT FILE:
         *
@@ -152,7 +154,7 @@ public class Parser
 
         //Parse each entry
         Pattern entryPattern = Pattern.compile("(?<=\\()(.*?)(?=\\)\\$)");
-        Matcher entryMatcher = entryPattern.matcher(testString);
+        Matcher entryMatcher = entryPattern.matcher(formattedData);
 
         while(entryMatcher.find())
             entries.add(entryMatcher.group());
@@ -227,6 +229,8 @@ public class Parser
             //Add verse object to list
             verses.add(verse);
         }
+
+        displayVerses();
     }
 
     private void displayVerses()

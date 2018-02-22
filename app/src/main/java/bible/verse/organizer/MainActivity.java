@@ -10,6 +10,7 @@ import android.view.MenuItem;
 
 import bible.verse.organizer.fragments.Home;
 import bible.verse.organizer.interfaces.OnBackPressListener;
+import bible.verse.organizer.objects.Verse;
 import bible.verse.organizer.organizer.R;
 
 public class MainActivity extends AppCompatActivity

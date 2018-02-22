@@ -46,8 +46,10 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 import bible.verse.organizer.interfaces.OnBackPressListener;
+import bible.verse.organizer.objects.Verse;
 import bible.verse.organizer.organizer.R;
 import bible.verse.organizer.verse_index.VerseIndexAdapter;
 
@@ -720,20 +722,30 @@ public class NewVerse extends Fragment implements
         String
             c = citation.getText().toString(),
             v = verseText.getText().toString(),
-            n = notesInput.getText().toString(),
+            n = notesInput.getText().toString();//,
 
-            textToDisplay =
-                "Citation: " + c + "\n" +
-                "Verse Text: " + v + "\n" +
-                "Title: " + title + "\n" +
-                "Notes:\n" + n + "\n" +
-                "Marked as Favorite: " + String.valueOf(isFavorite);
+//            textToDisplay =
+//                "Citation: " + c + "\n" +
+//                "Verse Text: " + v + "\n" +
+//                "Title: " + title + "\n" +
+//                "Notes:\n" + n + "\n" +
+//                "Marked as Favorite: " + String.valueOf(isFavorite);
+//
+//        new AlertDialog.Builder(getContext())
+//            .setTitle("Verse Details")
+//            .setMessage(textToDisplay)
+//            .setPositiveButton("Done", null)
+//            .show();
 
-        new AlertDialog.Builder(getContext())
-            .setTitle("Verse Details")
-            .setMessage(textToDisplay)
-            .setPositiveButton("Done", null)
-            .show();
+        Verse verse = new Verse();
+        verse.setId(UUID.randomUUID().toString());
+        verse.setCitation(c);
+        verse.setText(v);
+        verse.setCategory("category");
+        verse.setTags(new String[]{ "tag1", "tag2", "tag3" });
+        verse.setTitle(title);
+        verse.setNotes(n);
+        verse.setFavorited(isFavorite);
     }
 
     //Read verse_index_numbers.json

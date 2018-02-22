@@ -5,22 +5,31 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.text.Normalizer;
+
 import bible.verse.organizer.fragments.Home;
 import bible.verse.organizer.interfaces.OnBackPressListener;
+import bible.verse.organizer.objects.Verse;
 import bible.verse.organizer.organizer.R;
+import bible.verse.organizer.utilities.DataStorage;
+import bible.verse.organizer.utilities.Formatter;
 
 public class MainActivity extends AppCompatActivity
 {
 //    private Toolbar appBar;
+    DataStorage dataStorage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        dataStorage = new DataStorage(this);
 
         launchHomeFragment();
     }
@@ -33,6 +42,12 @@ public class MainActivity extends AppCompatActivity
             .beginTransaction()
             .replace(R.id.parent_layout, new Home(), "Home")
             .commit();
+    }
+
+    public void saveVerser(Verse verse)
+    {
+        dataStorage.update(Formatter.format(verse));
+        Log.i("DataStorage",    "Verse has been saved.");
     }
 
     @Override

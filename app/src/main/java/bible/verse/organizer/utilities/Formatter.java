@@ -1,29 +1,28 @@
 package bible.verse.organizer.utilities;
 
+import bible.verse.organizer.objects.Verse;
+
 public class Formatter
 {
     public Formatter() {}
 
-    private String formattedData = "";
-
-    public String format(String id, String citation, String text, String title, String category, String[] tags, boolean favorited, String notes)
+    public static String format(Verse verse)
     {
-        formattedData +=
+        String formattedData =
                 "(" +
-                    "#id{" + id + "}" +
-                    "#cit{" + citation + "}" +
-                    "#txt{" + text + "}" +
-                    "#t{" + title + "}" +
-                    "#cat{" + category  + "}" +
+                    "#id{" + verse.getId() + "}" +
+                    "#cit{" + verse.getCitation() + "}" +
+                    "#txt{" + verse.getText() + "}" +
+                    "#cat{" + verse.getCategory()  + "}" +
                     "#tgs{";
 
-
-        for (String tag : tags)
+        for (String tag : verse.getTags())
             formattedData += "[" + tag + "]";
 
         formattedData += "}" +
-                    "#f{" + String.valueOf(favorited) + "}" +
-                    "#n{" + notes + "}" +
+                    "#t{" + verse.getTitle() + "}" +
+                    "#n{" + verse.getNotes() + "}" +
+                    "#f{" + String.valueOf(verse.isFavorited()) + "}" +
                  ")$";
 
         return formattedData;

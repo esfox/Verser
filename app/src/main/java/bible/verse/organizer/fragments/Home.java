@@ -9,17 +9,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import bible.verse.organizer.utilities.DataStorer;
+import bible.verse.organizer.utilities.DataStorage;
 import bible.verse.organizer.utilities.Formatter;
 import bible.verse.organizer.organizer.R;
-import bible.verse.organizer.utilities.Parser;
 
 public class Home extends Fragment
 {
@@ -42,9 +40,6 @@ public class Home extends Fragment
                 drawerLayout.openDrawer(GravityCompat.START);
             }
         });
-
-        final DataStorer dataStorer = new DataStorer(getContext());
-        final Formatter formatter = new Formatter();
 
         final NavigationView drawer = layout.findViewById(R.id.home_navigation_drawer);
         drawer.setNavigationItemSelectedListener
@@ -72,26 +67,19 @@ public class Home extends Fragment
                         break;
 
                     case R.id.navigation_drawer_tags:
-                        new Parser().parse(dataStorer.read());
-                        Log.d("DataStorer", "Read data has been parsed.");
-//                        message = "Tags";
+                        message = "Tags";
                         break;
 
                     case R.id.navigation_drawer_settings:
-                        Log.d("DataStorer", "Read: " + dataStorer.read());
-//                        message = "Settings";
+                        message = "Settings";
                         break;
 
                     case R.id.navigation_drawer_about:
-                          dataStorer.update(formatter.formatMockData());
-                        Log.d("DataStorer", "Update");
-//                        message = "About";
+                        message = "About";
                         break;
 
                     case R.id.navigation_drawer_help:
-                        dataStorer.resetStorageFile();
-                        Log.d("DataStorer", "Reset");
-//                        message = "Help";
+                        message = "Help";
                         break;
                 }
 

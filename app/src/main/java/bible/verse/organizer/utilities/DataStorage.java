@@ -13,11 +13,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
-public class DataStorer
+public class DataStorage
 {
     private File file;
 
-    public DataStorer(Context context)
+    public DataStorage(Context context)
     {
         create(context);
     }
@@ -38,90 +38,58 @@ public class DataStorer
         {
             Log.e("Exception", "File write failed: " + e.toString());
         }
+
+        Log.i("DataStorage", "Successfully created storage file");
     }
 
     public String read ()
     {
-        InputStream inputStream = null;
+        String fileContent = null;
         try
         {
-            inputStream = new FileInputStream(file);
-        }
-        catch (FileNotFoundException e)
-        {
-            e.printStackTrace();
-        }
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            InputStream inputStream = new FileInputStream(file);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            StringBuilder stringBuilder = new StringBuilder();
 
-        StringBuilder stringBuilder = new StringBuilder();
+            boolean done = false;
 
-        boolean done = false;
-
-        while (!done)
-        {
-            String line = null;
-            try
+            while (!done)
             {
-                line = reader.readLine();
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-            done = (line == null);
+                String line = reader.readLine();
+                done = (line == null);
 
-            if (line != null)
-                stringBuilder.append(line);
-        }
-
-        try
-        {
+                if (line != null)
+                    stringBuilder.append(line);
+            }
             reader.close();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        try
-        {
             inputStream.close();
+
+            fileContent =  stringBuilder.toString();
         }
-        catch (IOException e)
+        catch (Exception e)
         {
             e.printStackTrace();
         }
 
-        return stringBuilder.toString();
+        Log.i("DataStorage", "Successfully read storage file");
+
+        return fileContent;
     }
 
     public void update(String formattedData)
     {
-        FileOutputStream fileOutputStream = null;
         try
         {
-            fileOutputStream = new FileOutputStream(file, true);
+            FileOutputStream fileOutputStream = new FileOutputStream(file, true);
+            fileOutputStream.write(formattedData.getBytes());
+            fileOutputStream.close();
         }
-        catch (FileNotFoundException e)
+        catch (Exception e)
         {
             e.printStackTrace();
         }
 
-        try
-        {
-            fileOutputStream.write(formattedData.getBytes());
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        try
-        {
-            fileOutputStream.close();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+        Log.i("DataStorage", "Successfully updated storage file");
     }
 
     public void resetStorageFile ()
@@ -137,6 +105,8 @@ public class DataStorer
         }
         writer.print("");
         writer.close();
+
+        Log.i("DataStorage", "Storage file has been reset");
     }
 
 }

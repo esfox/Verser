@@ -1,12 +1,15 @@
 package bible.verse.organizer;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import bible.verse.organizer.fragments.Home;
+import bible.verse.organizer.interfaces.OnBackPressListener;
 import bible.verse.organizer.organizer.R;
 
 public class MainActivity extends AppCompatActivity
@@ -18,9 +21,6 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-//        appBar = (Toolbar) findViewById(R.id.parent_toolbar);
-//        setSupportActionBar(appBar);
 
         launchHomeFragment();
     }
@@ -34,10 +34,32 @@ public class MainActivity extends AppCompatActivity
             .commit();
     }
 
-//    public Toolbar getAppBar()
-//    {
-//        return appBar;
-//    }
+    @Override
+    public void onBackPressed()
+    {
+        boolean backOverridden = false;
+        Fragment latestFragment = getLatestFragment();
+        if (latestFragment != null)
+            if(latestFragment instanceof OnBackPressListener)
+                backOverridden = ((OnBackPressListener) latestFragment).onBackPressed();
+
+        if(!backOverridden)
+            super.onBackPressed();
+    }
+
+    @Nullable
+    private Fragment getLatestFragment()
+    {
+        int backStackCount = getSupportFragmentManager().getBackStackEntryCount();
+
+        if (backStackCount <= 0)
+            return null;
+
+        int lastBackStackIndex = backStackCount - 1;
+        FragmentManager.BackStackEntry latestEntry =
+            getSupportFragmentManager().getBackStackEntryAt(lastBackStackIndex);
+        return getSupportFragmentManager().findFragmentByTag(latestEntry.getName());
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -49,7 +71,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        switch(item.getItemId())
+        switch (item.getItemId())
         {
             case R.id.action_settings:
                 return true;

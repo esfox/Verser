@@ -26,19 +26,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/toolbar_shadow_view"/>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/new_verse_done"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:src="@drawable/check"
-        app:fabSize="normal"/>
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -99,7 +86,7 @@
             android:paddingBottom="16dp">
 
             <LinearLayout
-                android:id="@+id/new_verse_add_title"
+                android:id="@+id/new_verse_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
@@ -123,15 +110,18 @@
                     android:tint="@color/textColorSecondary"/>
 
                 <TextView
+                    android:id="@+id/new_verse_title_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:text="Add a Title"
                     android:textSize="16sp"/>
 
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/new_verse_add_category"
+                android:id="@+id/new_verse_category"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
@@ -155,6 +145,7 @@
                     android:tint="@color/textColorSecondary"/>
 
                 <TextView
+                    android:id="@+id/new_verse_category_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Add Category"
@@ -163,7 +154,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/new_verse_add_tags"
+                android:id="@+id/new_verse_tags"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
@@ -187,6 +178,7 @@
                     android:tint="@color/textColorSecondary"/>
 
                 <TextView
+                    android:id="@+id/new_verse_tags_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Add Tags"
@@ -195,7 +187,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/new_verse_add_notes"
+                android:id="@+id/new_verse_notes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
@@ -219,6 +211,7 @@
                     android:tint="@color/textColorSecondary"/>
 
                 <TextView
+                    android:id="@+id/new_verse_notes_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Add Notes"
@@ -227,7 +220,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/new_verse_mark_as_favorite"
+                android:id="@+id/new_verse_favorite"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
@@ -243,6 +236,7 @@
                 android:paddingStart="16dp">
 
                 <ImageView
+                    android:id="@+id/new_verse_favorite_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
@@ -251,6 +245,7 @@
                     android:tint="@color/textColorSecondary"/>
 
                 <TextView
+                    android:id="@+id/new_verse_favorite_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Mark as Favorite"
@@ -258,5 +253,25 @@
 
             </LinearLayout>
         </LinearLayout>
+
     </RelativeLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/new_verse_done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:src="@drawable/check"
+        app:fabSize="normal"/>
+
+    <include
+        android:id="@+id/new_verse_notes_view"
+        layout="@layout/new_verse_add_notes"
+        tools:visibility="gone"/>
+
+    <include layout="@layout/toolbar_shadow_view"/>
+
 </android.support.design.widget.CoordinatorLayout>

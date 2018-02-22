@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
@@ -18,10 +19,13 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -31,6 +35,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,18 +47,24 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import bible.verse.organizer.interfaces.OnBackPressListener;
 import bible.verse.organizer.organizer.R;
 import bible.verse.organizer.verse_index.VerseIndexAdapter;
 
 public class NewVerse extends Fragment implements
-    View.OnClickListener
+    View.OnClickListener,
+    OnBackPressListener
 {
     private CoordinatorLayout parent;
+
+    //Fields of views where data is taken from
     private EditText
         citation,
-        verseText;
+        verseText,
+        notesInput;
 
     private PopupWindow verseIndex;
+    private View notesView;
 
     private String
         verseIndexJson,
@@ -65,6 +76,8 @@ public class NewVerse extends Fragment implements
         chapters,
         verses;
 
+    private boolean isEditingNotes;
+
     /*
         Save JSON classes for faster parsing.
         Number of chapters are parsed only when a book is selected
@@ -72,6 +85,11 @@ public class NewVerse extends Fragment implements
     */
     private JSONArray booksArray;
     private JSONObject chaptersObjects;
+
+    //TODO: Convert to Verse object
+    //Fields of data needed
+    private String title;
+    private boolean isFavorite;
 
     public NewVerse() {}
 
@@ -99,13 +117,18 @@ public class NewVerse extends Fragment implements
         //Setup verse index drop down
         setupVerseIndexDropDown();
 
+        //Setup layout for adding notes, put the view below the screen
+        setupNotesView(layout);
+
         //Initialize views to be used as buttons
         View
-            addTitle = layout.findViewById(R.id.new_verse_add_title),
-            addCategory = layout.findViewById(R.id.new_verse_add_category),
-            addTags = layout.findViewById(R.id.new_verse_add_tags),
-            addNotes = layout.findViewById(R.id.new_verse_add_notes),
-            markAsFavorite = layout.findViewById(R.id.new_verse_mark_as_favorite);
+            addTitle = layout.findViewById(R.id.new_verse_title),
+            addCategory = layout.findViewById(R.id.new_verse_category),
+            addTags = layout.findViewById(R.id.new_verse_tags),
+            addNotes = layout.findViewById(R.id.new_verse_notes),
+            markAsFavorite = layout.findViewById(R.id.new_verse_favorite);
+
+        FloatingActionButton doneButton = layout.findViewById(R.id.new_verse_done);
 
         //Create array of the views to be used as buttons
         View[] buttons =
@@ -115,7 +138,8 @@ public class NewVerse extends Fragment implements
                 addCategory,
                 addTags,
                 addNotes,
-                markAsFavorite
+                markAsFavorite,
+                doneButton
             };
 
         //Loop through array to assign click listeners
@@ -134,26 +158,45 @@ public class NewVerse extends Fragment implements
                 showVerseIndex();
                 break;
 
-            case R.id.new_verse_add_title:
-                showSnackbar("Add a Title");
+            case R.id.new_verse_title:
+                addTitle(view);
                 break;
 
-            case R.id.new_verse_add_category:
+            case R.id.new_verse_category:
                 showSnackbar("Add Category");
                 break;
 
-            case R.id.new_verse_add_tags:
+            case R.id.new_verse_tags:
                 showSnackbar("Add Tags");
                 break;
 
-            case R.id.new_verse_add_notes:
-                showSnackbar("Add Notes");
+            case R.id.new_verse_notes:
+                toggleNotesView(true);
                 break;
 
-            case R.id.new_verse_mark_as_favorite:
-                showSnackbar("Mark as Favorite");
+            case R.id.new_verse_favorite:
+                markAsFavorite(view);
+                break;
+
+            case R.id.new_verse_done:
+                addVerse();
+                getActivity().getSupportFragmentManager().popBackStack();
+                break;
+
+            case R.id.new_vere_notes_done:
+                toggleNotesView(false);
                 break;
         }
+    }
+
+    @Override
+    public boolean onBackPressed()
+    {
+        if(!isEditingNotes)
+            cancel();
+        else
+            toggleNotesView(false);
+        return true;
     }
 
     //Setup ActionBar
@@ -165,22 +208,7 @@ public class NewVerse extends Fragment implements
             @Override
             public void onClick(View view)
             {
-
-                //Cancel Confirmation Dialog
-                new AlertDialog.Builder(getContext())
-                    .setTitle("Discard your changes?")
-                    .setMessage("You have not saved this verse yet. " +
-                        "Are you sure you want to cancel adding a new verse?")
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i)
-                        {
-                            getActivity().getSupportFragmentManager().popBackStack();
-                        }
-                    })
-                    .setNegativeButton("No", null)
-                    .show();
+                cancel();
             }
         });
     }
@@ -197,14 +225,10 @@ public class NewVerse extends Fragment implements
             {
                 if(hasFocus)
                 {
-                    if((boolean) citation.getTag())
-                        toggleKeyboard(null, false);
+                    toggleKeyboard(null, false);
 
                     citation.callOnClick();
                 }
-                //TODO: Get citation text when pressing done FAB
-//                else
-//                    Log.d("citation", citation.getText().toString());
             }
         });
 
@@ -214,24 +238,9 @@ public class NewVerse extends Fragment implements
             in the text, parse it and assign it to citation EditText.
          */
         verseText = ((TextInputLayout)layout.findViewById(R.id.new_verse_text)).getEditText();
-        verseText.setOnFocusChangeListener(new View.OnFocusChangeListener()
-        {
-            @Override
-            public void onFocusChange(final View view, boolean hasFocus)
-            {
-                if(hasFocus)
-                    view.post(new Runnable()
-                    {
-                        @Override
-                        public void run()
-                        {
-                            toggleKeyboard(view, true);
-                        }
-                    });
-            }
-        });
     }
 
+    //TODO: Make custom view of verse index drop down
     //Setup verse index drop down
     private void setupVerseIndexDropDown()
     {
@@ -320,12 +329,6 @@ public class NewVerse extends Fragment implements
         */
         verseIndexViewPager.setTag(false);
 
-        /*
-            Set boolean tag to know if in not in book selection to
-            citation EditText as well for usage on its OnFocusChangeListener
-        */
-        citation.setTag(false);
-
         //Colors for the states of the page buttons (buttons on bottom)
         final int
             activeColor = ContextCompat.getColor(getContext(), R.color.colorAccent),
@@ -362,13 +365,6 @@ public class NewVerse extends Fragment implements
 
                 //Update ViewPager's boolean tag
                 verseIndexViewPager.setTag(isInChapterSelection);
-
-                /*
-                    If not in book selection page, set citation's boolean tag to true
-                    (meaning not in book selection)
-                */
-                if(page != BOOK_SELECTION)
-                    citation.setTag(true);
              }
 
             @Override
@@ -431,24 +427,6 @@ public class NewVerse extends Fragment implements
             public void afterTextChanged(Editable editable) {}
         });
 
-        //Toggle keyboard when book search input has been focused
-//        bookSearch.setOnFocusChangeListener(new View.OnFocusChangeListener()
-//        {
-//            @Override
-//            public void onFocusChange(final View view, boolean hasFocus)
-//            {
-//                if(hasFocus)
-//                    view.post(new Runnable()
-//                    {
-//                        @Override
-//                        public void run()
-//                        {
-//                            toggleKeyboard(view, true);
-//                        }
-//                    });
-//            }
-//        });
-
         //Initialize numbers grid in drop down (chapters/verses)
         final GridView
             chapterGrid = verseIndexLayout.findViewById(R.id.verse_index_chapters_grid),
@@ -501,7 +479,6 @@ public class NewVerse extends Fragment implements
                     {
                         stringToAppend += selectedChapter + ":" + item;
                         verseIndex.dismiss();
-                        verseText.requestFocus();
                     }
 
                     citation.setText("");
@@ -511,6 +488,102 @@ public class NewVerse extends Fragment implements
 
         chapterGrid.setOnItemClickListener(numberGridClickListener);
         versesGrid.setOnItemClickListener(numberGridClickListener);
+    }
+
+    //Setup layout for adding notes, put the view below the screen
+    private void setupNotesView(View layout)
+    {
+        notesView = layout.findViewById(R.id.new_verse_notes_view);
+        notesInput = notesView.findViewById(R.id.new_verse_notes_input);
+
+        //Set notesView y position to be the screen width
+        int screenHeight = getResources().getDisplayMetrics().heightPixels;
+        notesView.setY(screenHeight);
+
+        //Initialize onTouchListener to enable dragging notesView
+        View.OnTouchListener viewDragger = new View.OnTouchListener()
+        {
+            private float downY, previousY, fromY;
+            private boolean closed;
+
+            @Override
+            public boolean onTouch(View view, MotionEvent event)
+            {
+                switch (event.getAction())
+                {
+                    case MotionEvent.ACTION_DOWN:
+                        if(view instanceof EditText)
+                        {
+                            notesInput.requestFocus();
+                            toggleKeyboard(view, true);
+                        }
+
+                        downY = event.getRawY();
+                        previousY = downY;
+                        fromY = notesView.getY();
+
+                        break;
+
+                    case MotionEvent.ACTION_MOVE:
+                        float rawY = event.getRawY();
+                        closed = rawY < previousY;
+                        previousY = rawY;
+
+                        float y = event.getRawY() - downY;
+                        float newPosition = fromY + y;
+
+                        TypedValue value = new TypedValue();
+                        if(getActivity().getTheme()
+                            .resolveAttribute(R.attr.actionBarSize, value, true))
+                        {
+                            int bound = TypedValue.complexToDimensionPixelSize
+                                (value.data, getResources().getDisplayMetrics());
+                            if(newPosition >= bound)
+                                notesView.animate()
+                                    .y(newPosition)
+                                    .setDuration(0)
+                                    .start();
+                        }
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        if(downY != event.getRawY())
+                            toggleNotesView(closed);
+                        break;
+                }
+                return true;
+            }
+        };
+
+        //Set the button label as tag to be used in toggleNotesView (to change its text)
+        notesView.setTag(layout.findViewById(R.id.new_verse_notes_label));
+
+        notesView.findViewById(R.id.new_verse_notes_toolbar).setOnTouchListener(viewDragger);
+        notesInput.setOnTouchListener(viewDragger);
+
+        layout.findViewById(R.id.new_vere_notes_done)
+            .setOnClickListener(this);
+
+
+    }
+
+    //Cancel confirmation dialog
+    private void cancel()
+    {
+        new AlertDialog.Builder(getContext())
+            .setTitle("Discard your changes?")
+            .setMessage("You have not saved this verse yet. " +
+                "Are you sure you want to cancel adding a new verse?")
+            .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+            {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i)
+                {
+                    getActivity().getSupportFragmentManager().popBackStack();
+                }
+            })
+            .setNegativeButton("No", null)
+            .show();
     }
 
     //Show verse index drop down
@@ -551,6 +624,116 @@ public class NewVerse extends Fragment implements
             icons[i].setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
             labels[i].setTextColor(color);
         }
+    }
+
+    private void addTitle(final View button)
+    {
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        View titleInputLayout = inflater.inflate(R.layout.new_verse_add_title_dialog, null);
+        final EditText titleInput = titleInputLayout.findViewById(R.id.new_verse_add_title_input);
+
+        if(title != null)
+        {
+            titleInput.setText("");
+            titleInput.append(title);
+        }
+
+        new AlertDialog.Builder(getContext())
+            .setTitle("Add a Title")
+            .setView(titleInputLayout)
+            .setPositiveButton("Done", new DialogInterface.OnClickListener()
+            {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i)
+                {
+
+                    title = titleInput.getText().toString();
+                    if(title.equals(""))
+                        return;
+
+                    TextView label = button.findViewById(R.id.new_verse_title_label);
+                    label.setText(title);
+                    label.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19);
+                    Toast.makeText(getContext(), title, Toast.LENGTH_SHORT).show();
+                }
+            })
+            .setNegativeButton("Cancel", null)
+            .show();
+    }
+
+    private void markAsFavorite(View button)
+    {
+        isFavorite = !isFavorite;
+
+        ImageView favoriteIcon = button.findViewById(R.id.new_verse_favorite_icon);
+        TextView favoriteLabel = button.findViewById(R.id.new_verse_favorite_label);
+
+        int favoriteColor = ContextCompat.getColor(getContext(), R.color.favoriteColor),
+            normalColor = ContextCompat.getColor(getContext(), R.color.textColorSecondary);
+
+        int icon = isFavorite? R.drawable.favorite : R.drawable.favorite_outlined;
+        int iconTint = isFavorite? favoriteColor : normalColor;
+        String label = isFavorite? "Marked as Favorite!" : "Mark as Favorite";
+
+        favoriteIcon.setImageResource(icon);
+        favoriteIcon.setColorFilter(iconTint, PorterDuff.Mode.SRC_ATOP);
+        favoriteLabel.setText(label);
+    }
+
+    private void toggleNotesView(boolean toggle)
+    {
+        isEditingNotes = toggle;
+
+        float translateTo = 0;
+        if(toggle)
+        {
+            TypedValue value = new TypedValue();
+            if (getActivity().getTheme().resolveAttribute(R.attr.actionBarSize, value, true))
+                translateTo = TypedValue.complexToDimensionPixelSize
+                    (value.data, getResources().getDisplayMetrics());
+
+            notesInput.requestFocus();
+            toggleKeyboard(notesInput, true);
+        }
+        else
+        {
+            translateTo = getResources().getDisplayMetrics().heightPixels;
+            toggleKeyboard(null, false);
+        }
+
+        notesView
+            .animate()
+            .y(translateTo)
+            .setDuration(500)
+            .setInterpolator(new DecelerateInterpolator(3))
+            .start();
+
+        TextView buttonLabel = (TextView) notesView.getTag();
+        boolean notesInputIsEmpty = notesInput.getText().toString().equals("");
+        buttonLabel.setText(notesInputIsEmpty? "Add Notes" : "Edit Notes");
+    }
+
+    //TODO: Input validation
+    //When user presses Done button
+    private void addVerse()
+    {
+        String
+            c = citation.getText().toString(),
+            v = verseText.getText().toString(),
+            n = notesInput.getText().toString(),
+
+            textToDisplay =
+                "Citation: " + c + "\n" +
+                "Verse Text: " + v + "\n" +
+                "Title: " + title + "\n" +
+                "Notes:\n" + n + "\n" +
+                "Marked as Favorite: " + String.valueOf(isFavorite);
+
+        new AlertDialog.Builder(getContext())
+            .setTitle("Verse Details")
+            .setMessage(textToDisplay)
+            .setPositiveButton("Done", null)
+            .show();
     }
 
     //Read verse_index_numbers.json

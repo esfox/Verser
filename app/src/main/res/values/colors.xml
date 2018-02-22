@@ -14,6 +14,8 @@
     <color name="dividerColor">#BDBDBD</color>
     <color name="iconColor">#737373</color>
 
+    <color name="favoriteColor">#FFC400</color>
+
     <!--Initial Colors-->
     <!--<color name="colorPrimary">#329600</color>-->
     <!--<color name="colorPrimaryDark">#2A7D00</color>-->

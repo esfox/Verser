@@ -48,6 +48,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import bible.verse.organizer.MainActivity;
 import bible.verse.organizer.interfaces.OnBackPressListener;
 import bible.verse.organizer.objects.Verse;
 import bible.verse.organizer.organizer.R;
@@ -746,6 +747,8 @@ public class NewVerse extends Fragment implements
         verse.setTitle(title);
         verse.setNotes(n);
         verse.setFavorited(isFavorite);
+
+        ((MainActivity) getActivity()).saveVerse(verse);
     }
 
     //Read verse_index_numbers.json

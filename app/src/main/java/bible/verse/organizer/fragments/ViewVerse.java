@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import bible.verse.organizer.objects.Verse;
 import bible.verse.organizer.organizer.R;
 
 public class ViewVerse extends Fragment implements View.OnClickListener
@@ -95,15 +96,15 @@ public class ViewVerse extends Fragment implements View.OnClickListener
         }
     }
 
-    public void setData (String citation, String text, String title, String category, String[] tags, String notes, boolean favorited)
+    public void setData (Verse verse)
     {
-        this.citation.setText(citation);
-        this.text.setText(text);
+        this.citation.setText(verse.getCitation());
+        this.text.setText(verse.getText());
 //        this.title.setText(title);
-        this.category.setText(category);
+        this.category.setText(verse.getCategory());
 //        this.notes.setText(notes);
 
-        this.favorited = favorited;
+        this.favorited = verse.isFavorited();
         toggleStarColor();
     }
 

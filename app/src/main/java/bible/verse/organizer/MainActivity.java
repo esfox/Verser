@@ -44,10 +44,10 @@ public class MainActivity extends AppCompatActivity
             .commit();
     }
 
-    public void saveVerser(Verse verse)
+    public void saveVerse(Verse verse)
     {
         dataStorage.update(Formatter.format(verse));
-        Log.i("DataStorage",    "Verse has been saved.");
+        Log.i("DataStorage", "Verse has been saved.");
     }
 
     @Override

@@ -1,5 +1,6 @@
 package bible.verse.organizer.fragments;
 
+import android.animation.Animator;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.PorterDuff;
@@ -47,7 +48,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import bible.verse.organizer.MainActivity;
 import bible.verse.organizer.interfaces.OnBackPressListener;
 import bible.verse.organizer.objects.Verse;
 import bible.verse.organizer.organizer.R;
@@ -88,8 +92,7 @@ public class NewVerse extends Fragment implements
     private JSONArray booksArray;
     private JSONObject chaptersObjects;
 
-    //TODO: Convert to Verse object
-    //Fields of data needed
+    //Fields of data needed that should be fields
     private String title;
     private boolean isFavorite;
 
@@ -182,7 +185,6 @@ public class NewVerse extends Fragment implements
 
             case R.id.new_verse_done:
                 addVerse();
-                getActivity().getSupportFragmentManager().popBackStack();
                 break;
 
             case R.id.new_vere_notes_done:
@@ -219,6 +221,8 @@ public class NewVerse extends Fragment implements
     private void setupInputFields(View layout)
     {
         citation = layout.findViewById(R.id.new_verse_citation_input);
+        citation.setTag(layout.findViewById(R.id.new_verse_citation));
+
         citation.setKeyListener(null);
         citation.setOnFocusChangeListener(new View.OnFocusChangeListener()
         {
@@ -228,7 +232,6 @@ public class NewVerse extends Fragment implements
                 if(hasFocus)
                 {
                     toggleKeyboard(null, false);
-
                     citation.callOnClick();
                 }
             }
@@ -239,7 +242,28 @@ public class NewVerse extends Fragment implements
             (RegEx - "(\d\s)?([a-zA-Z]+\s*){1,3}\s\d{1,3}:\d{1,3}") is included
             in the text, parse it and assign it to citation EditText.
          */
-        verseText = ((TextInputLayout)layout.findViewById(R.id.new_verse_text)).getEditText();
+        verseText = layout.findViewById(R.id.new_verse_text_input);
+
+        TextWatcher textWatcher = new TextWatcher()
+        {
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
+                if(citation.hasFocus())
+                    ((TextInputLayout) citation.getTag()).setErrorEnabled(false);
+                else if(verseText.hasFocus())
+                    verseText.setError(null);
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void afterTextChanged(Editable editable) {}
+        };
+
+        citation.addTextChangedListener(textWatcher);
+        verseText.addTextChangedListener(textWatcher);
     }
 
     //TODO: Make custom view of verse index drop down
@@ -345,15 +369,14 @@ public class NewVerse extends Fragment implements
             @Override
             public void onPageSelected(int page)
             {
-                //Show keyboard if in book selection page and hide keyboard if not
-//                toggleKeyboard(bookSearch, page == BOOK_SELECTION);
-
                 //Toggle color of page buttons
                 toggleVerseIndexPageButtonState(icons, labels, page, activeColor, normalColor);
 
                 //Reset book search when going back to book selection page
                 if(page == BOOK_SELECTION)
                     bookSearch.setText("");
+                else
+                    toggleKeyboard(null, false);
 
                 /*
                     Set boolean tag of ViewPager and citation EditText to indicate
@@ -565,8 +588,6 @@ public class NewVerse extends Fragment implements
 
         layout.findViewById(R.id.new_vere_notes_done)
             .setOnClickListener(this);
-
-
     }
 
     //Cancel confirmation dialog
@@ -682,7 +703,7 @@ public class NewVerse extends Fragment implements
         favoriteLabel.setText(label);
     }
 
-    private void toggleNotesView(boolean toggle)
+    private void toggleNotesView(final boolean toggle)
     {
         isEditingNotes = toggle;
 
@@ -708,6 +729,25 @@ public class NewVerse extends Fragment implements
             .y(translateTo)
             .setDuration(500)
             .setInterpolator(new DecelerateInterpolator(3))
+            .setListener(new Animator.AnimatorListener()
+            {
+                @Override
+                public void onAnimationStart(Animator animator)
+                {
+                    if(toggle)
+                        notesView.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animator)
+                {
+                    if(!toggle)
+                        notesView.setVisibility(View.GONE);
+                }
+
+                @Override public void onAnimationCancel(Animator animator) {}
+                @Override public void onAnimationRepeat(Animator animator) {}
+            })
             .start();
 
         TextView buttonLabel = (TextView) notesView.getTag();
@@ -715,37 +755,60 @@ public class NewVerse extends Fragment implements
         buttonLabel.setText(notesInputIsEmpty? "Add Notes" : "Edit Notes");
     }
 
-    //TODO: Input validation
     //When user presses Done button
     private void addVerse()
     {
-        String
-            c = citation.getText().toString(),
-            v = verseText.getText().toString(),
-            n = notesInput.getText().toString();//,
+        final String
+            citation = this.citation.getText().toString(),
+            verseText = this.verseText.getText().toString(),
+            notes = notesInput.getText().toString();
 
-//            textToDisplay =
-//                "Citation: " + c + "\n" +
-//                "Verse Text: " + v + "\n" +
-//                "Title: " + title + "\n" +
-//                "Notes:\n" + n + "\n" +
-//                "Marked as Favorite: " + String.valueOf(isFavorite);
-//
-//        new AlertDialog.Builder(getContext())
-//            .setTitle("Verse Details")
-//            .setMessage(textToDisplay)
-//            .setPositiveButton("Done", null)
-//            .show();
+        boolean citationValidated = !citation.equals("");
+        TextInputLayout citationParent = (TextInputLayout) this.citation.getTag();
+        if(citationValidated)
+        {
+            citationValidated = citationIsValid(citation);
+            if(citationValidated)
+                citationParent.setErrorEnabled(false);
+            else
+                citationParent.setError("This is not a correct verse citation");
+        }
+        else
+            citationParent.setError("Please enter the verse citation");
 
-        Verse verse = new Verse();
-        verse.setId(UUID.randomUUID().toString());
-        verse.setCitation(c);
-        verse.setText(v);
-        verse.setCategory("category");
-        verse.setTags(new String[]{ "tag1", "tag2", "tag3" });
-        verse.setTitle(title);
-        verse.setNotes(n);
-        verse.setFavorited(isFavorite);
+        boolean verseTextValidated = !verseText.equals("");
+        if(verseTextValidated)
+            this.verseText.setError(null);
+        else
+            this.verseText.setError("Please enter the verse text");
+
+        if(!citationValidated || !verseTextValidated)
+            return;
+
+        new AlertDialog.Builder(getContext())
+            .setTitle("Save this verse?")
+            .setMessage("Are you done adding details about this verse?")
+            .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+            {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i)
+                {
+                    Verse verse = new Verse();
+                    verse.setId(UUID.randomUUID().toString());
+                    verse.setCitation(citation);
+                    verse.setText(verseText);
+                    verse.setCategory("category");
+                    verse.setTags(new String[]{ "tag1", "tag2", "tag3" });
+                    verse.setTitle(title);
+                    verse.setNotes(notes);
+                    verse.setFavorited(isFavorite);
+
+                    ((MainActivity) getActivity()).saveVerse(verse);
+                    getActivity().getSupportFragmentManager().popBackStack();
+                }
+            })
+            .setNegativeButton("No", null)
+            .show();
     }
 
     //Read verse_index_numbers.json
@@ -846,6 +909,14 @@ public class NewVerse extends Fragment implements
 
             this.verses = verses.size();
         }
+    }
+
+    //Check if citation is valid citation
+    private boolean citationIsValid(String input)
+    {
+        Pattern citationPattern = Pattern.compile("^(\\d\\s)?([a-zA-Z]+)\\s(\\d{1,3}:\\d{1,2})$");
+        Matcher citationMatcher = citationPattern.matcher(input);
+        return citationMatcher.matches();
     }
 
     //Method to show/hide keyboard

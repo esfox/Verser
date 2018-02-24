@@ -2,14 +2,17 @@ package bible.verse.organizer;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
-import java.text.Normalizer;
+import java.util.List;
 
 import bible.verse.organizer.fragments.Home;
 import bible.verse.organizer.interfaces.OnBackPressListener;
@@ -17,11 +20,14 @@ import bible.verse.organizer.objects.Verse;
 import bible.verse.organizer.organizer.R;
 import bible.verse.organizer.utilities.DataStorage;
 import bible.verse.organizer.utilities.Formatter;
+import bible.verse.organizer.utilities.Parser;
 
 public class MainActivity extends AppCompatActivity
 {
-//    private Toolbar appBar;
-    DataStorage dataStorage;
+    //Parent view for Snackbars
+    private View parent;
+
+    private DataStorage dataStorage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -29,9 +35,13 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        parent = findViewById(R.id.parent_layout);
+
         dataStorage = new DataStorage(this);
 
         launchHomeFragment();
+
+        readEntries();
     }
 
     private void launchHomeFragment()
@@ -44,10 +54,44 @@ public class MainActivity extends AppCompatActivity
             .commit();
     }
 
-    public void saveVerser(Verse verse)
+    public void saveVerse(Verse verse)
     {
         dataStorage.update(Formatter.format(verse));
-        Log.i("DataStorage",    "Verse has been saved.");
+        Log.i("DataStorage", "Verse has been saved.");
+        Snackbar.make(parent, "Verse has been saved!", Snackbar.LENGTH_SHORT).show();
+    }
+
+    public void readEntries()
+    {
+        List<Verse> verses = Parser.parse(dataStorage.read());
+
+        String messageToDisplay = "";
+
+        messageToDisplay += "Number of entries: " + String.valueOf(verses.size()) + "\n\n\n";
+
+        for(Verse verse : verses)
+        {
+            messageToDisplay +=
+                "Citation: " + verse.getCitation() + "\n" +
+                "Verse: " + verse.getText() + "\n" +
+                "Category: " + verse.getCategory() + "\n" +
+                "Tags:\n";
+
+            for(String tag : verse.getTags())
+                messageToDisplay += "- " + tag + "\n";
+
+            messageToDisplay +=
+                "Title: " + verse.getTitle() + "\n" +
+                "Notes: " + verse.getNotes() + "\n" +
+                "Marked as Favorite: " + String.valueOf(verse.isFavorited())
+                + "\n\n";
+        }
+
+        new AlertDialog.Builder(this)
+            .setTitle("Verses")
+            .setMessage(messageToDisplay)
+            .setPositiveButton("Done", null)
+            .show();
     }
 
     @Override

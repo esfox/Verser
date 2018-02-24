@@ -15,8 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import bible.verse.organizer.utilities.DataStorage;
-import bible.verse.organizer.utilities.Formatter;
 import bible.verse.organizer.organizer.R;
 
 public class Home extends Fragment
@@ -107,6 +105,9 @@ public class Home extends Fragment
         //Create class (static fields) for Fragment tags
         getActivity().getSupportFragmentManager()
             .beginTransaction()
+            .setCustomAnimations
+                (R.anim.slide_in_from_end, R.anim.slide_out_to_start,
+                 R.anim.slide_in_from_start, R.anim.slide_out_to_end)
             .replace(R.id.parent_layout, new NewVerse(), "New Verse")
             .addToBackStack("New Verse")
             .commit();

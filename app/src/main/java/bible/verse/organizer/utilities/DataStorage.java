@@ -24,7 +24,8 @@ public class DataStorage
 
     private void create(Context context)
     {
-        String filename = "entrylist.txt";
+        //vdf = Verser Data Format
+        String filename = "entrylist.vdf";
 
         file = new File(context.getFilesDir(), filename);
         FileOutputStream fileOutputStream;

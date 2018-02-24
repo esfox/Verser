@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:focusableInTouchMode="true"
     tools:ignore="HardcodedText">
 
     <EditText
@@ -21,6 +22,7 @@
     <ListView
         android:id="@+id/verse_index_books_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:dividerHeight="0dp"/>
 
 </LinearLayout>

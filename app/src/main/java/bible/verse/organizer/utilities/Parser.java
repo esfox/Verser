@@ -9,43 +9,9 @@ import bible.verse.organizer.objects.Verse;
 
 public class Parser
 {
-    private String testString =
-        "(" +
-            "#id{111}" +
-            "#cit{John 3:16}" +
-            "#txt{For God so loved the world in this way}" +
-            "#t{The Gospel}" +
-            "#cat{Salvation}" +
-            "#tgs{[God's Love][Jesus][Gospel]}" +
-            "#f{true}" +
-            "#n{This verse is about Salvation.}" +
-        ")$" +
-        "(" +
-            "#id{222}" +
-            "#cit{1 Corinthians 10:13}" +
-            "#txt{No temptation has overtaken you except}" +
-            "#t{The God Test Verse}" +
-            "#cat{Perseverance}" +
-            "#tgs{[Temptation][Sin]}" +
-            "#f{false}" +
-            "#n{This verse is about enduring temptation.}" +
-        ")$" +
-        "(" +
-            "#id{333}" +
-            "#cit{Romans 6:23}" +
-            "#txt{For the wages of sin is death}" +
-            "#t{Wages of Sin}" +
-            "#cat{Salvation}" +
-            "#tgs{[Sin][Death][Eternal Life][Jesus][Resurrection]}" +
-            "#f{true}" +
-            "#n{This verse is about the wages of sin and the gift of God.}" +
-        ")$";
-
-    private List<Verse> verses;
-
-    public void parse(String formattedData)
+    public static List<Verse> parse(String formattedData)
     {
-        verses = new ArrayList<>();
+        List<Verse> verses = new ArrayList<>();
 
         /*
         * THE FOLLOWING CHARACTERS SHOULD NOT BE PRINTED AS IS IN THE TXT FILE:
@@ -138,38 +104,39 @@ public class Parser
             verses.add(verse);
         }
 
-        displayVerses();
+        return verses;
+//        displayVerses();
     }
 
-    private void displayVerses()
-    {
-        for(Verse verse : verses)
-        {
-            System.out.println("ID: " + verse.getId());
-            System.out.println(verse.getCitation());
-            System.out.println(verse.getText());
-            System.out.println("Title: " + verse.getTitle());
-            System.out.println("Category: " + verse.getCategory());
-
-            System.out.print("Tags: ");
-            String[] tags = verse.getTags();
-            for(int i = 0; i < tags.length; i++)
-            {
-                String output = tags[i];
-                if(i != tags.length - 1)
-                    output += ", ";
-
-                System.out.print(output);
-            }
-
-            System.out.println();
-
-            if(verse.isFavorited())
-                System.out.println("Marked as Favorite!");
-            else System.out.println("Not a Favorite.");
-
-            System.out.println("Notes: " + verse.getNotes());
-            System.out.println();
-        }
-    }
+//    private void displayVerses()
+//    {
+//        for(Verse verse : verses)
+//        {
+//            System.out.println("ID: " + verse.getId());
+//            System.out.println(verse.getCitation());
+//            System.out.println(verse.getText());
+//            System.out.println("Title: " + verse.getTitle());
+//            System.out.println("Category: " + verse.getCategory());
+//
+//            System.out.print("Tags: ");
+//            String[] tags = verse.getTags();
+//            for(int i = 0; i < tags.length; i++)
+//            {
+//                String output = tags[i];
+//                if(i != tags.length - 1)
+//                    output += ", ";
+//
+//                System.out.print(output);
+//            }
+//
+//            System.out.println();
+//
+//            if(verse.isFavorited())
+//                System.out.println("Marked as Favorite!");
+//            else System.out.println("Not a Favorite.");
+//
+//            System.out.println("Notes: " + verse.getNotes());
+//            System.out.println();
+//        }
+//    }
 }

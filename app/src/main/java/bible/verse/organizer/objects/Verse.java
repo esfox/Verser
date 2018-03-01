@@ -1,7 +1,11 @@
 package bible.verse.organizer.objects;
 
+import java.util.UUID;
+
 public class Verse
 {
+    //TODO: Make category field a Category object, and store category ID instead of category name
+
     private String
         id,
         citation,
@@ -12,6 +16,11 @@ public class Verse
 
     private String[] tags;
     private boolean favorited;
+
+    public Verse()
+    {
+        id = UUID.randomUUID().toString();
+    }
 
     public String getId()
     {

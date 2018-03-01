@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -13,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import bible.verse.organizer.organizer.R;
 
@@ -48,40 +48,36 @@ public class Home extends Fragment
             {
                 drawerLayout.closeDrawer(GravityCompat.START);
 
-                String message = "";
-
                 switch(item.getItemId())
                 {
                     case R.id.navigation_drawer_home:
-                        message = "Home";
+                        snack("Home");
                         break;
 
                     case R.id.navigation_drawer_favorites:
-                        message = "Favorites";
+                        snack("Favorites");
                         break;
 
                     case R.id.navigation_drawer_categories:
-                        message = "Categories";
+                        categories();
                         break;
 
                     case R.id.navigation_drawer_tags:
-                        message = "Tags";
+                        snack("Tags");
                         break;
 
                     case R.id.navigation_drawer_settings:
-                        message = "Settings";
+                        snack("Settings");
                         break;
 
                     case R.id.navigation_drawer_about:
-                        message = "About";
+                        snack("About");
                         break;
 
                     case R.id.navigation_drawer_help:
-                        message = "Help";
+                        snack("Help");
                         break;
                 }
-
-                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
 
                 return false;
             }
@@ -108,8 +104,26 @@ public class Home extends Fragment
             .setCustomAnimations
                 (R.anim.slide_in_from_end, R.anim.slide_out_to_start,
                  R.anim.slide_in_from_start, R.anim.slide_out_to_end)
-            .replace(R.id.parent_layout, new NewVerse(), "New Verse")
-            .addToBackStack("New Verse")
+            .replace(R.id.parent_layout, new NewVerse(), FragmentTags.NEW_VERSE)
+            .addToBackStack(FragmentTags.NEW_VERSE)
             .commit();
+    }
+
+    private void categories()
+    {
+        getActivity().getSupportFragmentManager()
+        .beginTransaction()
+        .setCustomAnimations
+            (0, 0,
+             R.anim.slide_in_from_end, R.anim.slide_out_to_start)
+        .replace(R.id.parent_layout, new Categories(), FragmentTags.CATEGORIES)
+        .addToBackStack(FragmentTags.CATEGORIES)
+        .commit();
+    }
+    
+    //TEMPORARY
+    private void snack(String message)
+    {
+        Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
     }
 }

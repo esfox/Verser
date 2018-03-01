@@ -14,6 +14,7 @@ import android.view.View;
 
 import java.util.List;
 
+import bible.verse.organizer.fragments.FragmentTags;
 import bible.verse.organizer.fragments.Home;
 import bible.verse.organizer.interfaces.OnBackPressListener;
 import bible.verse.organizer.objects.Verse;
@@ -40,8 +41,6 @@ public class MainActivity extends AppCompatActivity
         dataStorage = new DataStorage(this);
 
         launchHomeFragment();
-
-        readEntries();
     }
 
     private void launchHomeFragment()
@@ -50,7 +49,7 @@ public class MainActivity extends AppCompatActivity
         //TODO: Create class (static fields) for Fragment tags
         getSupportFragmentManager()
             .beginTransaction()
-            .replace(R.id.parent_layout, new Home(), "Home")
+            .replace(R.id.parent_layout, new Home(), FragmentTags.HOME)
             .commit();
     }
 

@@ -11,13 +11,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 
 import java.util.List;
+import java.util.UUID;
 
 import bible.verse.organizer.fragments.Home;
 import bible.verse.organizer.interfaces.OnBackPressListener;
 import bible.verse.organizer.objects.Verse;
 import bible.verse.organizer.organizer.R;
+import bible.verse.organizer.utilities.DatabaseHandler;
 import bible.verse.organizer.utilities.DataStorage;
 import bible.verse.organizer.utilities.Formatter;
 import bible.verse.organizer.utilities.Parser;
@@ -40,8 +43,6 @@ public class MainActivity extends AppCompatActivity
         dataStorage = new DataStorage(this);
 
         launchHomeFragment();
-
-        readEntries();
     }
 
     private void launchHomeFragment()

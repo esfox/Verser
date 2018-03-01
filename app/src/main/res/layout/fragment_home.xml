@@ -41,7 +41,8 @@
             android:paddingRight="8dp"
             android:clipToPadding="false"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:listitem="@layout/verse_card"/>
+            tools:listitem="@layout/verse_card"
+            tools:visibility="gone"/>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/home_new_verse"

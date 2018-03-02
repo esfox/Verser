@@ -10,7 +10,8 @@
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/colorBackground">
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
@@ -33,6 +34,7 @@
         <include layout="@layout/toolbar_shadow_view"/>
 
         <android.support.v7.widget.RecyclerView
+            android:id="@+id/home_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingTop="8dp"
@@ -41,7 +43,18 @@
             android:paddingRight="8dp"
             android:clipToPadding="false"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:listitem="@layout/verse_card"/>
+            tools:listitem="@layout/verse_card"
+            tools:visibility="gone"/>
+
+        <Button
+            android:id="@+id/debug_show_database_contents"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|bottom"
+            android:layout_margin="16dp"
+            android:textColor="@color/textColorLight"
+            android:text="Show Database Contents"
+            tools:ignore="HardcodedText"/>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/home_new_verse"

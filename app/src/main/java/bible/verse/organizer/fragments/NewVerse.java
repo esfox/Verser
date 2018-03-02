@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -32,13 +31,13 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import org.json.JSONArray;
@@ -54,6 +53,7 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import bible.verse.organizer.MainActivity;
 import bible.verse.organizer.adapters.CategoriesAdapter;
 import bible.verse.organizer.adapters.VerseIndexPageAdapter;
 import bible.verse.organizer.interfaces.CategoriesListItemListener;
@@ -62,6 +62,7 @@ import bible.verse.organizer.objects.Category;
 import bible.verse.organizer.objects.Verse;
 import bible.verse.organizer.organizer.R;
 
+//TODO: Tags implementation
 public class NewVerse extends Fragment implements
     View.OnClickListener,
     OnBackPressListener
@@ -800,33 +801,61 @@ public class NewVerse extends Fragment implements
             .setTitle("Add a Title")
             .setView(titleInputLayout)
             .setPositiveButton("Done", null)
+            .setNeutralButton("Remove Title", null)
             .setNegativeButton("Cancel", null)
             .create();
 
+        final TextView label = button.findViewById(R.id.new_verse_title_label);
         dialog.setOnShowListener(new DialogInterface.OnShowListener()
         {
             @Override
             public void onShow(DialogInterface dialogInterface)
             {
-                dialog.getButton(DialogInterface.BUTTON_POSITIVE)
-                    .setOnClickListener(new View.OnClickListener()
+                Button
+                    done = dialog.getButton(DialogInterface.BUTTON_POSITIVE),
+                    removeTitle = dialog.getButton(DialogInterface.BUTTON_NEUTRAL);
+
+                done.setTag(1);
+                removeTitle.setTag(2);
+
+                removeTitle.setVisibility(title == null? View.GONE : View.VISIBLE);
+
+                if(title != null)
+                    removeTitle.setVisibility(title.equals("")? View.GONE : View.VISIBLE);
+
+                View.OnClickListener listener = new View.OnClickListener()
                 {
+                    @SuppressLint("SetTextI18n")
                     @Override
                     public void onClick(View view)
                     {
-                        title = titleInput.getEditText().getText().toString();
-                        if(title.equals(""))
-                            titleInput.setError("Please enter a title.");
-                        else
+                        switch((Integer) view.getTag())
                         {
-                            TextView label = button.findViewById(R.id.new_verse_title_label);
-                            label.setText(title);
-                            label.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19);
-                            Toast.makeText(getContext(), title, Toast.LENGTH_SHORT).show();
-                            dialog.dismiss();
+                            case 1:
+
+                                title = titleInput.getEditText().getText().toString();
+                                if(title.equals(""))
+                                    titleInput.setError("Please enter a title.");
+                                else
+                                {
+                                    label.setText(title);
+                                    label.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19);
+                                    dialog.dismiss();
+                                }
+                                break;
+
+                            case 2:
+                                title = "";
+                                label.setText("Add a Title");
+                                label.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                                dialog.dismiss();
+                                break;
                         }
                     }
-                });
+                };
+
+                done.setOnClickListener(listener);
+                removeTitle.setOnClickListener(listener);
             }
         });
         dialog.show();
@@ -964,37 +993,34 @@ public class NewVerse extends Fragment implements
         if(!citationValidated || !verseTextValidated)
             return;
 
-        d_showVerseDetails();
+//        d_showVerseDetails();
 
-//        new AlertDialog.Builder(getContext())
-//            .setTitle("Save this verse?")
-//            .setMessage("Are you done adding details about this verse?")
-//            .setPositiveButton("Yes", new DialogInterface.OnClickListener()
-//            {
-//                @Override
-//                public void onClick(DialogInterface dialogInterface, int i)
-//                {
-//                    String categoryName;
-//                    if(category != null)
-//                        categoryName = category.getName();
-//                    else categoryName = "No Category";
-//
-//                    Verse verse = new Verse();
-//                    verse.setId(UUID.randomUUID().toString());
-//                    verse.setCitation(citation);
-//                    verse.setText(verseText);
-//                    verse.setCategory(categoryName);
-//                    verse.setTags(new String[]{ "tag1", "tag2", "tag3" });
-//                    verse.setTitle(title);
-//                    verse.setNotes(notes);
-//                    verse.setFavorited(isFavorite);
-//
-//                    ((MainActivity) getActivity()).saveVerse(verse);
-//                    getActivity().getSupportFragmentManager().popBackStack();
-//                }
-//            })
-//            .setNegativeButton("No", null)
-//            .show();
+        new AlertDialog.Builder(getContext())
+            .setTitle("Save this verse?")
+            .setMessage("Are you done adding details about this verse?")
+            .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+            {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i)
+                {
+                    Verse verse = new Verse();
+                    verse.setId(UUID.randomUUID().toString());
+                    verse.setVerse(citation);
+                    verse.setVerseText(verseText);
+                    verse.setTags(new String[] { "tag1", "tag2", "tag3" });
+                    verse.setTitle(title);
+                    verse.setNotes(notes);
+                    verse.setFavorited(isFavorite);
+
+                    if(category != null)
+                        verse.setCategoryName(category.getId());
+
+                    ((MainActivity) getActivity()).saveVerse(verse);
+                    getActivity().getSupportFragmentManager().popBackStack();
+                }
+            })
+            .setNegativeButton("No", null)
+            .show();
     }
 
     //Read verse_index_numbers.json
@@ -1159,10 +1185,10 @@ public class NewVerse extends Fragment implements
         else categoryName = "No Category";
 
         Verse verse = new Verse();
-        verse.setCitation(citation);
-        verse.setText(verseText);
-        verse.setCategory(categoryName);
-        verse.setTags(new String[]{ "tag1", "tag2", "tag3" });
+        verse.setVerse(citation);
+        verse.setVerseText(verseText);
+        verse.setCategoryName(categoryName);
+        verse.setTags(new String[] { "tag1", "tag2", "tag3" });
         verse.setTitle(title);
         verse.setNotes(notes);
         verse.setFavorited(isFavorite);

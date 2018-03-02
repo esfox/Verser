@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -19,16 +20,16 @@ import bible.verse.organizer.fragments.Home;
 import bible.verse.organizer.interfaces.OnBackPressListener;
 import bible.verse.organizer.objects.Verse;
 import bible.verse.organizer.organizer.R;
-import bible.verse.organizer.utilities.DataStorage;
-import bible.verse.organizer.utilities.Formatter;
-import bible.verse.organizer.utilities.Parser;
+//import bible.verse.organizer.utilities.DataStorage;
+import bible.verse.organizer.utilities.DatabaseHandler;
 
 public class MainActivity extends AppCompatActivity
 {
     //Parent view for Snackbars
     private View parent;
 
-    private DataStorage dataStorage;
+    //    private DataStorage dataStorage;
+    private DatabaseHandler databaseHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -38,7 +39,9 @@ public class MainActivity extends AppCompatActivity
 
         parent = findViewById(R.id.parent_layout);
 
-        dataStorage = new DataStorage(this);
+//        dataStorage = new DataStorage(this);
+
+        databaseHandler = new DatabaseHandler(this);
 
         launchHomeFragment();
     }
@@ -55,43 +58,87 @@ public class MainActivity extends AppCompatActivity
 
     public void saveVerse(Verse verse)
     {
-        dataStorage.update(Formatter.format(verse));
-        Log.i("DataStorage", "Verse has been saved.");
+        databaseHandler.addEntry(verse);
+        Log.i("Database", "Verse has been saved in database.");
         Snackbar.make(parent, "Verse has been saved!", Snackbar.LENGTH_SHORT).show();
     }
 
-    public void readEntries()
+    public void showDatabaseContents()
     {
-        List<Verse> verses = Parser.parse(dataStorage.read());
+        List<Verse> verses = databaseHandler.getAllEntries();
 
-        String messageToDisplay = "";
+        String message = "Entry Count: " + String.valueOf(verses.size()) + "\n\n";
 
-        messageToDisplay += "Number of entries: " + String.valueOf(verses.size()) + "\n\n\n";
-
-        for(Verse verse : verses)
+        for (Verse verse : verses)
         {
-            messageToDisplay +=
-                "Citation: " + verse.getCitation() + "\n" +
-                "Verse: " + verse.getText() + "\n" +
-                "Category: " + verse.getCategory() + "\n" +
-                "Tags:\n";
+            message +=
+                "ID: " + verse.getId() + "\n" +
+                    verse.getVerse() + "\n" +
+                    verse.getVerseText() + "\n" +
+                    "Category: " + verse.getCategoryName() + "\n" +
+                    "Tags: ";
 
-            for(String tag : verse.getTags())
-                messageToDisplay += "- " + tag + "\n";
+            for (String tag : verse.getTags())
+                message += tag + ", ";
 
-            messageToDisplay +=
+            message += "\n" +
                 "Title: " + verse.getTitle() + "\n" +
                 "Notes: " + verse.getNotes() + "\n" +
-                "Marked as Favorite: " + String.valueOf(verse.isFavorited())
-                + "\n\n";
+                "Is Favorite: " + verse.isFavorite() + "\n\n\n";
         }
 
         new AlertDialog.Builder(this)
-            .setTitle("Verses")
-            .setMessage(messageToDisplay)
+            .setTitle("Database Contents")
+            .setMessage(message)
             .setPositiveButton("Done", null)
             .show();
     }
+
+    public void d_clearDatabase()
+    {
+        databaseHandler.clearEntriesTable();
+        Toast.makeText(this, "Database Cleared", Toast.LENGTH_SHORT).show();
+    }
+
+//    public void saveVerse(Verse verse)
+//    {
+//        dataStorage.update(Formatter.format(verse));
+//        Log.i("DataStorage", "Verse has been saved.");
+//        Snackbar.make(parent, "Verse has been saved!", Snackbar.LENGTH_SHORT).show();
+//    }
+
+//    public void readEntries()
+//    {
+//        List<Verse> verses = Parser.parse(dataStorage.read());
+//
+//        String messageToDisplay = "";
+//
+//        messageToDisplay += "Number of entries: " + String.valueOf(verses.size()) + "\n\n\n";
+//
+//        for(Verse verse : verses)
+//        {
+//            messageToDisplay +=
+//                "Citation: " + verse.getVerse() + "\n" +
+//                "Verse: " + verse.getVerseText() + "\n" +
+//                "Category: " + verse.getCategoryName() + "\n" +
+//                "Tags:\n";
+//
+//            for(String tag : verse.getTags())
+//                messageToDisplay += "- " + tag + "\n";
+//
+//            messageToDisplay +=
+//                "Title: " + verse.getTitle() + "\n" +
+//                "Notes: " + verse.getNotes() + "\n" +
+//                "Marked as Favorite: " + String.valueOf(verse.isFavorite())
+//                + "\n\n";
+//        }
+//
+//        new AlertDialog.Builder(this)
+//            .setTitle("Verses")
+//            .setMessage(messageToDisplay)
+//            .setPositiveButton("Done", null)
+//            .show();
+//    }
 
     @Override
     public void onBackPressed()

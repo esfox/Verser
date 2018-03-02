@@ -105,7 +105,7 @@
             <!--android:layout_below="@+id/new_verse_categories_toolbar"-->
             <!--android:background="@color/colorPrimary"-->
             <!--android:gravity="center"-->
-            <!--android:text="IMPLEMENT THIS!"-->
+            <!--android:verseText="IMPLEMENT THIS!"-->
             <!--android:textSize="20sp"-->
             <!--android:textColor="@color/textColorLight"-->
             <!--tools:ignore="HardcodedText"/>-->

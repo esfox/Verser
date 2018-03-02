@@ -20,6 +20,7 @@ import bible.verse.organizer.interfaces.CategoriesListItemListener;
 import bible.verse.organizer.objects.Category;
 import bible.verse.organizer.organizer.R;
 
+//TODO: Saving to Database
 public class Categories extends Fragment implements
     CategoriesListItemListener,
     View.OnClickListener
@@ -31,7 +32,8 @@ public class Categories extends Fragment implements
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState)
     {
         View layout = inflater.inflate(R.layout.fragment_categories, container, false);
 
@@ -89,7 +91,8 @@ public class Categories extends Fragment implements
         newCategoryDialog.findViewById(R.id.new_category_icon)
             .setOnClickListener(this);
 
-        final TextInputLayout newCategoryName = newCategoryDialog.findViewById(R.id.new_category_name);
+        final TextInputLayout newCategoryName = newCategoryDialog
+                .findViewById(R.id.new_category_name);
 
         final AlertDialog dialog = new AlertDialog.Builder(getContext())
             .setTitle("Add New Category")
@@ -126,6 +129,5 @@ public class Categories extends Fragment implements
             }
         });
         dialog.show();
-
     }
 }

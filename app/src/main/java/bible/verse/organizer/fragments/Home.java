@@ -9,12 +9,16 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import bible.verse.organizer.MainActivity;
+import bible.verse.organizer.adapters.VersesAdapter;
 import bible.verse.organizer.organizer.R;
 
 public class Home extends Fragment
@@ -27,6 +31,35 @@ public class Home extends Fragment
     {
         View layout = inflater.inflate(R.layout.fragment_home, container, false);
 
+        setupToolbarAndDrawer(layout);
+
+        setupList(layout);
+
+        final FloatingActionButton newVerse = layout.findViewById(R.id.home_new_verse);
+        newVerse.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                newVerse();
+            }
+        });
+
+        layout.findViewById(R.id.debug_show_database_contents)
+                .setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                ((MainActivity) getActivity()).showDatabaseContents();
+            }
+        });
+
+        return layout;
+    }
+
+    private void setupToolbarAndDrawer(View layout)
+    {
         final DrawerLayout drawerLayout = layout.findViewById(R.id.home_parent);
 
         Toolbar toolbar = layout.findViewById(R.id.home_toolbar);
@@ -39,61 +72,70 @@ public class Home extends Fragment
             }
         });
 
+        //FOR DEBUGGING ONLY - CLEAR DATABASE
+        toolbar.setOnLongClickListener(new View.OnLongClickListener()
+        {
+            @Override
+            public boolean onLongClick(View view)
+            {
+                ((MainActivity) getActivity()).d_clearDatabase();
+                return true;
+            }
+        });
+
         final NavigationView drawer = layout.findViewById(R.id.home_navigation_drawer);
         drawer.setNavigationItemSelectedListener
             (new NavigationView.OnNavigationItemSelectedListener()
-        {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item)
             {
-                drawerLayout.closeDrawer(GravityCompat.START);
-
-                switch(item.getItemId())
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item)
                 {
-                    case R.id.navigation_drawer_home:
-                        snack("Home");
-                        break;
+                    drawerLayout.closeDrawer(GravityCompat.START);
 
-                    case R.id.navigation_drawer_favorites:
-                        snack("Favorites");
-                        break;
+                    switch(item.getItemId())
+                    {
+                        case R.id.navigation_drawer_home:
+                            snack("Home");
+                            break;
 
-                    case R.id.navigation_drawer_categories:
-                        categories();
-                        break;
+                        case R.id.navigation_drawer_favorites:
+                            snack("Favorites");
+                            break;
 
-                    case R.id.navigation_drawer_tags:
-                        snack("Tags");
-                        break;
+                        case R.id.navigation_drawer_categories:
+                            categories();
+                            break;
 
-                    case R.id.navigation_drawer_settings:
-                        snack("Settings");
-                        break;
+                        case R.id.navigation_drawer_tags:
+                            snack("Tags");
+                            break;
 
-                    case R.id.navigation_drawer_about:
-                        snack("About");
-                        break;
+                        case R.id.navigation_drawer_settings:
+                            snack("Settings");
+                            break;
 
-                    case R.id.navigation_drawer_help:
-                        snack("Help");
-                        break;
+                        case R.id.navigation_drawer_about:
+                            snack("About");
+                            break;
+
+                        case R.id.navigation_drawer_help:
+                            snack("Help");
+                            break;
+                    }
+
+                    return false;
                 }
+            });
+    }
 
-                return false;
-            }
-        });
+    private void setupList(View layout)
+    {
+        RecyclerView versesList = layout.findViewById(R.id.home_list);
+        versesList.setHasFixedSize(true);
+        versesList.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        final FloatingActionButton newVerse = layout.findViewById(R.id.home_new_verse);
-        newVerse.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                newVerse();
-            }
-        });
-
-        return layout;
+        VersesAdapter adapter = new VersesAdapter();
+        versesList.setAdapter(adapter);
     }
 
     private void newVerse()

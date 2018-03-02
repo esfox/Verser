@@ -7,24 +7,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay"
-        app:elevation="0dp">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/categories_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:contentInsetStartWithNavigation="0dp"
-            app:navigationIcon="@drawable/back"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:title="Categories"/>
-
-    </android.support.design.widget.AppBarLayout>
-
     <include layout="@layout/toolbar_shadow_view"/>
 
     <android.support.v7.widget.RecyclerView
@@ -44,5 +26,23 @@
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:src="@drawable/plus"
         app:fabSize="normal"/>
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:elevation="0dp">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/categories_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:contentInsetStartWithNavigation="0dp"
+            app:navigationIcon="@drawable/back"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:title="Categories"/>
+
+    </android.support.design.widget.AppBarLayout>
 
 </android.support.design.widget.CoordinatorLayout>

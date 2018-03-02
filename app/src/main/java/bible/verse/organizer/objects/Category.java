@@ -9,7 +9,10 @@ public class Category
     private int verseCount;
     private int iconResource;
 
-    public Category() {}
+    public Category()
+    {
+        id = UUID.randomUUID().toString();
+    }
 
     public Category(String name, int iconResource)
     {

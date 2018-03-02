@@ -35,14 +35,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            tools:text="The Tag"/>
+            tools:verseText="The Tag"/>
 
         <TextView
             android:id="@+id/tags_item_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            tools:text="20 verses"/>
+            tools:verseText="20 verses"/>
 
     </LinearLayout>
 

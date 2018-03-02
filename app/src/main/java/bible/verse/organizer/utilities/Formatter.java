@@ -11,9 +11,9 @@ public class Formatter
         String formattedData =
                 "(" +
                     "#id{" + verse.getId() + "}" +
-                    "#cit{" + verse.getCitation() + "}" +
-                    "#txt{" + verse.getText() + "}" +
-                    "#cat{" + verse.getCategory()  + "}" +
+                    "#cit{" + verse.getVerse() + "}" +
+                    "#txt{" + verse.getVerseText() + "}" +
+                    "#cat{" + verse.getCategoryName()  + "}" +
                     "#tgs{";
 
         for (String tag : verse.getTags())
@@ -22,7 +22,7 @@ public class Formatter
         formattedData += "}" +
                     "#t{" + verse.getTitle() + "}" +
                     "#n{" + verse.getNotes() + "}" +
-                    "#f{" + String.valueOf(verse.isFavorited()) + "}" +
+                    "#f{" + String.valueOf(verse.isFavorite()) + "}" +
                  ")$";
 
         return formattedData;

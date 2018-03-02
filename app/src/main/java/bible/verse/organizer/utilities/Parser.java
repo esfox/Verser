@@ -55,12 +55,12 @@ public class Parser
             //Parse Citation
             Matcher citationMatcher = citationPattern.matcher(entry);
             if(citationMatcher.find())
-                verse.setCitation(citationMatcher.group(1));
+                verse.setVerse(citationMatcher.group(1));
 
             //Parse Text
             Matcher textMatcher = textPattern.matcher(entry);
             if(textMatcher.find())
-                verse.setText(textMatcher.group(1));
+                verse.setVerseText(textMatcher.group(1));
 
             //Parse Title
             Matcher titleMatcher = titlePattern.matcher(entry);
@@ -70,7 +70,7 @@ public class Parser
             //Parse Category
             Matcher categoryMatcher = categoryPattern.matcher(entry);
             if(categoryMatcher.find())
-                verse.setCategory(categoryMatcher.group(1));
+                verse.setCategoryName(categoryMatcher.group(1));
 
             //Parse Tags
             Matcher tagsMatcher = tagsPattern.matcher(entry);
@@ -113,10 +113,10 @@ public class Parser
 //        for(Verse verse : verses)
 //        {
 //            System.out.println("ID: " + verse.getId());
-//            System.out.println(verse.getCitation());
-//            System.out.println(verse.getText());
+//            System.out.println(verse.getVerse());
+//            System.out.println(verse.getVerseText());
 //            System.out.println("Title: " + verse.getTitle());
-//            System.out.println("Category: " + verse.getCategory());
+//            System.out.println("Category: " + verse.getCategoryName());
 //
 //            System.out.print("Tags: ");
 //            String[] tags = verse.getTags();
@@ -131,7 +131,7 @@ public class Parser
 //
 //            System.out.println();
 //
-//            if(verse.isFavorited())
+//            if(verse.isFavorite())
 //                System.out.println("Marked as Favorite!");
 //            else System.out.println("Not a Favorite.");
 //

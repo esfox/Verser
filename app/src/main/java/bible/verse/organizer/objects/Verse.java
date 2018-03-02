@@ -4,16 +4,31 @@ import java.util.UUID;
 
 public class Verse
 {
-    //TODO: Make category field a Category object, and store category ID instead of category name
+    //TODO: Make categoryName field a Category object, and store categoryName ID instead of categoryName name
+
+    /*
+        Order of Fields
+
+        - ID
+        - Citation
+        - Verse Text
+        - Category
+        - Tags
+        - Title
+        - Notes
+        - Is Favorite
+    */
 
     private String
         id,
-        citation,
-        text,
+        verse,
+        verseText,
+        categoryName,
         title,
-        category,
         notes;
 
+    //TODO: Implement category object on verse object
+    private Category category;
     private String[] tags;
     private boolean favorited;
 
@@ -32,24 +47,24 @@ public class Verse
         this.id = id;
     }
 
-    public String getCitation()
+    public String getVerse()
     {
-        return citation;
+        return verse;
     }
 
-    public void setCitation(String citation)
+    public void setVerse(String verseCitation)
     {
-        this.citation = citation;
+        verse = verseCitation;
     }
 
-    public String getText()
+    public String getVerseText()
     {
-        return text;
+        return verseText;
     }
 
-    public void setText(String text)
+    public void setVerseText(String verseText)
     {
-        this.text = text;
+        this.verseText = verseText;
     }
 
     public String getTitle()
@@ -62,14 +77,14 @@ public class Verse
         this.title = title;
     }
 
-    public String getCategory()
+    public String getCategoryName()
     {
-        return category;
+        return categoryName;
     }
 
-    public void setCategory(String category)
+    public void setCategoryName(String categoryName)
     {
-        this.category = category;
+        this.categoryName = categoryName;
     }
 
     public String getNotes()
@@ -92,7 +107,7 @@ public class Verse
         this.tags = tags;
     }
 
-    public boolean isFavorited()
+    public boolean isFavorite()
     {
         return favorited;
     }

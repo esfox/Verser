@@ -12,6 +12,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +22,7 @@ import android.view.ViewGroup;
 import bible.verse.organizer.MainActivity;
 import bible.verse.organizer.adapters.VersesAdapter;
 import bible.verse.organizer.organizer.R;
+import bible.verse.organizer.utilities.DatabaseHandler;
 
 public class Home extends Fragment
 {

@@ -20,8 +20,9 @@ import bible.verse.organizer.fragments.Home;
 import bible.verse.organizer.interfaces.OnBackPressListener;
 import bible.verse.organizer.objects.Verse;
 import bible.verse.organizer.organizer.R;
-//import bible.verse.organizer.utilities.DataStorage;
 import bible.verse.organizer.utilities.DatabaseHandler;
+
+//import bible.verse.organizer.utilities.DataStorage;
 
 public class MainActivity extends AppCompatActivity
 {

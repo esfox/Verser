@@ -6,10 +6,13 @@
 
     <dimen name="verse_card_height">138dp</dimen>
 
+    <dimen name="new_verse_button_height">48dp</dimen>
+    <dimen name="new_verse_book_input_box_min_width">150dp</dimen>
+
     <dimen name="category_item_height">72dp</dimen>
+    <dimen name="category_item_options_width">144dp</dimen>
     <!--category_item_height - 24dp (padding)-->
     <dimen name="category_item_icon_size">48dp</dimen>
 
-    <dimen name="new_verse_book_input_box_min_width">150dp</dimen>
 
 </resources>

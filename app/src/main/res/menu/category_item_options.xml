@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:ignore="HardcodedText">
+
+    <item
+        android:id="@+id/category_item_options_edit"
+        android:icon="@drawable/category_item_options_edit"
+        android:title="Edit"/>
+
+    <item
+        android:id="@+id/category_item_options_delete"
+        android:icon="@drawable/category_item_options_delete"
+        android:title="Delete"/>
+
+</menu>

@@ -20,6 +20,6 @@
         android:maxLines="1"
         android:textSize="12sp"
         android:textColor="@color/textColorLight"
-        tools:text="Some Useful Tag"/>
+        tools:text="Useful Tag"/>
 
 </RelativeLayout>

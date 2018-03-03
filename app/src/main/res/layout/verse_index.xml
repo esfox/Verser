@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:background="@android:drawable/dialog_holo_light_frame"
+    android:weightSum="1"
     tools:ignore="ContentDescription,HardcodedText,UseCompoundDrawables">
 
     <android.support.v4.view.ViewPager
         android:id="@+id/verse_index_view_pager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/verse_index_divider">
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <!--android:layout_above="@+id/verse_index_divider">-->
 
         <include
             android:id="@+id/verse_index_books"
@@ -31,17 +34,17 @@
         android:id="@+id/verse_index_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/dividerColor"
-        android:layout_above="@+id/verse_index_options"/>
+        android:background="@color/dividerColor"/>
+        <!--android:layout_above="@+id/verse_index_options"/>-->
 
     <LinearLayout
         android:id="@+id/verse_index_options"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:orientation="horizontal"
         android:baselineAligned="false"
         android:weightSum="3">
+        <!--android:layout_alignParentBottom="true"-->
 
         <LinearLayout
             android:id="@+id/verse_index_book"
@@ -134,4 +137,4 @@
         </LinearLayout>
 
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

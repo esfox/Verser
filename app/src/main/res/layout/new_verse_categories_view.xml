@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="ContentDescription,HardcodedText">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="6dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/toolbar_shadow"
+            android:scaleY="-1"
+            tools:ignore="ContentDescription"/>
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorBackground"
+        android:orientation="vertical">
+
+        <ViewSwitcher
+            android:id="@+id/new_verse_categories_viewswitcher"
+            android:layout_width="match_parent"
+            android:layout_height="48dp">
+
+            <LinearLayout
+                android:id="@+id/new_verse_categories_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <android.support.v7.widget.Toolbar
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    app:popupTheme="@style/AppTheme.PopupOverlay"
+                    app:title="Choose Category"/>
+
+                <ImageView
+                    android:id="@+id/new_verse_categories_search"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:padding="12dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:tint="@color/textColorPrimary"
+                    android:src="@drawable/search"/>
+
+                <ImageView
+                    android:id="@+id/new_verse_categories_cancel"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:padding="12dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:tint="@color/textColorPrimary"
+                    android:src="@drawable/close"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <EditText
+                    android:id="@+id/new_verse_categories_search_input"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    android:inputType="text"
+                    android:imeOptions="actionDone"
+                    android:hint="Search Category..."/>
+
+                <ImageView
+                    android:id="@+id/new_verse_categories_search_cancel"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:padding="12dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:tint="@color/textColorSecondary"
+                    android:src="@drawable/cancel"/>
+
+            </LinearLayout>
+        </ViewSwitcher>
+
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_below="@+id/new_verse_categories_toolbar"-->
+            <!--android:background="@color/colorPrimary"-->
+            <!--android:gravity="center"-->
+            <!--android:verseText="IMPLEMENT THIS!"-->
+            <!--android:textSize="20sp"-->
+            <!--android:textColor="@color/textColorLight"-->
+            <!--tools:ignore="HardcodedText"/>-->
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/new_verse_categories_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:fastScrollEnabled="true"
+            app:fastScrollVerticalTrackDrawable="@drawable/scroll_track"
+            app:fastScrollVerticalThumbDrawable="@drawable/scroll_thumb"
+            app:fastScrollHorizontalTrackDrawable="@drawable/scroll_track"
+            app:fastScrollHorizontalThumbDrawable="@drawable/scroll_thumb"
+            tools:listitem="@layout/category_item"/>
+
+    </LinearLayout>
+</LinearLayout>

@@ -1,6 +1,7 @@
 package bible.verse.organizer.fragments;
 
 import android.animation.Animator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.PorterDuff;
@@ -8,14 +9,14 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -30,13 +31,14 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.ViewSwitcher;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,25 +54,36 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import bible.verse.organizer.MainActivity;
+import bible.verse.organizer.adapters.CategoriesAdapter;
+import bible.verse.organizer.adapters.VerseIndexPageAdapter;
+import bible.verse.organizer.interfaces.CategoriesListItemListener;
 import bible.verse.organizer.interfaces.OnBackPressListener;
+import bible.verse.organizer.objects.Category;
 import bible.verse.organizer.objects.Verse;
 import bible.verse.organizer.organizer.R;
-import bible.verse.organizer.verse_index.VerseIndexAdapter;
 
+//TODO: Tags implementation
 public class NewVerse extends Fragment implements
     View.OnClickListener,
     OnBackPressListener
 {
-    private CoordinatorLayout parent;
-
     //Fields of views where data is taken from
     private EditText
         citation,
         verseText,
         notesInput;
 
+    //Verse index drop-down
     private PopupWindow verseIndex;
-    private View notesView;
+
+    //Hidden views (categories, notes & tags)
+    private View
+        notesView,
+        categoriesView,
+        tagsView;
+
+    //Screen height (set hidden views y position to this to make them hidden)
+    private float screenHeight;
 
     private String
         verseIndexJson,
@@ -82,7 +95,11 @@ public class NewVerse extends Fragment implements
         chapters,
         verses;
 
-    private boolean isEditingNotes;
+    //Boolean fields for hidden views to capture back button
+    private boolean
+        isChoosingCategory,
+        isSelectingTags,
+        isEditingNotes;
 
     /*
         Save JSON classes for faster parsing.
@@ -95,6 +112,7 @@ public class NewVerse extends Fragment implements
     //Fields of data needed that should be fields
     private String title;
     private boolean isFavorite;
+    private Category category;
 
     public NewVerse() {}
 
@@ -110,20 +128,24 @@ public class NewVerse extends Fragment implements
         loadVerseIndex();
         loadBooks();
 
-        //Setup ActionBar
-        setupActionBar(layout);
+        screenHeight = getResources().getDisplayMetrics().heightPixels;
 
-        //Initialize parent layout for using in Snackbars
-        parent = layout.findViewById(R.id.new_verse_parent);
+        //Setup AppBar
+        Toolbar appBar = layout.findViewById(R.id.new_verse_toolbar);
+        appBar.setNavigationOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                cancel();
+            }
+        });
 
         //Setup citation EditText
         setupInputFields(layout);
 
         //Setup verse index drop down
         setupVerseIndexDropDown();
-
-        //Setup layout for adding notes, put the view below the screen
-        setupNotesView(layout);
 
         //Initialize views to be used as buttons
         View
@@ -151,6 +173,15 @@ public class NewVerse extends Fragment implements
         for(View button : buttons)
             button.setOnClickListener(this);
 
+        //Setup layout for selecting categories
+        setupCategoriesView(layout, addCategory);
+
+        //Setup layout for selecting tags
+        setupTagsView(layout);
+
+        //Setup layout for editing notes
+        setupNotesView(layout);
+
         return layout;
     }
 
@@ -168,11 +199,11 @@ public class NewVerse extends Fragment implements
                 break;
 
             case R.id.new_verse_category:
-                showSnackbar("Add Category");
+                toggleCategoriesView(true);
                 break;
 
             case R.id.new_verse_tags:
-                showSnackbar("Add Tags");
+                toggleTagsView(true);
                 break;
 
             case R.id.new_verse_notes:
@@ -187,8 +218,16 @@ public class NewVerse extends Fragment implements
                 addVerse();
                 break;
 
-            case R.id.new_vere_notes_done:
+            case R.id.new_verse_categories_cancel:
+                toggleCategoriesView(false);
+                break;
+
+            case R.id.new_verse_notes_done:
                 toggleNotesView(false);
+                break;
+
+            case R.id.new_verse_tags_done:
+                toggleTagsView(false);
                 break;
         }
     }
@@ -196,25 +235,15 @@ public class NewVerse extends Fragment implements
     @Override
     public boolean onBackPressed()
     {
-        if(!isEditingNotes)
-            cancel();
-        else
+        if(isEditingNotes)
             toggleNotesView(false);
+        else if(isChoosingCategory)
+            toggleCategoriesView(false);
+        else if(isSelectingTags)
+            toggleTagsView(false);
+        else
+            cancel();
         return true;
-    }
-
-    //Setup ActionBar
-    private void setupActionBar(View layout)
-    {
-        Toolbar toolbar = layout.findViewById(R.id.new_verse_toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                cancel();
-            }
-        });
     }
 
     //Setup verse citation and verse text EditTexts
@@ -314,8 +343,8 @@ public class NewVerse extends Fragment implements
         verseIndex = new PopupWindow
             (
                 verseIndexLayout,
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.WRAP_CONTENT,
 //                (int) TypedValue.applyDimension
 //                    (TypedValue.COMPLEX_UNIT_DIP, 350, getResources().getDisplayMetrics()),
                 true
@@ -344,7 +373,7 @@ public class NewVerse extends Fragment implements
             VERSE_SELECTION = 2;
 
         //Adding each page to ViewPager adapter
-        VerseIndexAdapter pagerAdapter = new VerseIndexAdapter();
+        VerseIndexPageAdapter pagerAdapter = new VerseIndexPageAdapter();
         for(View pageLayout : pageLayouts)
             pagerAdapter.addPage(pageLayout);
         verseIndexViewPager.setAdapter(pagerAdapter);
@@ -515,78 +544,184 @@ public class NewVerse extends Fragment implements
         versesGrid.setOnItemClickListener(numberGridClickListener);
     }
 
-    //Setup layout for adding notes, put the view below the screen
+    //Setup layout for selecting category
+    private void setupCategoriesView(final View layout, final View button)
+    {
+        //Button label and icon
+        final TextView label = button.findViewById(R.id.new_verse_category_label);
+        final ImageView icon = button.findViewById(R.id.new_verse_category_icon);
+
+        //Clear category button
+        final View clearButton = layout.findViewById(R.id.new_verse_category_clear);
+
+        categoriesView = layout.findViewById(R.id.new_verse_categories_view);
+
+        //Set view y position to be the screen height (hidden below screen)
+        categoriesView.setY(screenHeight);
+
+        //Toolbar & Search EditText ViewSwitcher
+        final ViewSwitcher viewSwitcher = categoriesView.findViewById
+            (R.id.new_verse_categories_viewswitcher);
+
+        //Set ViewSwitcher as tag to categoriesView to be used when toggling it
+        categoriesView.setTag(viewSwitcher);
+
+        //Category search EditText
+        final EditText searchInput = categoriesView.findViewById
+            (R.id.new_verse_categories_search_input);
+
+        //Setup categories list
+        RecyclerView categoriesList = layout.findViewById(R.id.new_verse_categories_list);
+        categoriesList.setHasFixedSize(true);
+        categoriesList.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        //Setup categories adapter and listener for the adapter
+        CategoriesListItemListener listener = new CategoriesListItemListener()
+        {
+            @Override
+            public void onCategoryItemClick(Category category)
+            {
+                NewVerse.this.category = category;
+
+                toggleCategoriesView(false);
+                label.setText(category.getName());
+                icon.setImageResource(category.getIconResource());
+                clearButton.setVisibility(View.VISIBLE);
+
+                if(!searchInput.getText().toString().equals(""))
+                    searchInput.setText("");
+
+                toggleKeyboard(searchInput, false);
+            }
+        };
+
+        final CategoriesAdapter adapter = new CategoriesAdapter(listener);
+        categoriesList.setAdapter(adapter);
+
+        //Search functionality
+        searchInput.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
+                adapter.getFilter().filter(charSequence);
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void afterTextChanged(Editable editable) {}
+        });
+
+        //Click listener for categories-related buttons
+        View.OnClickListener onClickListener = new View.OnClickListener()
+        {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onClick(View view)
+            {
+
+                //Used for resetting ViewSwitcher to default when categoriesView hidden
+                boolean isSearchingCategory = false;
+
+                switch(view.getId())
+                {
+                    case R.id.new_verse_category_clear:
+                        category = null;
+                        clearButton.setVisibility(View.GONE);
+                        label.setText("Add Category");
+                        icon.setImageResource(R.drawable.category);
+                        break;
+
+                    case R.id.new_verse_categories_search:
+                        viewSwitcher.setInAnimation(getContext(), R.anim.viewswitcher_in);
+                        viewSwitcher.setOutAnimation(getContext(), R.anim.viewswitcher_out);
+                        viewSwitcher.showNext();
+                        isSearchingCategory = true;
+
+                        searchInput.requestFocus();
+                        toggleKeyboard(searchInput, true);
+                        break;
+
+                    case R.id.new_verse_categories_search_cancel:
+                        viewSwitcher.setInAnimation(getContext(), R.anim.viewswitcher_out_reverse);
+                        viewSwitcher.setOutAnimation(getContext(), R.anim.viewswitcher_in_reverse);
+                        viewSwitcher.showPrevious();
+                        isSearchingCategory = false;
+
+                        toggleKeyboard(null, false);
+
+                        if(!searchInput.getText().toString().equals(""))
+                            searchInput.setText("");
+                        break;
+                }
+
+                //Set boolean as tag to ViewSwitcher
+                viewSwitcher.setTag(isSearchingCategory);
+            }
+        };
+
+        clearButton.setOnClickListener(onClickListener);
+
+        //Search category button
+        categoriesView.findViewById(R.id.new_verse_categories_search)
+            .setOnClickListener(onClickListener);
+
+        //Category search cancel button
+        categoriesView.findViewById(R.id.new_verse_categories_search_cancel)
+            .setOnClickListener(onClickListener);
+
+        //Enable dragging the toolbar
+        SwipeTouchListener swipeTouchListener = new SwipeTouchListener(categoriesView);
+        viewSwitcher.setOnTouchListener(swipeTouchListener);
+
+        //Set on click listener for cancel button
+        categoriesView.findViewById(R.id.new_verse_categories_cancel)
+            .setOnClickListener(this);
+    }
+
+    //Setup layout for selecting tags
+    private void setupTagsView(View layout)
+    {
+        tagsView = layout.findViewById(R.id.new_verse_tags_view);
+
+        //Set view y position to be the screen height (hidden below screen)
+        tagsView.setY(screenHeight);
+
+        //Enable dragging the toolbar
+        SwipeTouchListener swipeTouchListener = new SwipeTouchListener(tagsView);
+        tagsView.setOnTouchListener(swipeTouchListener); //TEMPORARY
+        tagsView.findViewById(R.id.new_verse_tags_toolbar)
+            .setOnTouchListener(swipeTouchListener);
+
+        //Set on click listener for done button
+        tagsView.findViewById(R.id.new_verse_tags_done)
+            .setOnClickListener(this);
+
+        //TODO: make other views (buttons, selected tags indicator) functional
+    }
+
+    //Setup layout for editing notes, put the view below the screen
     private void setupNotesView(View layout)
     {
         notesView = layout.findViewById(R.id.new_verse_notes_view);
         notesInput = notesView.findViewById(R.id.new_verse_notes_input);
 
-        //Set notesView y position to be the screen width
-        int screenHeight = getResources().getDisplayMetrics().heightPixels;
+        //Set view y position to be the screen height (hidden below screen)
         notesView.setY(screenHeight);
-
-        //Initialize onTouchListener to enable dragging notesView
-        View.OnTouchListener viewDragger = new View.OnTouchListener()
-        {
-            private float downY, previousY, fromY;
-            private boolean closed;
-
-            @Override
-            public boolean onTouch(View view, MotionEvent event)
-            {
-                switch (event.getAction())
-                {
-                    case MotionEvent.ACTION_DOWN:
-                        if(view instanceof EditText)
-                        {
-                            notesInput.requestFocus();
-                            toggleKeyboard(view, true);
-                        }
-
-                        downY = event.getRawY();
-                        previousY = downY;
-                        fromY = notesView.getY();
-
-                        break;
-
-                    case MotionEvent.ACTION_MOVE:
-                        float rawY = event.getRawY();
-                        closed = rawY < previousY;
-                        previousY = rawY;
-
-                        float y = event.getRawY() - downY;
-                        float newPosition = fromY + y;
-
-                        TypedValue value = new TypedValue();
-                        if(getActivity().getTheme()
-                            .resolveAttribute(R.attr.actionBarSize, value, true))
-                        {
-                            int bound = TypedValue.complexToDimensionPixelSize
-                                (value.data, getResources().getDisplayMetrics());
-                            if(newPosition >= bound)
-                                notesView.animate()
-                                    .y(newPosition)
-                                    .setDuration(0)
-                                    .start();
-                        }
-                        break;
-
-                    case MotionEvent.ACTION_UP:
-                        if(downY != event.getRawY())
-                            toggleNotesView(closed);
-                        break;
-                }
-                return true;
-            }
-        };
 
         //Set the button label as tag to be used in toggleNotesView (to change its text)
         notesView.setTag(layout.findViewById(R.id.new_verse_notes_label));
 
-        notesView.findViewById(R.id.new_verse_notes_toolbar).setOnTouchListener(viewDragger);
-        notesInput.setOnTouchListener(viewDragger);
+        //Enable dragging the view
+        SwipeTouchListener swipeTouchListener = new SwipeTouchListener(notesView);
+        notesInput.setOnTouchListener(swipeTouchListener);
+        notesView.findViewById(R.id.new_verse_notes_toolbar)
+            .setOnTouchListener(swipeTouchListener);
 
-        layout.findViewById(R.id.new_vere_notes_done)
+        //Set on click listener for done button
+        notesView.findViewById(R.id.new_verse_notes_done)
             .setOnClickListener(this);
     }
 
@@ -652,36 +787,128 @@ public class NewVerse extends Fragment implements
     private void addTitle(final View button)
     {
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        View titleInputLayout = inflater.inflate(R.layout.new_verse_add_title_dialog, null);
-        final EditText titleInput = titleInputLayout.findViewById(R.id.new_verse_add_title_input);
+        final View titleInputLayout = inflater.inflate(R.layout.dialog_new_verse_add_title, null);
+        final TextInputLayout titleInput =
+            titleInputLayout.findViewById(R.id.new_verse_add_title_input);
 
         if(title != null)
         {
-            titleInput.setText("");
-            titleInput.append(title);
+            titleInput.getEditText().setText("");
+            titleInput.getEditText().append(title);
         }
 
-        new AlertDialog.Builder(getContext())
+        final AlertDialog dialog = new AlertDialog.Builder(getContext())
             .setTitle("Add a Title")
             .setView(titleInputLayout)
-            .setPositiveButton("Done", new DialogInterface.OnClickListener()
-            {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i)
-                {
-
-                    title = titleInput.getText().toString();
-                    if(title.equals(""))
-                        return;
-
-                    TextView label = button.findViewById(R.id.new_verse_title_label);
-                    label.setText(title);
-                    label.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19);
-                    Toast.makeText(getContext(), title, Toast.LENGTH_SHORT).show();
-                }
-            })
+            .setPositiveButton("Done", null)
+            .setNeutralButton("Remove Title", null)
             .setNegativeButton("Cancel", null)
-            .show();
+            .create();
+
+        final TextView label = button.findViewById(R.id.new_verse_title_label);
+        dialog.setOnShowListener(new DialogInterface.OnShowListener()
+        {
+            @Override
+            public void onShow(DialogInterface dialogInterface)
+            {
+                Button
+                    done = dialog.getButton(DialogInterface.BUTTON_POSITIVE),
+                    removeTitle = dialog.getButton(DialogInterface.BUTTON_NEUTRAL);
+
+                done.setTag(1);
+                removeTitle.setTag(2);
+
+                removeTitle.setVisibility(title == null? View.GONE : View.VISIBLE);
+
+                if(title != null)
+                    removeTitle.setVisibility(title.equals("")? View.GONE : View.VISIBLE);
+
+                View.OnClickListener listener = new View.OnClickListener()
+                {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onClick(View view)
+                    {
+                        switch((Integer) view.getTag())
+                        {
+                            case 1:
+
+                                title = titleInput.getEditText().getText().toString();
+                                if(title.equals(""))
+                                    titleInput.setError("Please enter a title.");
+                                else
+                                {
+                                    label.setText(title);
+                                    label.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19);
+                                    dialog.dismiss();
+                                }
+                                break;
+
+                            case 2:
+                                title = "";
+                                label.setText("Add a Title");
+                                label.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                                dialog.dismiss();
+                                break;
+                        }
+                    }
+                };
+
+                done.setOnClickListener(listener);
+                removeTitle.setOnClickListener(listener);
+            }
+        });
+        dialog.show();
+    }
+
+    private void toggleCategoriesView(final boolean toggle)
+    {
+        isChoosingCategory = toggle;
+
+        toggleHiddenView(categoriesView, toggle);
+
+        if(toggle)
+            return;
+
+        try
+        {
+            ViewSwitcher viewSwitcher = (ViewSwitcher) categoriesView.getTag();
+            boolean isSearchingCategory = (boolean) viewSwitcher.getTag();
+            if(isSearchingCategory)
+            {
+                viewSwitcher.showNext();
+                viewSwitcher.setTag(false);
+            }
+        }
+        catch (NullPointerException ignored) {}
+    }
+
+    private void toggleTagsView(final boolean toggle)
+    {
+        isSelectingTags = toggle;
+
+        toggleHiddenView(tagsView, toggle);
+
+        //TODO: change add tags button view (horizontally scrolling list of selected tags)
+    }
+
+    private void toggleNotesView(final boolean toggle)
+    {
+        isEditingNotes = toggle;
+
+        toggleHiddenView(notesView, toggle);
+
+        if(toggle)
+        {
+            notesInput.requestFocus();
+            toggleKeyboard(notesInput, true);
+        }
+        else
+            toggleKeyboard(null, false);
+
+        TextView buttonLabel = (TextView) notesView.getTag();
+        boolean notesInputIsEmpty = notesInput.getText().toString().equals("");
+        buttonLabel.setText(notesInputIsEmpty? "Add Notes" : "Edit Notes");
     }
 
     private void markAsFavorite(View button)
@@ -703,31 +930,16 @@ public class NewVerse extends Fragment implements
         favoriteLabel.setText(label);
     }
 
-    private void toggleNotesView(final boolean toggle)
+    private void toggleHiddenView(final View hiddenView, final boolean toggle)
     {
-        isEditingNotes = toggle;
-
         float translateTo = 0;
-        if(toggle)
-        {
-            TypedValue value = new TypedValue();
-            if (getActivity().getTheme().resolveAttribute(R.attr.actionBarSize, value, true))
-                translateTo = TypedValue.complexToDimensionPixelSize
-                    (value.data, getResources().getDisplayMetrics());
+        if(!toggle)
+            translateTo = screenHeight;
 
-            notesInput.requestFocus();
-            toggleKeyboard(notesInput, true);
-        }
-        else
-        {
-            translateTo = getResources().getDisplayMetrics().heightPixels;
-            toggleKeyboard(null, false);
-        }
-
-        notesView
+        hiddenView
             .animate()
             .y(translateTo)
-            .setDuration(500)
+            .setDuration(600)
             .setInterpolator(new DecelerateInterpolator(3))
             .setListener(new Animator.AnimatorListener()
             {
@@ -735,24 +947,20 @@ public class NewVerse extends Fragment implements
                 public void onAnimationStart(Animator animator)
                 {
                     if(toggle)
-                        notesView.setVisibility(View.VISIBLE);
+                        hiddenView.setVisibility(View.VISIBLE);
                 }
 
                 @Override
                 public void onAnimationEnd(Animator animator)
                 {
                     if(!toggle)
-                        notesView.setVisibility(View.GONE);
+                        hiddenView.setVisibility(View.GONE);
                 }
 
                 @Override public void onAnimationCancel(Animator animator) {}
                 @Override public void onAnimationRepeat(Animator animator) {}
             })
             .start();
-
-        TextView buttonLabel = (TextView) notesView.getTag();
-        boolean notesInputIsEmpty = notesInput.getText().toString().equals("");
-        buttonLabel.setText(notesInputIsEmpty? "Add Notes" : "Edit Notes");
     }
 
     //When user presses Done button
@@ -785,6 +993,8 @@ public class NewVerse extends Fragment implements
         if(!citationValidated || !verseTextValidated)
             return;
 
+//        d_showVerseDetails();
+
         new AlertDialog.Builder(getContext())
             .setTitle("Save this verse?")
             .setMessage("Are you done adding details about this verse?")
@@ -795,13 +1005,15 @@ public class NewVerse extends Fragment implements
                 {
                     Verse verse = new Verse();
                     verse.setId(UUID.randomUUID().toString());
-                    verse.setCitation(citation);
-                    verse.setText(verseText);
-                    verse.setCategory("category");
-                    verse.setTags(new String[]{ "tag1", "tag2", "tag3" });
+                    verse.setVerse(citation);
+                    verse.setVerseText(verseText);
+                    verse.setTags(new String[] { "tag1", "tag2", "tag3" });
                     verse.setTitle(title);
                     verse.setNotes(notes);
                     verse.setFavorited(isFavorite);
+
+                    if(category != null)
+                        verse.setCategoryName(category.getId());
 
                     ((MainActivity) getActivity()).saveVerse(verse);
                     getActivity().getSupportFragmentManager().popBackStack();
@@ -937,8 +1149,130 @@ public class NewVerse extends Fragment implements
         else inputManager.hideSoftInputFromWindow(windowToken, 0);
     }
 
-    private void showSnackbar(String message)
+    //FOR DEBUGGING ONLY
+    private void d_showVerseDetails()
     {
-        Snackbar.make(parent, message, Snackbar.LENGTH_SHORT).show();
+        final String
+            citation = this.citation.getText().toString(),
+            verseText = this.verseText.getText().toString(),
+            notes = notesInput.getText().toString();
+
+        boolean citationValidated = !citation.equals("");
+        TextInputLayout citationParent = (TextInputLayout) this.citation.getTag();
+        if(citationValidated)
+        {
+            citationValidated = citationIsValid(citation);
+            if(citationValidated)
+                citationParent.setErrorEnabled(false);
+            else
+                citationParent.setError("This is not a correct verse citation");
+        }
+        else
+            citationParent.setError("Please enter the verse citation");
+
+        boolean verseTextValidated = !verseText.equals("");
+        if(verseTextValidated)
+            this.verseText.setError(null);
+        else
+            this.verseText.setError("Please enter the verse text");
+
+        if(!citationValidated || !verseTextValidated)
+            return;
+
+        String categoryName;
+        if(category != null)
+            categoryName = category.getName();
+        else categoryName = "No Category";
+
+        Verse verse = new Verse();
+        verse.setVerse(citation);
+        verse.setVerseText(verseText);
+        verse.setCategoryName(categoryName);
+        verse.setTags(new String[] { "tag1", "tag2", "tag3" });
+        verse.setTitle(title);
+        verse.setNotes(notes);
+        verse.setFavorited(isFavorite);
+
+        String message =
+            "Citation: " + citation + "\n" +
+            "Verse Text: " + verseText + "\n" +
+            "Category: " + categoryName + "\n" +
+            "Title: " + title + "\n" +
+            "Notes: " + notes + "\n" +
+            "Marked as favorite: " + isFavorite;
+
+        new AlertDialog.Builder(getContext())
+            .setTitle("Verse Details")
+            .setMessage(message)
+            .setPositiveButton("Done", null)
+            .show();
+    }
+
+    //OnTouchListener that moves/swipes view
+    private class SwipeTouchListener implements View.OnTouchListener
+    {
+        private View viewToMove;
+
+        SwipeTouchListener(View viewToMove)
+        {
+            this.viewToMove = viewToMove;
+        }
+
+        private float downY, previousY, fromY;
+        private boolean closed;
+
+        @Override
+        public boolean onTouch(View view, MotionEvent event)
+        {
+            switch (event.getAction())
+            {
+                case MotionEvent.ACTION_DOWN:
+                    if(view instanceof EditText)
+                    {
+                        view.requestFocus();
+                        toggleKeyboard(view, true);
+                    }
+
+                    downY = event.getRawY();
+                    previousY = downY;
+                    fromY = viewToMove.getY();
+                    break;
+
+                case MotionEvent.ACTION_MOVE:
+                    float rawY = event.getRawY();
+                    closed = rawY < previousY;
+                    previousY = rawY;
+
+                    float y = event.getRawY() - downY;
+                    float newPosition = fromY + y;
+
+                    TypedValue value = new TypedValue();
+                    if(getActivity().getTheme()
+                        .resolveAttribute(R.attr.actionBarSize, value, true))
+                    {
+                        int bound = TypedValue.complexToDimensionPixelSize
+                            (value.data, getResources().getDisplayMetrics());
+                        if(newPosition >= bound)
+                            viewToMove.animate()
+                                .y(newPosition)
+                                .setDuration(0)
+                                .start();
+                    }
+                    break;
+
+                case MotionEvent.ACTION_UP:
+                    if(downY != event.getRawY())
+                    {
+                        if(viewToMove == notesView)
+                            toggleNotesView(closed);
+                        else if(viewToMove == categoriesView)
+                            toggleCategoriesView(closed);
+                        else if(viewToMove == tagsView)
+                            toggleTagsView(closed);
+                    }
+                    break;
+            }
+            return true;
+        }
     }
 }

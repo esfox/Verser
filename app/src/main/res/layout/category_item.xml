@@ -1,33 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/category_item_height"
     android:gravity="center_vertical"
+    android:weightSum="1"
     android:padding="12dp"
-    tools:ignore="ContentDescription">
-
-    <!--<ImageView-->
-        <!--android:layout_width="@dimen/category_item_height"-->
-        <!--android:layout_height="@dimen/category_item_height"-->
-        <!--tools:src="@drawable/check"/>-->
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    tools:ignore="ContentDescription,HardcodedText">
 
     <ImageView
         android:id="@+id/category_item_icon"
-        android:layout_width="@dimen/category_item_icon_size"
-        android:layout_height="@dimen/category_item_icon_size"
-        tools:src="@drawable/tag_background"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:src="@drawable/temp_category_icon"/>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="12dp"
         android:layout_marginStart="12dp"
-        android:layout_toLeftOf="@+id/category_item_options"
-        android:layout_toStartOf="@+id/category_item_options"
-        android:layout_toRightOf="@+id/category_item_icon"
-        android:layout_toEndOf="@+id/category_item_icon"
+        android:layout_weight="1"
         android:orientation="vertical">
 
         <TextView
@@ -38,6 +33,7 @@
             tools:text="Category Name"/>
 
         <TextView
+            android:id="@+id/category_item_verse_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
@@ -49,10 +45,10 @@
         android:id="@+id/category_item_options"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
         android:padding="12dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
         android:tint="@color/textColorSecondary"
         android:src="@drawable/more"/>
 
-</RelativeLayout>
+</LinearLayout>

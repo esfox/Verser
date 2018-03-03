@@ -79,10 +79,10 @@ public class ViewVerse extends Fragment implements View.OnClickListener
                         getContext(),
                         "Title: " +
                                 "Sum Butipul Taitol" +
-//                                title.getText() +
+//                                title.getVerseText() +
                                 "\nNotes: " +
                                 "Le not" +
-//                                notes.getText() +
+//                                notes.getVerseText() +
                                 "\nTags: " +
                                 "Tag1, Tag2, Tag3",
                         Toast.LENGTH_SHORT).show();
@@ -98,13 +98,13 @@ public class ViewVerse extends Fragment implements View.OnClickListener
 
     public void setData (Verse verse)
     {
-        this.citation.setText(verse.getCitation());
-        this.text.setText(verse.getText());
-//        this.title.setText(title);
-        this.category.setText(verse.getCategory());
-//        this.notes.setText(notes);
+        this.citation.setText(verse.getVerse());
+        this.text.setText(verse.getVerseText());
+//        this.title.setVerseText(title);
+        this.category.setText(verse.getCategoryName());
+//        this.notes.setVerseText(notes);
 
-        this.favorited = verse.isFavorited();
+        this.favorited = verse.isFavorite();
         toggleStarColor();
     }
 

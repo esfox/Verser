@@ -60,6 +60,8 @@ public class DatabaseHandler extends SQLiteOpenHelper
 
     public void addEntry(Verse verse)
     {
+<<<<<<< HEAD
+=======
         ContentValues values = new ContentValues();
         values.put(COLUMN_UUID, verse.getId());
         values.put(COLUMN_TITLE, verse.getTitle());
@@ -75,8 +77,9 @@ public class DatabaseHandler extends SQLiteOpenHelper
         values.put(COLUMN_ISFAVORITE, String.valueOf(verse.isFavorite()));
         values.put(COLUMN_NOTES, verse.getNotes());
 
+>>>>>>> 00c1a9a79a533df98cf30cf01b604d2e00135020
         SQLiteDatabase database = getWritableDatabase();
-        database.insert(TABLE_ENTRIES, null, values);
+        database.insert(TABLE_ENTRIES, null, getVerseValues(verse));
         database.close();
     }
 
@@ -86,6 +89,55 @@ public class DatabaseHandler extends SQLiteOpenHelper
 //        sqLiteDatabase.rawQuery("DELETE FROM " + TABLE_ENTRIES + " WHERE " + COLUMN_TITLE + "=\""  + verseTitle + " \";", null);
 //    }
 
+<<<<<<< HEAD
+    public Verse getEntry (String id)
+    {
+        Verse verse = new Verse();
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        String query =
+                "SELECT *" +
+                " FROM " + TABLE_ENTRIES +
+                " WHERE " + COLUMN_ID + " LIKE \'%" + id + "%\'";
+
+        Cursor cursor = sqLiteDatabase.rawQuery(query, null);
+
+        if (cursor.moveToFirst())
+            verse = transferSQLtoVerse(cursor);
+
+        sqLiteDatabase.close();
+        return verse;
+    }
+
+    public void updateEntry (Verse verse)
+    {
+        getWritableDatabase().update(TABLE_ENTRIES, getVerseValues(verse),
+                "uuid=" + verse.getId(), null);
+    }
+
+    public List<Verse> search (String criteria)
+    {
+        List<Verse> verses = new ArrayList<>();
+
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        String query = "SELECT *" +
+                " FROM " + TABLE_ENTRIES +
+                " WHERE " +
+                COLUMN_UUID + " + " +
+                COLUMN_CITATION + " + " +
+                COLUMN_TITLE + " + " +
+                COLUMN_CATEGORY + " + " +
+                COLUMN_TAGS + " + " +
+                " LIKE \'%" + criteria + "%\'";
+
+        Cursor cursor = sqLiteDatabase.rawQuery(query, null);
+
+        while(cursor.moveToNext())
+            verses.add(transferSQLtoVerse(cursor));
+
+        sqLiteDatabase.close();
+        return verses;
+    }
+=======
 //    public Verse getEntry(String id)
 //    {
 //        Verse verse = new Verse();
@@ -128,6 +180,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
 //        sqLiteDatabase.close();
 //        return verses;
 //    }
+>>>>>>> 00c1a9a79a533df98cf30cf01b604d2e00135020
 
     public List<Verse> getAllEntries()
     {
@@ -144,16 +197,23 @@ public class DatabaseHandler extends SQLiteOpenHelper
         return verses;
     }
 
+<<<<<<< HEAD
+    public void clearEntriesTable()
+=======
     public void updateEntry()
+>>>>>>> 00c1a9a79a533df98cf30cf01b604d2e00135020
     {
-
+        getWritableDatabase().delete(TABLE_ENTRIES, null, null);
     }
 
+<<<<<<< HEAD
+=======
     public void clearEntriesTable()
     {
         getWritableDatabase().delete(TABLE_ENTRIES, null, null);
     }
 
+>>>>>>> 00c1a9a79a533df98cf30cf01b604d2e00135020
     private Verse transferSQLtoVerse(Cursor cursor)
     {
         Verse verse = new Verse();
@@ -172,6 +232,26 @@ public class DatabaseHandler extends SQLiteOpenHelper
         verse.setNotes(cursor.getString(cursor.getColumnIndex(COLUMN_NOTES)));
 
         return verse;
+    }
+
+    private ContentValues getVerseValues(Verse verse)
+    {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_UUID, verse.getId());
+        values.put(COLUMN_TITLE, verse.getTitle());
+        values.put(COLUMN_CATEGORY, verse.getCategoryName());
+        values.put(COLUMN_CITATION, verse.getVerse());
+
+        StringBuilder tags = new StringBuilder();
+        for(String tag: verse.getTags())
+            tags.append(tag).append(",");
+
+        values.put(COLUMN_TAGS, tags. toString());
+        values.put(COLUMN_VERSE_TEXT, verse.getVerseText());
+        values.put(COLUMN_ISFAVORITE, String.valueOf(verse.isFavorite()));
+        values.put(COLUMN_NOTES, verse.getNotes());
+
+        return values;
     }
 
 }

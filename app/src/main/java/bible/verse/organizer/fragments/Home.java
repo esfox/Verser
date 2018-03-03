@@ -20,12 +20,14 @@ import android.view.ViewGroup;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.List;
+import java.util.UUID;
 
 import bible.verse.organizer.MainActivity;
 import bible.verse.organizer.adapters.VersesAdapter;
 import bible.verse.organizer.interfaces.VerseWebRequestListener;
 import bible.verse.organizer.objects.Verse;
 import bible.verse.organizer.organizer.R;
+import bible.verse.organizer.utilities.DatabaseHandler;
 import bible.verse.organizer.utilities.VerseWebRequest;
 
 public class Home extends Fragment implements
@@ -237,13 +239,5 @@ public class Home extends Fragment implements
     private void snack(String message)
     {
         Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
-    }
-
-    private void ExecuteTestingGround()
-    {
-        DatabaseHandler databaseHandler = new DatabaseHandler(getContext());
-
-        List<Verse> verses = databaseHandler.getAllEntries();
-        databaseHandler.updateEntry(verses.get(2));
     }
 }

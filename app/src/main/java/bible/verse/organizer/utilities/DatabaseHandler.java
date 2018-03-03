@@ -19,7 +19,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
     private static final String TABLE_ENTRIES = "entries";
     private static final String COLUMN_ID = "_id";
     private static final String COLUMN_UUID = "uuid";
-    private static final String COLUMN_CITATION = "verse";
+    private static final String COLUMN_VERSE = "verse";
     private static final String COLUMN_VERSE_TEXT = "verse_text";
     private static final String COLUMN_CATEGORY = "category";
     private static final String COLUMN_TAGS = "tags";
@@ -40,7 +40,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
         String query = "CREATE TABLE " + TABLE_ENTRIES + "(" +
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 COLUMN_UUID + " TEXT, " +
-                COLUMN_CITATION + " TEXT, " +
+                COLUMN_VERSE + " TEXT, " +
                 COLUMN_VERSE_TEXT + " TEXT," +
                 COLUMN_CATEGORY + " TEXT," +
                 COLUMN_TAGS + " TEXT," +
@@ -60,62 +60,61 @@ public class DatabaseHandler extends SQLiteOpenHelper
 
     public void addEntry(Verse verse)
     {
-        SQLiteDatabase database = getWritableDatabase();
-        database.insert(TABLE_ENTRIES, null, getVerseValues(verse));
-        database.close();
+        getWritableDatabase().insert(TABLE_ENTRIES, null, getVerseValues(verse));
+        getWritableDatabase().close();
     }
 
-//    public void deleteEntry(String verseTitle)
-//    {
-//        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
-//        sqLiteDatabase.rawQuery("DELETE FROM " + TABLE_ENTRIES + " WHERE " + COLUMN_TITLE + "=\""  + verseTitle + " \";", null);
-//    }
+    public void deleteEntry(Verse verse)
+    {
+        getWritableDatabase().delete(TABLE_ENTRIES,
+                COLUMN_UUID + "=?", new String[] {verse.getId()});
+        getWritableDatabase().close();
+    }
 
     public Verse getEntry (String id)
     {
         Verse verse = new Verse();
-        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         String query =
                 "SELECT *" +
                 " FROM " + TABLE_ENTRIES +
                 " WHERE " + COLUMN_UUID + " LIKE \'%" + id + "%\'";
 
-        Cursor cursor = sqLiteDatabase.rawQuery(query, null);
+        Cursor cursor = getWritableDatabase().rawQuery(query, null);
 
         if (cursor.moveToFirst())
             verse = transferSQLtoVerse(cursor);
 
-        sqLiteDatabase.close();
+        getWritableDatabase().close();
         return verse;
     }
 
     public void updateEntry (Verse verse)
     {
         getWritableDatabase().update(TABLE_ENTRIES, getVerseValues(verse),
-                "uuid=" + verse.getId(), null);
+                COLUMN_UUID + "=?", new String[] {verse.getId()});
+        getWritableDatabase().close();
     }
 
     public List<Verse> search (String criteria)
     {
         List<Verse> verses = new ArrayList<>();
 
-        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         String query = "SELECT *" +
                 " FROM " + TABLE_ENTRIES +
                 " WHERE " +
                 COLUMN_UUID + " + " +
-                COLUMN_CITATION + " + " +
+                COLUMN_VERSE + " + " +
                 COLUMN_TITLE + " + " +
                 COLUMN_CATEGORY + " + " +
                 COLUMN_TAGS + " + " +
                 " LIKE \'%" + criteria + "%\'";
 
-        Cursor cursor = sqLiteDatabase.rawQuery(query, null);
+        Cursor cursor = getWritableDatabase().rawQuery(query, null);
 
         while(cursor.moveToNext())
             verses.add(transferSQLtoVerse(cursor));
 
-        sqLiteDatabase.close();
+        getWritableDatabase().close();
         return verses;
     }
 
@@ -123,14 +122,14 @@ public class DatabaseHandler extends SQLiteOpenHelper
     {
         List<Verse> verses = new ArrayList<>();
 
-        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         String query = "SELECT * FROM " + TABLE_ENTRIES;
 
-        Cursor cursor = sqLiteDatabase.rawQuery(query, null);
+        Cursor cursor = getWritableDatabase().rawQuery(query, null);
 
         while(cursor.moveToNext())
             verses.add(transferSQLtoVerse(cursor));
 
+        getWritableDatabase().close();
         return verses;
     }
 
@@ -145,7 +144,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
 
         verse.setId(cursor.getString(cursor.getColumnIndex(COLUMN_UUID)));
         verse.setTitle(cursor.getString(cursor.getColumnIndex(COLUMN_TITLE)));
-        verse.setVerse(cursor.getString(cursor.getColumnIndex(COLUMN_CITATION)));
+        verse.setVerse(cursor.getString(cursor.getColumnIndex(COLUMN_VERSE)));
         verse.setCategoryName(cursor.getString(cursor.getColumnIndex(COLUMN_CATEGORY)));
 
         String tagString = cursor.getString(cursor.getColumnIndex(COLUMN_TAGS));
@@ -165,7 +164,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
         values.put(COLUMN_UUID, verse.getId());
         values.put(COLUMN_TITLE, verse.getTitle());
         values.put(COLUMN_CATEGORY, verse.getCategoryName());
-        values.put(COLUMN_CITATION, verse.getVerse());
+        values.put(COLUMN_VERSE, verse.getVerse());
 
         StringBuilder tags = new StringBuilder();
         for(String tag: verse.getTags())

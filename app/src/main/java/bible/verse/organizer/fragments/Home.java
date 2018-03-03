@@ -19,8 +19,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
 import bible.verse.organizer.MainActivity;
 import bible.verse.organizer.adapters.VersesAdapter;
+import bible.verse.organizer.objects.Verse;
 import bible.verse.organizer.organizer.R;
 import bible.verse.organizer.utilities.DatabaseHandler;
 
@@ -170,5 +173,13 @@ public class Home extends Fragment
     private void snack(String message)
     {
         Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
+    }
+
+    private void ExecuteTestingGround()
+    {
+        DatabaseHandler databaseHandler = new DatabaseHandler(getContext());
+
+        List<Verse> verses = databaseHandler.getAllEntries();
+        databaseHandler.updateEntry(verses.get(2));
     }
 }

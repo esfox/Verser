@@ -107,7 +107,7 @@ public class NewVerse extends Fragment implements
         and number of verses are parsed only when a chapter is selected.
     */
     private JSONArray booksArray;
-    private JSONObject chaptersObjects;
+    private JSONObject chaptersObject;
 
     //Fields of data needed that should be fields
     private String title;
@@ -251,7 +251,6 @@ public class NewVerse extends Fragment implements
     {
         citation = layout.findViewById(R.id.new_verse_citation_input);
         citation.setTag(layout.findViewById(R.id.new_verse_citation));
-
         citation.setKeyListener(null);
         citation.setOnFocusChangeListener(new View.OnFocusChangeListener()
         {
@@ -1081,10 +1080,10 @@ public class NewVerse extends Fragment implements
                     JSONObject bookObjects = booksArray.getJSONObject(i);
                     if(bookObjects.keys().next().equals(selectedBook))
                     {
-                        chaptersObjects = bookObjects
+                        chaptersObject = bookObjects
                             .getJSONObject(selectedBook);
 
-                        Iterator<String> keys = chaptersObjects.keys();
+                        Iterator<String> keys = chaptersObject.keys();
                         int length = 0;
                         while(keys.hasNext())
                         {
@@ -1106,13 +1105,13 @@ public class NewVerse extends Fragment implements
     //Load (parse) verses for seleted chapter
     private void loadVersesForChapter()
     {
-        if(chaptersObjects != null)
+        if(chaptersObject != null)
         {
             List<Integer> verses = new ArrayList<>();
 
             try
             {
-                int length = chaptersObjects.getInt(selectedChapter);
+                int length = chaptersObject.getInt(selectedChapter);
 
                 for(int i = 1; i <= length; i++)
                     verses.add(i);

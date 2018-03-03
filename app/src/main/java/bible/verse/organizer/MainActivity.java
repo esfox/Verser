@@ -32,6 +32,8 @@ public class MainActivity extends AppCompatActivity
     //    private DataStorage dataStorage;
     private DatabaseHandler databaseHandler;
 
+    private List<Verse> verses;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -64,9 +66,9 @@ public class MainActivity extends AppCompatActivity
         Snackbar.make(parent, "Verse has been saved!", Snackbar.LENGTH_SHORT).show();
     }
 
-    public void showDatabaseContents()
+    public void loadVerses()
     {
-        List<Verse> verses = databaseHandler.getAllEntries();
+        verses = databaseHandler.getAllEntries();
 
         String message = "Entry Count: " + String.valueOf(verses.size()) + "\n\n";
 
@@ -93,6 +95,11 @@ public class MainActivity extends AppCompatActivity
             .setMessage(message)
             .setPositiveButton("Done", null)
             .show();
+    }
+
+    public List<Verse> getVerses()
+    {
+        return verses;
     }
 
     public void d_clearDatabase()

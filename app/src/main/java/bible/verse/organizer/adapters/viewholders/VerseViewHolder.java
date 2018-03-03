@@ -32,7 +32,7 @@ public class VerseViewHolder extends RecyclerView.ViewHolder implements
 
         verseCitation.setText(verse.getVerse());
         verseText.setText(verse.getVerseText());
-        category.setText(verse.getCategoryName());
+//        category.setText(verse.getCategoryName());
     }
 
     @Override

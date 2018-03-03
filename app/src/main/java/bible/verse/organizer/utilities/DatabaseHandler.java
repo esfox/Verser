@@ -204,6 +204,8 @@ public class DatabaseHandler extends SQLiteOpenHelper
         verse.setId(cursor.getString(cursor.getColumnIndex(COLUMN_UUID)));
         verse.setTitle(cursor.getString(cursor.getColumnIndex(COLUMN_TITLE)));
         verse.setVerse(cursor.getString(cursor.getColumnIndex(COLUMN_CITATION)));
+
+        //TODO: Get category name by id
         verse.setCategoryName(cursor.getString(cursor.getColumnIndex(COLUMN_CATEGORY)));
 
         String tagString = cursor.getString(cursor.getColumnIndex(COLUMN_TAGS));

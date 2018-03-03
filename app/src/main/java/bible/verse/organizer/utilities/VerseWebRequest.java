@@ -3,6 +3,10 @@ package bible.verse.organizer.utilities;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,6 +16,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import bible.verse.organizer.interfaces.VerseWebRequestListener;
+import bible.verse.organizer.objects.Verse;
 
 
 public class VerseWebRequest extends AsyncTask<String, String, String>
@@ -60,6 +65,35 @@ public class VerseWebRequest extends AsyncTask<String, String, String>
     protected void onPostExecute(String response)
     {
         super.onPostExecute(response);
-        listener.onRequestResponse(response);
+
+        String
+            book,
+            chapter,
+            verse,
+            verseCitation,
+            verseText;
+
+        JSONObject verseJsonObject;
+        try
+        {
+            verseJsonObject = new JSONArray(response)
+                    .getJSONObject(0);
+
+            book = verseJsonObject.getString("bookname");
+            chapter = verseJsonObject.getString("chapter");
+            verse = verseJsonObject.getString("verse");
+            verseCitation = book + " " + chapter + ":" + verse;
+            verseText = verseJsonObject.getString("text");
+
+            Verse verseObject = new Verse();
+            verseObject.setVerse(verseCitation);
+            verseObject.setVerseText(verseText);
+
+            listener.onRequestResponse(verseObject);
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
     }
 }

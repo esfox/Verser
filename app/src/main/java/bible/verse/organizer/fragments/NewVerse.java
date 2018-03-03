@@ -37,6 +37,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
@@ -58,14 +59,17 @@ import bible.verse.organizer.adapters.CategoriesAdapter;
 import bible.verse.organizer.adapters.VerseIndexPageAdapter;
 import bible.verse.organizer.interfaces.CategoriesListItemListener;
 import bible.verse.organizer.interfaces.OnBackPressListener;
+import bible.verse.organizer.interfaces.VerseWebRequestListener;
 import bible.verse.organizer.objects.Category;
 import bible.verse.organizer.objects.Verse;
 import bible.verse.organizer.organizer.R;
+import bible.verse.organizer.utilities.VerseWebRequest;
 
 //TODO: Tags implementation
 public class NewVerse extends Fragment implements
     View.OnClickListener,
-    OnBackPressListener
+    OnBackPressListener,
+    VerseWebRequestListener
 {
     //Fields of views where data is taken from
     private EditText
@@ -81,6 +85,8 @@ public class NewVerse extends Fragment implements
         notesView,
         categoriesView,
         tagsView;
+
+    private ProgressBar verseTextProgressBar;
 
     //Screen height (set hidden views y position to this to make them hidden)
     private float screenHeight;
@@ -246,6 +252,13 @@ public class NewVerse extends Fragment implements
         return true;
     }
 
+    @Override
+    public void onRequestResponse(Verse verse)
+    {
+        verseTextProgressBar.setVisibility(View.GONE);
+        verseText.setText(verse.getVerseText());
+    }
+
     //Setup verse citation and verse text EditTexts
     private void setupInputFields(View layout)
     {
@@ -265,12 +278,23 @@ public class NewVerse extends Fragment implements
             }
         });
 
+        citation.setOnLongClickListener(new View.OnLongClickListener()
+        {
+            @Override
+            public boolean onLongClick(View view)
+            {
+                requestVerse();
+                return true;
+            }
+        });
+
         /*
             TODO: Add smart functionality where if a valid verse citation
             (RegEx - "(\d\s)?([a-zA-Z]+\s*){1,3}\s\d{1,3}:\d{1,3}") is included
             in the text, parse it and assign it to citation EditText.
          */
         verseText = layout.findViewById(R.id.new_verse_text_input);
+        verseTextProgressBar = layout.findViewById(R.id.new_verse_text_progress_bar);
 
         TextWatcher textWatcher = new TextWatcher()
         {
@@ -497,6 +521,7 @@ public class NewVerse extends Fragment implements
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
             {
 
+                toggleKeyboard(bookSearch, false);
                 String bookItem = adapterView.getItemAtPosition(i).toString();
                 citation.setText("");
                 citation.append(bookItem);
@@ -541,6 +566,8 @@ public class NewVerse extends Fragment implements
 
         chapterGrid.setOnItemClickListener(numberGridClickListener);
         versesGrid.setOnItemClickListener(numberGridClickListener);
+
+        //TODO: Multiple verses
     }
 
     //Setup layout for selecting category
@@ -1120,6 +1147,18 @@ public class NewVerse extends Fragment implements
 
             this.verses = verses.size();
         }
+    }
+
+    private void requestVerse()
+    {
+        String citationString = citation.getText().toString();
+        if(citationString.equals(""))
+            return;
+
+        verseTextProgressBar.setVisibility(View.VISIBLE);
+        String url = "http://labs.bible.org/api/?type=json&formatting=plain&passage="
+                + citationString.replaceAll(" ", "%20");
+        new VerseWebRequest(NewVerse.this).execute(url);
     }
 
     //Check if citation is valid citation

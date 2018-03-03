@@ -16,18 +16,12 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 import java.util.List;
-import java.util.UUID;
-
 import bible.verse.organizer.MainActivity;
 import bible.verse.organizer.adapters.VersesAdapter;
 import bible.verse.organizer.interfaces.VerseWebRequestListener;
 import bible.verse.organizer.objects.Verse;
 import bible.verse.organizer.organizer.R;
-import bible.verse.organizer.utilities.DatabaseHandler;
 import bible.verse.organizer.utilities.VerseWebRequest;
 
 public class Home extends Fragment implements
@@ -38,15 +32,19 @@ public class Home extends Fragment implements
     private RecyclerView versesList;
 
     private static final String verseOfTheDayURL =
-            "https://beta.ourmanna.com/api/v1/get/?format=json";
+            "http://labs.bible.org/api/?passage=votd&type=json&formatting=plain";
+
+    private static Verse verseOfTheDay = null;
 
     public Home() {}
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater,
+                             @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
-        new VerseWebRequest(this).execute(verseOfTheDayURL);
+        if(verseOfTheDay == null)
+            new VerseWebRequest(this).execute(verseOfTheDayURL);
 
         View layout = inflater.inflate(R.layout.fragment_home, container, false);
 
@@ -71,37 +69,16 @@ public class Home extends Fragment implements
                 break;
 
             case R.id.debug_show_database_contents:
-                ((MainActivity) getActivity()).loadVerses();
+                ((MainActivity) getActivity()).d_showVerses();
                 break;
         }
     }
 
     @Override
-    public void onRequestResponse(String response)
+    public void onRequestResponse(Verse verse)
     {
-        String
-            verse = "",
-            verseText = "";
-        JSONObject verseObject;
-        try
-        {
-            verseObject = new JSONObject(response)
-                    .getJSONObject("verse")
-                    .getJSONObject("details");
-
-            verse = verseObject.getString("reference");
-            verseText = verseObject.getString("text");
-        }
-        catch (JSONException e)
-        {
-            e.printStackTrace();
-        }
-
-        Verse verseOfTheDay = new Verse();
-        verseOfTheDay.setVerse(verse);
-        verseOfTheDay.setVerseText(verseText);
-        versesAdapter.showVerseOfTheDay(verseOfTheDay);
-        versesList.smoothScrollToPosition(versesAdapter.getItemCount() - 1);
+        verseOfTheDay = verse;
+        showVerseOfTheDay();
     }
 
     private void setupToolbarAndDrawer(View layout)
@@ -187,7 +164,8 @@ public class Home extends Fragment implements
         versesAdapter = new VersesAdapter();
         versesList.setAdapter(versesAdapter);
 
-        updateVersesList();
+        if(verseOfTheDay != null)
+            showVerseOfTheDay();
 
         versesList.post(new Runnable()
         {
@@ -197,6 +175,8 @@ public class Home extends Fragment implements
                 versesList.scrollToPosition(versesAdapter.getItemCount() - 1);
             }
         });
+
+        updateVersesList();
     }
 
     private void updateVersesList()
@@ -208,6 +188,12 @@ public class Home extends Fragment implements
 
         for(Verse verse : verses)
             versesAdapter.addVerse(verse);
+    }
+
+    private void showVerseOfTheDay()
+    {
+        versesAdapter.showVerseOfTheDay(verseOfTheDay);
+        versesList.smoothScrollToPosition(versesAdapter.getItemCount() - 1);
     }
 
     private void newVerse()

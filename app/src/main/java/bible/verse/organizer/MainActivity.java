@@ -2,7 +2,6 @@ package bible.verse.organizer;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
@@ -10,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import java.util.List;
@@ -26,9 +24,6 @@ import bible.verse.organizer.utilities.DatabaseHandler;
 
 public class MainActivity extends AppCompatActivity
 {
-    //Parent view for Snackbars
-    private View parent;
-
     //    private DataStorage dataStorage;
     private DatabaseHandler databaseHandler;
 
@@ -39,8 +34,6 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        parent = findViewById(R.id.parent_layout);
 
 //        dataStorage = new DataStorage(this);
 
@@ -63,42 +56,48 @@ public class MainActivity extends AppCompatActivity
     {
         databaseHandler.addEntry(verse);
         Log.i("Database", "Verse has been saved in database.");
-        Snackbar.make(parent, "Verse has been saved!", Snackbar.LENGTH_SHORT).show();
+        Toast.makeText(this, "Verse has been saved!", Toast.LENGTH_SHORT).show();
     }
 
     public void loadVerses()
     {
         verses = databaseHandler.getAllEntries();
+    }
+
+    public void d_showVerses()
+    {
+        loadVerses();
 
         String message = "Entry Count: " + String.valueOf(verses.size()) + "\n\n";
 
         for (Verse verse : verses)
         {
             message +=
-                "ID: " + verse.getId() + "\n" +
-                    verse.getVerse() + "\n" +
-                    verse.getVerseText() + "\n" +
-                    "Category: " + verse.getCategoryName() + "\n" +
-                    "Tags: ";
+                    "ID: " + verse.getId() + "\n" +
+                            verse.getVerse() + "\n" +
+                            verse.getVerseText() + "\n" +
+                            "Category: " + verse.getCategoryName() + "\n" +
+                            "Tags: ";
 
             for (String tag : verse.getTags())
                 message += tag + ", ";
 
             message += "\n" +
-                "Title: " + verse.getTitle() + "\n" +
-                "Notes: " + verse.getNotes() + "\n" +
-                "Is Favorite: " + verse.isFavorite() + "\n\n\n";
+                    "Title: " + verse.getTitle() + "\n" +
+                    "Notes: " + verse.getNotes() + "\n" +
+                    "Is Favorite: " + verse.isFavorite() + "\n\n\n";
         }
 
         new AlertDialog.Builder(this)
-            .setTitle("Database Contents")
-            .setMessage(message)
-            .setPositiveButton("Done", null)
-            .show();
+                .setTitle("Database Contents")
+                .setMessage(message)
+                .setPositiveButton("Done", null)
+                .show();
     }
 
     public List<Verse> getVerses()
     {
+        loadVerses();
         return verses;
     }
 

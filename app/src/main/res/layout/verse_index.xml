@@ -65,7 +65,7 @@
                 android:layout_marginRight="6dp"
                 android:layout_marginEnd="6dp"
                 android:tint="@color/textColorSecondary"
-                android:src="@drawable/book"/>
+                android:src="@drawable/bible"/>
 
             <TextView
                 android:id="@+id/verse_index_book_label"

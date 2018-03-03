@@ -12,26 +12,41 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Layout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.List;
+
 import bible.verse.organizer.MainActivity;
 import bible.verse.organizer.adapters.VersesAdapter;
+import bible.verse.organizer.interfaces.VerseWebRequestListener;
+import bible.verse.organizer.objects.Verse;
 import bible.verse.organizer.organizer.R;
-import bible.verse.organizer.utilities.DatabaseHandler;
+import bible.verse.organizer.utilities.VerseWebRequest;
 
-public class Home extends Fragment
+public class Home extends Fragment implements
+        View.OnClickListener,
+        VerseWebRequestListener
 {
+    private VersesAdapter versesAdapter;
+    private RecyclerView versesList;
+
+    private static final String verseOfTheDayURL =
+            "https://beta.ourmanna.com/api/v1/get/?format=json";
+
     public Home() {}
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
+        new VerseWebRequest(this).execute(verseOfTheDayURL);
+
         View layout = inflater.inflate(R.layout.fragment_home, container, false);
 
         setupToolbarAndDrawer(layout);
@@ -39,26 +54,53 @@ public class Home extends Fragment
         setupList(layout);
 
         final FloatingActionButton newVerse = layout.findViewById(R.id.home_new_verse);
-        newVerse.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                newVerse();
-            }
-        });
-
-        layout.findViewById(R.id.debug_show_database_contents)
-                .setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                ((MainActivity) getActivity()).showDatabaseContents();
-            }
-        });
+        newVerse.setOnClickListener(this);
+        layout.findViewById(R.id.debug_show_database_contents).setOnClickListener(this);
 
         return layout;
+    }
+
+    @Override
+    public void onClick(View view)
+    {
+        switch(view.getId())
+        {
+            case R.id.home_new_verse:
+                newVerse();
+                break;
+
+            case R.id.debug_show_database_contents:
+                ((MainActivity) getActivity()).loadVerses();
+                break;
+        }
+    }
+
+    @Override
+    public void onRequestResponse(String response)
+    {
+        String
+            verse = "",
+            verseText = "";
+        JSONObject verseObject;
+        try
+        {
+            verseObject = new JSONObject(response)
+                    .getJSONObject("verse")
+                    .getJSONObject("details");
+
+            verse = verseObject.getString("reference");
+            verseText = verseObject.getString("text");
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+
+        Verse verseOfTheDay = new Verse();
+        verseOfTheDay.setVerse(verse);
+        verseOfTheDay.setVerseText(verseText);
+        versesAdapter.showVerseOfTheDay(verseOfTheDay);
+        versesList.smoothScrollToPosition(versesAdapter.getItemCount() - 1);
     }
 
     private void setupToolbarAndDrawer(View layout)
@@ -133,12 +175,38 @@ public class Home extends Fragment
 
     private void setupList(View layout)
     {
-        RecyclerView versesList = layout.findViewById(R.id.home_list);
-        versesList.setHasFixedSize(true);
-        versesList.setLayoutManager(new LinearLayoutManager(getContext()));
+        LinearLayoutManager versesListLayoutManager = new LinearLayoutManager(getContext());
+        versesListLayoutManager.setReverseLayout(true);
+        versesListLayoutManager.setStackFromEnd(true);
 
-        VersesAdapter adapter = new VersesAdapter();
-        versesList.setAdapter(adapter);
+        versesList = layout.findViewById(R.id.home_list);
+        versesList.setHasFixedSize(true);
+        versesList.setLayoutManager(versesListLayoutManager);
+
+        versesAdapter = new VersesAdapter();
+        versesList.setAdapter(versesAdapter);
+
+        updateVersesList();
+
+        versesList.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                versesList.scrollToPosition(versesAdapter.getItemCount() - 1);
+            }
+        });
+    }
+
+    private void updateVersesList()
+    {
+        List<Verse> verses = ((MainActivity) getActivity()).getVerses();
+
+        if(verses == null)
+            return;
+
+        for(Verse verse : verses)
+            versesAdapter.addVerse(verse);
     }
 
     private void newVerse()
@@ -165,7 +233,7 @@ public class Home extends Fragment
         .addToBackStack(FragmentTags.CATEGORIES)
         .commit();
     }
-    
+
     //TEMPORARY
     private void snack(String message)
     {

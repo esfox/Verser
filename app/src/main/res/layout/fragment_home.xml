@@ -24,6 +24,7 @@
                 android:layout_width="match_parent"
                 android:background="?attr/colorPrimary"
                 android:layout_height="?attr/actionBarSize"
+                app:layout_scrollFlags="scroll|enterAlways"
                 app:contentInsetStartWithNavigation="0dp"
                 app:navigationIcon="@drawable/navigation_drawer_icon"
                 app:popupTheme="@style/AppTheme.PopupOverlay"
@@ -31,13 +32,11 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <include layout="@layout/toolbar_shadow_view"/>
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/home_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="8dp"
+            android:paddingTop="6dp"
             android:paddingBottom="8dp"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
@@ -66,6 +65,8 @@
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
             app:fabSize="normal"/>
+
+        <include layout="@layout/toolbar_shadow_view"/>
 
     </android.support.design.widget.CoordinatorLayout>
 

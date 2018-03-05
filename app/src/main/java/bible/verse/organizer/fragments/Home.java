@@ -17,11 +17,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import java.util.List;
+import java.util.UUID;
+
 import bible.verse.organizer.MainActivity;
 import bible.verse.organizer.adapters.VersesAdapter;
 import bible.verse.organizer.interfaces.VerseWebRequestListener;
+import bible.verse.organizer.objects.Category;
 import bible.verse.organizer.objects.Verse;
 import bible.verse.organizer.organizer.R;
+import bible.verse.organizer.utilities.DatabaseHandler;
 import bible.verse.organizer.utilities.VerseWebRequest;
 
 public class Home extends Fragment implements

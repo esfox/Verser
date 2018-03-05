@@ -39,6 +39,7 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import org.json.JSONArray;
@@ -48,6 +49,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
@@ -63,6 +65,7 @@ import bible.verse.organizer.interfaces.VerseWebRequestListener;
 import bible.verse.organizer.objects.Category;
 import bible.verse.organizer.objects.Verse;
 import bible.verse.organizer.organizer.R;
+import bible.verse.organizer.utilities.Color;
 import bible.verse.organizer.utilities.VerseWebRequest;
 
 //TODO: Tags implementation
@@ -73,18 +76,18 @@ public class NewVerse extends Fragment implements
 {
     //Fields of views where data is taken from
     private EditText
-        citation,
-        verseText,
-        notesInput;
+            citation,
+            verseText,
+            notesInput;
 
     //Verse index drop-down
     private PopupWindow verseIndex;
 
     //Hidden views (categories, notes & tags)
     private View
-        notesView,
-        categoriesView,
-        tagsView;
+            notesView,
+            categoriesView,
+            tagsView;
 
     private ProgressBar verseTextProgressBar;
 
@@ -92,20 +95,20 @@ public class NewVerse extends Fragment implements
     private float screenHeight;
 
     private String
-        verseIndexJson,
-        selectedBook,
-        selectedChapter;
+            verseIndexJson,
+            selectedBook,
+            selectedChapter;
 
     private ArrayList<String> books;
     private int
-        chapters,
-        verses;
+            chapters,
+            verses;
 
     //Boolean fields for hidden views to capture back button
     private boolean
-        isChoosingCategory,
-        isSelectingTags,
-        isEditingNotes;
+            isChoosingCategory,
+            isSelectingTags,
+            isEditingNotes;
 
     /*
         Save JSON classes for faster parsing.
@@ -125,8 +128,8 @@ public class NewVerse extends Fragment implements
     @Nullable
     @Override
     public View onCreateView
-        (LayoutInflater inflater, @Nullable ViewGroup container,
-         @Nullable Bundle savedInstanceState)
+            (LayoutInflater inflater, @Nullable ViewGroup container,
+             @Nullable Bundle savedInstanceState)
     {
         View layout = inflater.inflate(R.layout.fragment_new_verse, container, false);
 
@@ -176,7 +179,7 @@ public class NewVerse extends Fragment implements
             };
 
         //Loop through array to assign click listeners
-        for(View button : buttons)
+        for (View button : buttons)
             button.setOnClickListener(this);
 
         //Setup layout for selecting categories
@@ -194,7 +197,7 @@ public class NewVerse extends Fragment implements
     @Override
     public void onClick(View view)
     {
-        switch(view.getId())
+        switch (view.getId())
         {
             case R.id.new_verse_citation_input:
                 showVerseIndex();
@@ -241,11 +244,11 @@ public class NewVerse extends Fragment implements
     @Override
     public boolean onBackPressed()
     {
-        if(isEditingNotes)
+        if (isEditingNotes)
             toggleNotesView(false);
-        else if(isChoosingCategory)
+        else if (isChoosingCategory)
             toggleCategoriesView(false);
-        else if(isSelectingTags)
+        else if (isSelectingTags)
             toggleTagsView(false);
         else
             cancel();
@@ -270,7 +273,7 @@ public class NewVerse extends Fragment implements
             @Override
             public void onFocusChange(View view, boolean hasFocus)
             {
-                if(hasFocus)
+                if (hasFocus)
                 {
                     toggleKeyboard(null, false);
                     citation.callOnClick();
@@ -301,17 +304,21 @@ public class NewVerse extends Fragment implements
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
             {
-                if(citation.hasFocus())
+                if (citation.hasFocus())
                     ((TextInputLayout) citation.getTag()).setErrorEnabled(false);
-                else if(verseText.hasFocus())
+                else if (verseText.hasFocus())
                     verseText.setError(null);
             }
 
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
+            }
 
             @Override
-            public void afterTextChanged(Editable editable) {}
+            public void afterTextChanged(Editable editable)
+            {
+            }
         };
 
         citation.addTextChangedListener(textWatcher);
@@ -326,7 +333,7 @@ public class NewVerse extends Fragment implements
         final View verseIndexLayout = inflater.inflate(R.layout.verse_index, null);
 
         //Initializing page buttons
-        View
+        final View
             verseIndexBook = verseIndexLayout.findViewById(R.id.verse_index_book),
             verseIndexChapter = verseIndexLayout.findViewById(R.id.verse_index_chapter),
             verseIndexVerse = verseIndexLayout.findViewById(R.id.verse_index_verse);
@@ -341,18 +348,18 @@ public class NewVerse extends Fragment implements
 
         //Initialize page button icons and labels
         final ImageView
-            bookIcon = verseIndexLayout.findViewById(R.id.verse_index_book_icon),
-            chapterIcon = verseIndexLayout.findViewById(R.id.verse_index_chapter_icon),
-            verseIcon = verseIndexLayout.findViewById(R.id.verse_index_verse_icon);
+                bookIcon = verseIndexLayout.findViewById(R.id.verse_index_book_icon),
+                chapterIcon = verseIndexLayout.findViewById(R.id.verse_index_chapter_icon),
+                verseIcon = verseIndexLayout.findViewById(R.id.verse_index_verse_icon);
 
         final TextView
-            bookLabel = verseIndexLayout.findViewById(R.id.verse_index_book_label),
-            chapterLabel = verseIndexLayout.findViewById(R.id.verse_index_chapter_label),
-            verseLabel = verseIndexLayout.findViewById(R.id.verse_index_verse_label);
+                bookLabel = verseIndexLayout.findViewById(R.id.verse_index_book_label),
+                chapterLabel = verseIndexLayout.findViewById(R.id.verse_index_chapter_label),
+                verseLabel = verseIndexLayout.findViewById(R.id.verse_index_verse_label);
 
         //Make array of page button icons and labels
-        final ImageView[] icons = new ImageView[] { bookIcon, chapterIcon, verseIcon };
-        final TextView[] labels = new TextView[] { bookLabel, chapterLabel, verseLabel };
+        final ImageView[] icons = new ImageView[]{bookIcon, chapterIcon, verseIcon};
+        final TextView[] labels = new TextView[]{bookLabel, chapterLabel, verseLabel};
 
         //Initialize book search EditText on book selection page
         final EditText bookSearch = verseIndexLayout.findViewById(R.id.verse_index_books_search);
@@ -378,7 +385,7 @@ public class NewVerse extends Fragment implements
 
         //Initialize ViewPager for verse index
         final ViewPager verseIndexViewPager =
-            verseIndexLayout.findViewById(R.id.verse_index_view_pager);
+                verseIndexLayout.findViewById(R.id.verse_index_view_pager);
         verseIndexViewPager.setOffscreenPageLimit(2);
 
         //Initializing of verse index pages
@@ -397,7 +404,7 @@ public class NewVerse extends Fragment implements
 
         //Adding each page to ViewPager adapter
         VerseIndexPageAdapter pagerAdapter = new VerseIndexPageAdapter();
-        for(View pageLayout : pageLayouts)
+        for (View pageLayout : pageLayouts)
             pagerAdapter.addPage(pageLayout);
         verseIndexViewPager.setAdapter(pagerAdapter);
 
@@ -409,8 +416,8 @@ public class NewVerse extends Fragment implements
 
         //Colors for the states of the page buttons (buttons on bottom)
         final int
-            activeColor = ContextCompat.getColor(getContext(), R.color.colorAccent),
-            normalColor = ContextCompat.getColor(getContext(), R.color.textColorSecondary);
+            activeColor = Color.getColor(getContext(), R.attr.colorAccent),
+            normalColor = Color.getColor(getContext(), android.R.attr.textColorSecondary);
 
         //Set book button to selected state (active color)
         icons[0].setColorFilter(activeColor, PorterDuff.Mode.SRC_ATOP);
@@ -425,7 +432,7 @@ public class NewVerse extends Fragment implements
                 toggleVerseIndexPageButtonState(icons, labels, page, activeColor, normalColor);
 
                 //Reset book search when going back to book selection page
-                if(page == BOOK_SELECTION)
+                if (page == BOOK_SELECTION)
                     bookSearch.setText("");
                 else
                     toggleKeyboard(null, false);
@@ -435,20 +442,25 @@ public class NewVerse extends Fragment implements
                     what is currently being selected (if chapter or verse).
                  */
                 boolean isInChapterSelection = false;
-                if(page == CHAPTER_SELECTION)
+                if (page == CHAPTER_SELECTION)
                     isInChapterSelection = true;
-                else if(page == VERSE_SELECTION)
+                else if (page == VERSE_SELECTION)
                     isInChapterSelection = false;
 
                 //Update ViewPager's boolean tag
                 verseIndexViewPager.setTag(isInChapterSelection);
-             }
+            }
 
             @Override
             public void onPageScrolled
-                (int position, float positionOffset, int positionOffsetPixels) {}
+                    (int position, float positionOffset, int positionOffsetPixels)
+            {
+            }
+
             @Override
-            public void onPageScrollStateChanged(int state) {}
+            public void onPageScrollStateChanged(int state)
+            {
+            }
         });
 
         //Change ViewPager current page on page button clicks
@@ -481,12 +493,12 @@ public class NewVerse extends Fragment implements
         };
 
         //Assign Click Listener for page buttons
-        for(View verseIndexPageButton : verseIndexPageButtons)
+        for (View verseIndexPageButton : verseIndexPageButtons)
             verseIndexPageButton.setOnClickListener(clickListener);
 
         //Initialize books list adapter
         final ArrayAdapter<String> booksAdapter = new ArrayAdapter<>
-            (getContext(), R.layout.verse_index_books_item, R.id.verse_index_books_item, books);
+                (getContext(), R.layout.verse_index_books_item, R.id.verse_index_books_item, books);
 
         //Add search functionality to adapter
         bookSearch.addTextChangedListener(new TextWatcher()
@@ -498,19 +510,26 @@ public class NewVerse extends Fragment implements
             }
 
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
+            }
 
             @Override
-            public void afterTextChanged(Editable editable) {}
+            public void afterTextChanged(Editable editable)
+            {
+            }
         });
 
         //Initialize numbers grid in drop down (chapters/verses)
         final GridView
-            chapterGrid = verseIndexLayout.findViewById(R.id.verse_index_chapters_grid),
-            versesGrid = verseIndexLayout.findViewById(R.id.verse_index_verses_grid);
+                chapterGrid = verseIndexLayout.findViewById(R.id.verse_index_chapters_grid),
+                versesGrid = verseIndexLayout.findViewById(R.id.verse_index_verses_grid);
         final TextView
-            chaptersWarning = verseIndexLayout.findViewById(R.id.verse_index_chapters_warning),
-            versesWarning = verseIndexLayout.findViewById(R.id.verse_index_verses_warning);
+                chaptersWarning = verseIndexLayout.findViewById(R.id.verse_index_chapters_warning),
+                versesWarning = verseIndexLayout.findViewById(R.id.verse_index_verses_warning);
+        final Button
+            versesDoneButton = verseIndexLayout.findViewById(R.id.verse_index_verses_done),
+            versesClearButton = verseIndexLayout.findViewById(R.id.verse_index_verses_clear);
 
         //Initialize books list and its adapter
         ListView booksList = verseIndexLayout.findViewById(R.id.verse_index_books_list);
@@ -532,6 +551,16 @@ public class NewVerse extends Fragment implements
             }
         });
 
+        //List for storing selected verses
+        final List<Integer> selectedVerses = new ArrayList<>();
+
+        //Colors for item states
+        final int
+            itemNormalColor = Color.getColor(getContext(), android.R.color.transparent),
+            itemSelectedColor = Color.getColor(getContext(), R.attr.colorAccent),
+            textColorSecondary = Color.getColor(getContext(), android.R.attr.textColorSecondary),
+            textColorLight= Color.getColor(getContext(), R.attr.textColorLight);
+
         //Setup adapter on item click listener
         AdapterView.OnItemClickListener numberGridClickListener =
             new AdapterView.OnItemClickListener()
@@ -539,35 +568,105 @@ public class NewVerse extends Fragment implements
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
                 {
-                    //if(has not selected selectedBook, show toast saying to select selectedBook first)
-
                     String
                         item = adapterView.getItemAtPosition(i).toString(),
-                        stringToAppend = "";
-                    stringToAppend += selectedBook + " ";
-                    if((boolean) verseIndexViewPager.getTag())
+                        stringToAppend = selectedBook + " ";
+                    if ((boolean) verseIndexViewPager.getTag())
                     {
                         stringToAppend += item + ":";
                         selectedChapter = item;
                         loadVersesForChapter();
-                        updateVerseIndexNumberGrid(versesGrid, versesWarning, verses);
                         verseIndexViewPager.setCurrentItem(VERSE_SELECTION);
+                        selectedVerses.clear();
+                        updateVerseIndexNumberGrid(versesGrid, versesWarning, verses);
+
+                        citation.setText("");
+                        citation.append(stringToAppend);
                     }
                     else
                     {
-                        stringToAppend += selectedChapter + ":" + item;
-                        verseIndex.dismiss();
-                    }
+                        TextView itemView = ((TextView) view);
+                        boolean itemIsSelected;
+                        if(itemView.getTag() == null)
+                            itemIsSelected = false;
+                        else
+                            itemIsSelected = (Boolean) itemView.getTag();
 
-                    citation.setText("");
-                    citation.append(stringToAppend);
+                        itemView.setBackgroundColor
+                            (itemIsSelected? itemNormalColor : itemSelectedColor);
+                        itemView.setTextColor
+                            (itemIsSelected? textColorSecondary : textColorLight);
+
+                        itemView.setTag(!itemIsSelected);
+
+                        int itemNumber = Integer.parseInt(item);
+                        if(!itemIsSelected)
+                            selectedVerses.add(itemNumber);
+                        else
+                            selectedVerses.remove(selectedVerses.indexOf(itemNumber));
+                    }
                 }
             };
 
         chapterGrid.setOnItemClickListener(numberGridClickListener);
         versesGrid.setOnItemClickListener(numberGridClickListener);
 
-        //TODO: Multiple verses
+        View.OnClickListener versesButtonListener = new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                String stringToAppend = selectedBook + " " + selectedChapter + ":";
+
+                switch(view.getId())
+                {
+                    case R.id.verse_index_verses_done:
+                        if(selectedVerses.isEmpty())
+                        {
+                            Toast.makeText(getContext(), "No verse selected",
+                                Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+
+                        for(int i = 0; i < selectedVerses.size(); i++)
+                            Log.d("verses", String.valueOf(selectedVerses.get(i)));
+
+                        stringToAppend += getSelectedVerses(selectedVerses);
+                        verseIndex.dismiss();
+                        break;
+
+                    case R.id.verse_index_verses_clear:
+                        selectedVerses.clear();
+                        updateVerseIndexNumberGrid(versesGrid, versesWarning, verses);
+                        break;
+                }
+
+                citation.setText("");
+                citation.append(stringToAppend);
+            }
+        };
+
+        versesDoneButton.setOnClickListener(versesButtonListener);
+        versesClearButton.setOnClickListener(versesButtonListener);
+
+        //TODO: Long press selects range of verses
+//        versesGrid.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
+//        {
+//            @Override
+//            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l)
+//            {
+//                String
+//                    item = adapterView.getItemAtPosition(i).toString(),
+//                    stringToAppend = selectedBook + " " + selectedChapter + ":" ;
+//
+//                fromVerse = item + "-";
+//                stringToAppend += fromVerse;
+//
+//                citation.setText("");
+//                citation.append(stringToAppend);
+//                return true;
+//            }
+//        });
     }
 
     //Setup layout for selecting category
@@ -945,7 +1044,7 @@ public class NewVerse extends Fragment implements
         TextView favoriteLabel = button.findViewById(R.id.new_verse_favorite_label);
 
         int favoriteColor = ContextCompat.getColor(getContext(), R.color.favoriteColor),
-            normalColor = ContextCompat.getColor(getContext(), R.color.textColorSecondary);
+            normalColor = Color.getColor(getContext(), android.R.attr.textColorSecondary);
 
         int icon = isFavorite? R.drawable.favorite : R.drawable.favorite_outlined;
         int iconTint = isFavorite? favoriteColor : normalColor;
@@ -1149,6 +1248,7 @@ public class NewVerse extends Fragment implements
         }
     }
 
+    //Getting the verse from a web api
     private void requestVerse()
     {
         String citationString = citation.getText().toString();
@@ -1157,16 +1257,53 @@ public class NewVerse extends Fragment implements
 
         verseTextProgressBar.setVisibility(View.VISIBLE);
         String url = "http://labs.bible.org/api/?type=json&formatting=plain&passage="
-                + citationString.replaceAll(" ", "%20");
+                + citationString.replaceAll("\\s", "%20");
         new VerseWebRequest(NewVerse.this).execute(url);
     }
 
     //Check if citation is valid citation
     private boolean citationIsValid(String input)
     {
-        Pattern citationPattern = Pattern.compile("^(\\d\\s)?([a-zA-Z]+)\\s(\\d{1,3}:\\d{1,2})$");
+        String verseRegex = "^(\\d\\s)?([a-zA-Z]+\\s*){1,3}(\\d{1,3}:\\d{1,3})(-\\d{1,3})?$";
+        Pattern citationPattern = Pattern.compile(verseRegex);
         Matcher citationMatcher = citationPattern.matcher(input);
         return citationMatcher.matches();
+    }
+
+    private String getSelectedVerses(List<Integer> selectedVerses)
+    {
+        Collections.sort(selectedVerses);
+
+        String selectedVersesString = "";
+        ArrayList<Integer> temp = new ArrayList<>();
+
+        for(int i = 0; i < selectedVerses.size(); i++)
+        {
+            int current = selectedVerses.get(i);
+
+            temp.add(current);
+            if(i + 1 < selectedVerses.size())
+            {
+                if(Math.abs(selectedVerses.get(i + 1) - current) == 1)
+                    continue;
+            }
+
+            if(temp.size() == 1)
+            {
+                selectedVersesString += temp.get(0) + ", ";
+                temp.clear();
+            }
+            else
+            {
+                String min = String.valueOf(Collections.min(temp));
+                String max = String.valueOf(Collections.max(temp));
+                selectedVersesString += min + "-" + max + ", ";
+                temp.clear();
+            }
+        }
+
+        selectedVersesString = selectedVersesString.replaceAll(", $", "");
+        return selectedVersesString;
     }
 
     //Method to show/hide keyboard

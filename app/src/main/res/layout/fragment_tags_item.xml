@@ -52,7 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:padding="12dp"
-        android:tint="@color/textColorSecondary"
+        android:tint="?android:attr/textColorSecondary"
         android:src="@drawable/more"/>
 
 </LinearLayout>

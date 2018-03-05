@@ -34,7 +34,7 @@
         android:id="@+id/verse_index_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/dividerColor"/>
+        android:background="?attr/dividerColor"/>
         <!--android:layout_above="@+id/verse_index_options"/>-->
 
     <LinearLayout
@@ -64,7 +64,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="6dp"
                 android:layout_marginEnd="6dp"
-                android:tint="@color/textColorSecondary"
+                android:tint="?android:attr/textColorSecondary"
                 android:src="@drawable/bible"/>
 
             <TextView
@@ -72,6 +72,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:textColor="?android:attr/textColorSecondary"
                 android:text="Book"/>
 
         </LinearLayout>
@@ -94,7 +95,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="6dp"
                 android:layout_marginEnd="6dp"
-                android:tint="@color/textColorSecondary"
+                android:tint="?android:attr/textColorSecondary"
                 android:src="@drawable/chapter"/>
 
             <TextView
@@ -102,6 +103,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:textColor="?android:attr/textColorSecondary"
                 android:text="Chapter"/>
 
         </LinearLayout>
@@ -124,7 +126,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="8dp"
                 android:layout_marginEnd="8dp"
-                android:tint="@color/textColorSecondary"
+                android:tint="?android:attr/textColorSecondary"
                 android:src="@drawable/verse"/>
 
             <TextView
@@ -132,6 +134,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:textColor="?android:attr/textColorSecondary"
                 android:text="Verse"/>
 
         </LinearLayout>

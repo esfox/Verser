@@ -2,6 +2,7 @@ package bible.verse.organizer.utilities;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -69,21 +70,32 @@ public class VerseWebRequest extends AsyncTask<String, String, String>
         String
             book,
             chapter,
-            verse,
-            verseCitation,
-            verseText;
+            verse = "",
+            verseCitation = "",
+            verseText = "";
 
-        JSONObject verseJsonObject;
+        JSONArray verseJsonArray;
         try
         {
-            verseJsonObject = new JSONArray(response)
-                    .getJSONObject(0);
+            verseJsonArray = new JSONArray(response);
 
-            book = verseJsonObject.getString("bookname");
-            chapter = verseJsonObject.getString("chapter");
-            verse = verseJsonObject.getString("verse");
-            verseCitation = book + " " + chapter + ":" + verse;
-            verseText = verseJsonObject.getString("text");
+            for(int i = 0; i < verseJsonArray.length(); i++)
+            {
+                JSONObject verseJsonObject = verseJsonArray.getJSONObject(i);
+                book = verseJsonObject.getString("bookname");
+                chapter = verseJsonObject.getString("chapter");
+
+                if(i == 0)
+                    verse += verseJsonObject.getString("verse");
+                else if(i == verseJsonArray.length() - 1)
+                    verse += "-" + verseJsonObject.getString("verse");
+
+                verseCitation = book + " " + chapter + ":" + verse;
+                verseText += verseJsonObject.getString("text");
+
+                if(!verseText.endsWith(" "))
+                    verseText += " ";
+            }
 
             Verse verseObject = new Verse();
             verseObject.setVerse(verseCitation);

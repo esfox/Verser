@@ -25,7 +25,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorBackground">
+        android:background="?attr/backgroundColor">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/new_verse_tags_toolbar"
@@ -55,13 +55,13 @@
                 android:layout_marginEnd="4dp"
                 android:gravity="center_vertical"
                 android:textAppearance="@style/TextAppearance.AppCompat.Button"
-                android:textColor="@color/textColorSecondary"
+                android:textColor="?android:attr/textColorSecondary"
                 android:text="Clear Tags"/>
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:tint="@color/textColorSecondary"
+                android:tint="?android:attr/textColorSecondary"
                 android:src="@drawable/close"
                 tools:ignore="ContentDescription"/>
 
@@ -72,11 +72,11 @@
             android:layout_height="match_parent"
             android:layout_above="@+id/new_verse_tags_indicator"
             android:layout_below="@+id/new_verse_tags_toolbar"
-            android:background="@color/colorPrimary"
+            android:background="?attr/colorPrimary"
             android:gravity="center"
             android:text="IMPLEMENT THIS!"
             android:textSize="20sp"
-            android:textColor="@color/textColorLight"
+            android:textColor="?attr/textColorLight"
             tools:ignore="HardcodedText"/>
 
         <!--TODO: Make functional. Multi-select checkable 2 column list -->
@@ -128,7 +128,7 @@
                 android:scrollHorizontally="true"
                 android:maxLines="1"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/textColorPrimary"
+                android:textColor="?android:attr/textColorPrimary"
                 tools:text="tag, tag, tag, tag, tag, tag, tag, tag, tag, tag, tag, tag, tag, tag"/>
 
         </LinearLayout>

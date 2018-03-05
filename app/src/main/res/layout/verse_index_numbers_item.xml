@@ -6,7 +6,9 @@
     android:layout_width="48dp"
     android:layout_height="48dp"
     android:orientation="vertical"
+    android:background="@android:color/transparent"
     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+    android:textColor="?android:attr/textColorSecondary"
     android:gravity="center"
     tools:text="99"
     tools:background="#cccccc"/>

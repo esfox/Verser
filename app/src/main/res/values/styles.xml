@@ -3,6 +3,10 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
 
+        <!--Disable Action Bar-->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
         <!-- Theme Colors -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -14,7 +18,41 @@
         <!--Text Colors-->
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
         <item name="android:textColorSecondary">@color/textColorSecondary</item>
-        <item name="android:textColorTertiary">@color/textColorSecondary</item>
+        <item name="android:textColorTertiary">@color/textColorTertiary</item>
+
+        <!--Button Style-->
+        <item name="colorButtonNormal">@color/colorAccent</item>
+        <item name="android:buttonStyle">@style/Widget.AppCompat.Button.Colored</item>
+        
+        <!--AlertDialog Theme-->
+        <item name="alertDialogTheme">@style/AlertDialogTheme</item>
+
+        <!--Custom Attributes-->
+        <item name="backgroundColor">@color/colorBackground</item>
+        <item name="textColorLight">@color/textColorLight</item>
+        <item name="buttonImageViewTint">@color/textColorSecondary</item>
+        <item name="dividerColor">@color/dividerColor</item>
+        <item name="categoryIconTint">@color/textColorSecondary</item>
+    </style>
+
+    <!--TODO: Change important colors-->
+    <style name="AppThemeDark" parent="Theme.AppCompat.NoActionBar">
+
+        <!--Disable Action Bar-->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
+        <!-- Theme Colors -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlNormal">@color/iconColor</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
+
+        <!--Text Colors-->
+        <item name="android:textColorPrimary">@color/dark_textColorPrimary</item>
+        <item name="android:textColorSecondary">@color/textColorSecondary</item>
+        <item name="android:textColorTertiary">@color/textColorTertiary</item>
 
         <!--Button Style-->
         <item name="colorButtonNormal">@color/colorAccent</item>
@@ -23,6 +61,12 @@
         <!--AlertDialog Theme-->
         <item name="alertDialogTheme">@style/AlertDialogTheme</item>
 
+        <!--Custom Attributes-->
+        <item name="backgroundColor">@color/dark_colorBackground</item>
+        <item name="textColorLight">@color/dark_textColorLight</item>
+        <item name="buttonImageViewTint">@color/textColorSecondary</item>
+        <item name="dividerColor">@color/dark_dividerColor</item>
+        <item name="categoryIconTint">@color/textColorSecondary</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -51,6 +95,10 @@
     <style name="AlertDialogButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
         <item name="android:textColor">@color/colorAccent</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="NegativeButtonStyle" parent="Theme.AppCompat.Light">
+        <item name="colorButtonNormal">@color/negativeColor</item>
     </style>
 
 </resources>

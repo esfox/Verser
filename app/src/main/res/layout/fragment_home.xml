@@ -11,7 +11,7 @@
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorBackground">
+        android:background="?android:colorBackground">
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
@@ -46,13 +46,13 @@
             tools:visibility="gone"/>
 
         <Button
-            android:id="@+id/debug_show_database_contents"
+            android:id="@+id/debug_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|bottom"
             android:layout_margin="16dp"
-            android:textColor="@color/textColorLight"
-            android:text="Show Database Contents"
+            android:textColor="?attr/textColorLight"
+            android:text="Debug Button"
             tools:ignore="HardcodedText"/>
 
         <android.support.design.widget.FloatingActionButton
@@ -77,7 +77,6 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         android:theme="@style/NavigationViewStyle"
-        android:background="@color/colorBackground"
         app:headerLayout="@layout/navigation_drawer_header"
         app:menu="@menu/navigation_drawer"/>
 

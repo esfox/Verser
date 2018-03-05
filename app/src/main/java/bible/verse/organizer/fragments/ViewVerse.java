@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import bible.verse.organizer.objects.Verse;
 import bible.verse.organizer.organizer.R;
+import bible.verse.organizer.utilities.Color;
 
 public class ViewVerse extends Fragment implements View.OnClickListener
 {
@@ -24,20 +25,21 @@ public class ViewVerse extends Fragment implements View.OnClickListener
 
     private View[] tagButtons;
 
-    private TextView citation,
+    private TextView title,
                      text,
-                     title,
                      category,
                      notes;
 
     private ImageView star;
 
-    private boolean favorited;
+    private boolean isFavorite;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
         View layout = inflater.inflate(R.layout.fragment_view_verse, container, false);
+
+        //TODO: Setup toolbar and assign verse citation as title
 
         //Button initialization
         editButton = layout.findViewById(R.id.view_verse_edit);
@@ -57,7 +59,7 @@ public class ViewVerse extends Fragment implements View.OnClickListener
             view.setOnClickListener(this);
 
         //TextView Initializations
-        citation = layout.findViewById(R.id.view_verse_citation);
+        title = layout.findViewById(R.id.view_verse_title);
         text = layout.findViewById(R.id.view_verse_text);
         category = layout.findViewById(R.id.view_verse_category);
 
@@ -98,27 +100,28 @@ public class ViewVerse extends Fragment implements View.OnClickListener
 
     public void setData (Verse verse)
     {
-        this.citation.setText(verse.getVerse());
+        this.title.setText(verse.getTitle());
         this.text.setText(verse.getVerseText());
 //        this.title.setVerseText(title);
         this.category.setText(verse.getCategoryName());
 //        this.notes.setVerseText(notes);
 
-        this.favorited = verse.isFavorite();
+        this.isFavorite = verse.isFavorite();
         toggleStarColor();
     }
 
     private void toggleFavorite ()
     {
-        favorited = !favorited;
+        isFavorite = !isFavorite;
         toggleStarColor();
     }
 
     private void toggleStarColor()
     {
-        if (favorited)
-            star.setColorFilter(ContextCompat.getColor(getContext(), R.color.favoriteOn), PorterDuff.Mode.SRC_ATOP);
-        else
-            star.setColorFilter(ContextCompat.getColor(getContext(), R.color.textColorSecondary), PorterDuff.Mode.SRC_ATOP);
+        int color = isFavorite?
+            ContextCompat.getColor(getContext(), R.color.favoriteColor) :
+            Color.getColor(getContext(), android.R.attr.textColorSecondary);
+
+        star.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
     }
 }

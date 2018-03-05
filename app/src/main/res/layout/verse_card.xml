@@ -37,7 +37,7 @@
                     android:layout_marginRight="8dp"
                     android:layout_marginEnd="8dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="@color/textColorPrimary"
+                    android:textColor="?android:attr/textColorPrimary"
                     tools:text="John 3:16"/>
 
                 <TextView
@@ -47,7 +47,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true"
                     android:textSize="12sp"
-                    android:textColor="@color/textColorTertiary"
+                    android:textColor="?android:attr/textColorTertiary"
                     tools:text="Verse Category"/>
 
             </RelativeLayout>
@@ -59,6 +59,7 @@
                 android:layout_marginTop="6dp"
                 android:maxLines="3"
                 android:ellipsize="end"
+                android:textColor="?android:attr/textColorSecondary"
                 tools:text="@string/long_dummy_text"/>
 
             <!--Sample Tags Only-->

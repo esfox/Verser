@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity
                             verse.getVerse() + "\n" +
                             verse.getVerseText() + "\n" +
                             "Category: " + verse.getCategoryName() + "\n" +
-                            "Tags: ";
+                            "Tag: ";
 
             for (String tag : verse.getTags())
                 message += tag + ", ";
@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity
 //                "Citation: " + verse.getVerse() + "\n" +
 //                "Verse: " + verse.getVerseText() + "\n" +
 //                "Category: " + verse.getCategoryName() + "\n" +
-//                "Tags:\n";
+//                "Tag:\n";
 //
 //            for(String tag : verse.getTags())
 //                messageToDisplay += "- " + tag + "\n";

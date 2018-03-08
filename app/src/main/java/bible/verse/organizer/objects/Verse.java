@@ -13,7 +13,7 @@ public class Verse
         - Citation
         - Verse Text
         - Category
-        - Tags
+        - Tag
         - Title
         - Notes
         - Is Favorite

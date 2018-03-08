@@ -61,7 +61,7 @@
                 android:ellipsize="end"
                 tools:text="@string/long_dummy_text"/>
 
-            <!--Sample Tags Only-->
+            <!--SamTagTags Only-->
             <LinearLayout
                 android:id="@+id/verse_card_tag_area"
                 android:layout_width="match_parent"

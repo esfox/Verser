@@ -72,7 +72,7 @@ public class Parser
             if(categoryMatcher.find())
                 verse.setCategoryName(categoryMatcher.group(1));
 
-            //Parse Tags
+            //Parse Tag
             Matcher tagsMatcher = tagsPattern.matcher(entry);
             while(tagsMatcher.find())
             {
@@ -118,7 +118,7 @@ public class Parser
 //            System.out.println("Title: " + verse.getTitle());
 //            System.out.println("Category: " + verse.getCategoryName());
 //
-//            System.out.print("Tags: ");
+//            System.out.print("Tag: ");
 //            String[] tags = verse.getTags();
 //            for(int i = 0; i < tags.length; i++)
 //            {

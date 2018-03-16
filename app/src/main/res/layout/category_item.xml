@@ -15,6 +15,7 @@
         android:id="@+id/category_item_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:tint="?android:attr/textColorSecondary"
         tools:src="@drawable/temp_category_icon"/>
 
     <LinearLayout
@@ -48,7 +49,7 @@
         android:padding="12dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
-        android:tint="@color/textColorSecondary"
+        android:tint="?android:attr/textColorSecondary"
         android:src="@drawable/more"/>
 
 </LinearLayout>

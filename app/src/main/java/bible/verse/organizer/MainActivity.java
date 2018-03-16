@@ -1,5 +1,6 @@
 package bible.verse.organizer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -24,6 +25,8 @@ import bible.verse.organizer.utilities.DatabaseHandler;
 
 public class MainActivity extends AppCompatActivity
 {
+    private static boolean applyDarkTheme;
+
     //    private DataStorage dataStorage;
     private DatabaseHandler databaseHandler;
 
@@ -33,6 +36,9 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        setTheme(applyDarkTheme? R.style.AppThemeDark : R.style.AppTheme);
+
         setContentView(R.layout.activity_main);
 
 //        dataStorage = new DataStorage(this);
@@ -105,6 +111,15 @@ public class MainActivity extends AppCompatActivity
     {
         databaseHandler.clearEntriesTable();
         Toast.makeText(this, "Database Cleared", Toast.LENGTH_SHORT).show();
+    }
+
+    @SuppressWarnings("unused")
+    public void changeTheme()
+    {
+        applyDarkTheme = !applyDarkTheme;
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 
 //    public void saveVerse(Verse verse)

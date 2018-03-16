@@ -58,7 +58,7 @@ public class Home extends Fragment implements
 
         final FloatingActionButton newVerse = layout.findViewById(R.id.home_new_verse);
         newVerse.setOnClickListener(this);
-        layout.findViewById(R.id.debug_show_database_contents).setOnClickListener(this);
+        layout.findViewById(R.id.debug_button).setOnClickListener(this);
 
         return layout;
     }
@@ -72,7 +72,7 @@ public class Home extends Fragment implements
                 newVerse();
                 break;
 
-            case R.id.debug_show_database_contents:
+            case R.id.debug_button:
                 ((MainActivity) getActivity()).d_showVerses();
                 break;
         }

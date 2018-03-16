@@ -24,7 +24,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorBackground">
+        android:background="?attr/backgroundColor">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/new_verse_notes_toolbar"
@@ -41,7 +41,7 @@
             android:padding="12dp"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
-            android:tint="@color/textColorPrimary"
+            android:tint="?android:attr/textColorPrimary"
             android:src="@drawable/check"
             tools:ignore="ContentDescription"/>
 

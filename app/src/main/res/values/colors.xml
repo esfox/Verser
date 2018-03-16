@@ -2,20 +2,34 @@
 <resources>
 
     <!--Colors by Gigabyte-->
+    <!--Default Light Theme Colors-->
     <color name="colorPrimary">#795548</color>
     <color name="colorPrimaryDark">#5D4037</color>
-    <color name="colorPrimaryLight">#D7CCC8</color>
     <color name="colorAccent">#4CAF50</color>
     <color name="colorBackground">#F0F0F0</color>
     <color name="textColorPrimary">#212121</color>
     <color name="textColorSecondary">#555555</color>
     <color name="textColorTertiary">#818181</color>
-    <color name="textColorLight">#ffffff</color>
+    <color name="textColorLight">#FFF</color>
     <color name="dividerColor">#BDBDBD</color>
     <color name="iconColor">#737373</color>
-    <color name="favoriteOn">#ffff00</color>
-
     <color name="favoriteColor">#FFC400</color>
+    <color name="negativeColor">#EF5350</color>
+
+    <!--Dark Theme Colors-->
+    <color name="dark_colorPrimary">#795548</color>
+    <color name="dark_colorPrimaryDark">#5D4037</color>
+    <color name="dark_colorAccent">#4CAF50</color>
+    <color name="dark_colorBackground">#303030</color>
+    <color name="dark_textColorPrimary">#FFF</color>
+    <color name="dark_textColorSecondary">#555555</color>
+    <color name="dark_textColorTertiary">#818181</color>
+    <color name="dark_textColorLight">#FFF</color>
+    <color name="dark_dividerColor">#424242</color>
+    <color name="dark_iconColor">#737373</color>
+    <color name="dark_favoriteOn">#FFFF00</color>
+    <color name="dark_favoriteColor">#FFC400</color>
+    <color name="dark_negativeColor">#EF5350</color>
 
     <!--Initial Colors-->
     <!--<color name="colorPrimary">#329600</color>-->

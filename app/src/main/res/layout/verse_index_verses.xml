@@ -3,7 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true"
+    tools:ignore="HardcodedText">
 
     <TextView
         android:id="@+id/verse_index_verses_warning"
@@ -11,17 +13,52 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:text="You haven't selected a chapter yet."
-        tools:ignore="HardcodedText"/>
+        android:text="You haven't selected a chapter yet."/>
 
     <GridView
         android:id="@+id/verse_index_verses_grid"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/verse_index_verses_buttons"
         android:columnWidth="48dp"
         android:numColumns="auto_fit"
-        android:horizontalSpacing="0dp"
-        android:verticalSpacing="0dp"
+        android:horizontalSpacing="1dp"
+        android:verticalSpacing="1dp"
         android:stretchMode="columnWidth"/>
 
+    <LinearLayout
+        android:id="@+id/verse_index_verses_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        tools:ignore="ButtonStyle">
+
+        <Button
+            android:id="@+id/verse_index_verses_clear"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp"
+            android:theme="@style/NegativeButtonStyle"
+            android:drawableLeft="@drawable/close"
+            android:drawableStart="@drawable/close"
+            android:textColor="?attr/textColorLight"
+            android:text="Clear"/>
+
+        <Button
+            android:id="@+id/verse_index_verses_done"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp"
+            android:drawableLeft="@drawable/check"
+            android:drawableStart="@drawable/check"
+            android:textColor="?attr/textColorLight"
+            android:text="Done"/>
+
+    </LinearLayout>
 </RelativeLayout>

@@ -16,6 +16,7 @@ import android.widget.Toast;
 import bible.verse.organizer.interfaces.CategoriesListItemListener;
 import bible.verse.organizer.objects.Category;
 import bible.verse.organizer.organizer.R;
+import bible.verse.organizer.utilities.Color;
 
 public class CategoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
 {
@@ -35,8 +36,6 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder implements View.
         name = itemView.findViewById(R.id.category_item_name);
         verseCount = itemView.findViewById(R.id.category_item_verse_count);
         icon = itemView.findViewById(R.id.category_item_icon);
-        icon.setColorFilter(ContextCompat.getColor
-            (itemView.getContext(), R.color.textColorSecondary), PorterDuff.Mode.SRC_ATOP);
         options = itemView.findViewById(R.id.category_item_options);
 
         itemView.setOnClickListener(this);

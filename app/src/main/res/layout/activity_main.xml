@@ -7,15 +7,4 @@
     android:layout_height="match_parent"
     tools:context="bible.verse.organizer.MainActivity">
 
-    <!--<android.support.design.widget.NavigationView-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_gravity="start"-->
-        <!--android:fitsSystemWindows="true"-->
-        <!--android:theme="@style/NavigationViewStyle"-->
-        <!--android:background="@color/colorBackground"-->
-        <!--app:headerLayout="@layout/navigation_drawer_header"-->
-        <!--app:itemBackground="?attr/selectableItemBackground"-->
-        <!--app:menu="@menu/navigation_drawer"/>-->
-
 </android.support.design.widget.CoordinatorLayout>

@@ -45,7 +45,7 @@
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/new_verse_text"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:paddingLeft="16dp"
                     android:paddingRight="16dp">
 
@@ -104,7 +104,7 @@
                         android:layout_marginEnd="8dp"
                         android:layout_marginRight="8dp"
                         android:src="@drawable/title"
-                        android:tint="@color/textColorSecondary"/>
+                        android:tint="?android:attr/textColorSecondary"/>
 
                     <TextView
                         android:id="@+id/new_verse_title_label"
@@ -112,8 +112,9 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        android:text="Add a Title"
-                        android:textSize="16sp"/>
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:textSize="16sp"
+                        android:text="Add a Title"/>
 
                 </LinearLayout>
 
@@ -138,7 +139,7 @@
                         android:layout_height="24dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginRight="8dp"
-                        android:tint="@color/textColorSecondary"
+                        android:tint="?android:attr/textColorSecondary"
                         android:src="@drawable/category"/>
 
                     <TextView
@@ -146,8 +147,9 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Add Category"
-                        android:textSize="16sp"/>
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:textSize="16sp"
+                        android:text="Add Category"/>
 
                     <ImageView
                         android:id="@+id/new_verse_category_clear"
@@ -156,7 +158,7 @@
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:clickable="true"
                         android:padding="8dp"
-                        android:tint="@color/textColorSecondary"
+                        android:tint="?android:attr/textColorSecondary"
                         android:src="@drawable/cancel"
                         android:visibility="gone"/>
 
@@ -184,14 +186,15 @@
                         android:layout_marginEnd="8dp"
                         android:layout_marginRight="8dp"
                         android:src="@drawable/tag"
-                        android:tint="@color/textColorSecondary"/>
+                        android:tint="?android:attr/textColorSecondary"/>
 
                     <TextView
                         android:id="@+id/new_verse_tags_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Add Tags"
-                        android:textSize="16sp"/>
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:textSize="16sp"
+                        android:text="Add Tags"/>
 
                 </LinearLayout>
 
@@ -217,14 +220,15 @@
                         android:layout_marginEnd="8dp"
                         android:layout_marginRight="8dp"
                         android:src="@drawable/edit"
-                        android:tint="@color/textColorSecondary"/>
+                        android:tint="?android:attr/textColorSecondary"/>
 
                     <TextView
                         android:id="@+id/new_verse_notes_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Add Notes"
-                        android:textSize="16sp"/>
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:textSize="16sp"
+                        android:text="Add Notes"/>
 
                 </LinearLayout>
 
@@ -251,14 +255,15 @@
                         android:layout_marginEnd="8dp"
                         android:layout_marginRight="8dp"
                         android:src="@drawable/favorite_outlined"
-                        android:tint="@color/textColorSecondary"/>
+                        android:tint="?android:attr/textColorSecondary"/>
 
                     <TextView
                         android:id="@+id/new_verse_favorite_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Mark as Favorite"
-                        android:textSize="16sp"/>
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:textSize="16sp"
+                        android:text="Mark as Favorite"/>
 
                 </LinearLayout>
             </LinearLayout>

@@ -103,7 +103,7 @@ public class ViewVerse extends Fragment implements View.OnClickListener
         this.title.setText(verse.getTitle());
         this.text.setText(verse.getVerseText());
 //        this.title.setVerseText(title);
-        this.category.setText(verse.getCategoryName());
+        this.category.setText(verse.getCategory().getName());
 //        this.notes.setVerseText(notes);
 
         this.isFavorite = verse.isFavorite();

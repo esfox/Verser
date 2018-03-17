@@ -23,20 +23,25 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoryViewHolder> 
 
     private CategoriesListItemListener listener;
 
-    public CategoriesAdapter(CategoriesListItemListener listener)
+    public CategoriesAdapter(CategoriesListItemListener listener, List<Category> categories)
     {
-        categoriesDefaultList = new ArrayList<>();
+        categoriesDefaultList = categories;
         this.listener = listener;
 
-        makeDummyItems();
+//        makeDummyItems();
 
-        categories = categoriesDefaultList;
+        this.categories = categoriesDefaultList;
     }
 
     public void addCategory(Category category)
     {
-        categories.add(0, category);
-        notifyItemInserted(0);
+        categories.add(category);
+        notifyItemInserted(categories.size() - 1);
+    }
+
+    public void updateCategories(List<Category> categories)
+    {
+        categoriesDefaultList = categories;
     }
 
     @Override

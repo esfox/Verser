@@ -667,6 +667,7 @@ public class NewVerse extends Fragment implements
     }
 
     //Setup layout for selecting category
+    @SuppressLint("ClickableViewAccessibility")
     private void setupCategoriesView(final View layout, final View button)
     {
         //Button label and icon
@@ -717,7 +718,9 @@ public class NewVerse extends Fragment implements
             }
         };
 
-        final CategoriesAdapter adapter = new CategoriesAdapter(listener);
+        List<Category> categories =  ((MainActivity) getActivity()).getCategories();
+
+        final CategoriesAdapter adapter = new CategoriesAdapter(listener, categories);
         categoriesList.setAdapter(adapter);
 
         //Search functionality
@@ -1133,7 +1136,7 @@ public class NewVerse extends Fragment implements
                     verse.setFavorited(isFavorite);
 
                     if(category != null)
-                        verse.setCategoryName(category.getId());
+                        verse.setCategory(category);
 
                     ((MainActivity) getActivity()).saveVerse(verse);
                     getActivity().getSupportFragmentManager().popBackStack();
@@ -1353,24 +1356,21 @@ public class NewVerse extends Fragment implements
         if(!citationValidated || !verseTextValidated)
             return;
 
-        String categoryName;
-        if(category != null)
-            categoryName = category.getName();
-        else categoryName = "No Category";
-
         Verse verse = new Verse();
         verse.setVerse(citation);
         verse.setVerseText(verseText);
-        verse.setCategoryName(categoryName);
         verse.setTags(new String[] { "tag1", "tag2", "tag3" });
         verse.setTitle(title);
         verse.setNotes(notes);
         verse.setFavorited(isFavorite);
 
+        if(category != null)
+            verse.setCategory(category);
+
         String message =
             "Citation: " + citation + "\n" +
             "Verse Text: " + verseText + "\n" +
-            "Category: " + categoryName + "\n" +
+            "Category: " + category.getName() + "\n" +
             "Title: " + title + "\n" +
             "Notes: " + notes + "\n" +
             "Marked as favorite: " + isFavorite;

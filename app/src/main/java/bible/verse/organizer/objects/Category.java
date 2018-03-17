@@ -51,6 +51,11 @@ public class Category
         this.verseCount = verseCount;
     }
 
+    public void updateVerseCount()
+    {
+        verseCount++;
+    }
+
     public int getIconResource()
     {
         return iconResource;

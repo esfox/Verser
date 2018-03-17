@@ -19,6 +19,7 @@ import java.util.List;
 import bible.verse.organizer.fragments.FragmentTags;
 import bible.verse.organizer.fragments.Home;
 import bible.verse.organizer.interfaces.OnBackPressListener;
+import bible.verse.organizer.objects.Category;
 import bible.verse.organizer.objects.Verse;
 import bible.verse.organizer.organizer.R;
 import bible.verse.organizer.utilities.DatabaseHandler;
@@ -62,21 +63,40 @@ public class MainActivity extends AppCompatActivity
             .commit();
     }
 
+    public List<Verse> getVerses()
+    {
+        verses = databaseHandler.getAllEntries();
+        return verses;
+    }
+
     public void saveVerse(Verse verse)
     {
+        //Save verse
         databaseHandler.addEntry(verse);
-        Log.i("Database", "Verse has been saved in database.");
+
+        //Update verse's category verse count
+        Category category = verse.getCategory();
+        category.updateVerseCount();
+        databaseHandler.updateCategory(category);
+
+        Log.i("Database", "Verse has been saved.");
         Toast.makeText(this, "Verse has been saved!", Toast.LENGTH_SHORT).show();
     }
 
-    public void loadVerses()
+    public List<Category> getCategories()
     {
-        verses = databaseHandler.getAllEntries();
+        return databaseHandler.getAllCategories();
+    }
+
+    public void saveCategory(Category category)
+    {
+        databaseHandler.addCategory(category);
+        Log.i("Database", "Category has been saved.");
     }
 
     public void d_showVerses()
     {
-        loadVerses();
+        verses = databaseHandler.getAllEntries();
 
         String message = "Entry Count: " + String.valueOf(verses.size()) + "\n\n";
 
@@ -86,7 +106,7 @@ public class MainActivity extends AppCompatActivity
                     "ID: " + verse.getId() + "\n" +
                             verse.getVerse() + "\n" +
                             verse.getVerseText() + "\n" +
-                            "Category: " + verse.getCategoryName() + "\n" +
+                            "Category: " + verse.getCategory().getName() + "\n" +
                             "Tag: ";
 
             for (String tag : verse.getTags())
@@ -103,12 +123,6 @@ public class MainActivity extends AppCompatActivity
                 .setMessage(message)
                 .setPositiveButton("Done", null)
                 .show();
-    }
-
-    public List<Verse> getVerses()
-    {
-        loadVerses();
-        return verses;
     }
 
     public void d_clearDatabase()
@@ -147,7 +161,7 @@ public class MainActivity extends AppCompatActivity
 //            messageToDisplay +=
 //                "Citation: " + verse.getVerse() + "\n" +
 //                "Verse: " + verse.getVerseText() + "\n" +
-//                "Category: " + verse.getCategoryName() + "\n" +
+//                "Category: " + verse.getCategory() + "\n" +
 //                "Tag:\n";
 //
 //            for(String tag : verse.getTags())

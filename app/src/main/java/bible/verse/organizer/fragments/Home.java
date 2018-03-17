@@ -132,7 +132,7 @@ public class Home extends Fragment implements
                             break;
 
                         case R.id.navigation_drawer_tags:
-                            snack("Tags");
+                            tags();
                             break;
 
                         case R.id.navigation_drawer_settings:
@@ -226,6 +226,15 @@ public class Home extends Fragment implements
         .replace(R.id.parent_layout, new Categories(), FragmentTags.CATEGORIES)
         .addToBackStack(FragmentTags.CATEGORIES)
         .commit();
+    }
+
+    private void tags()
+    {
+        getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.parent_layout, new Tags(), FragmentTags.TAGS)
+                .addToBackStack(FragmentTags.TAGS)
+                .commit();
     }
 
     //TEMPORARY

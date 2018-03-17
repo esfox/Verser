@@ -68,7 +68,7 @@ import bible.verse.organizer.organizer.R;
 import bible.verse.organizer.utilities.Color;
 import bible.verse.organizer.utilities.VerseWebRequest;
 
-//TODO: Tags implementation
+//TODO: Tag implementation
 public class NewVerse extends Fragment implements
     View.OnClickListener,
     OnBackPressListener,

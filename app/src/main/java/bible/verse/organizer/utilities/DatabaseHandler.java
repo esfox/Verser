@@ -61,6 +61,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
                 COLUMN_NAME + " TEXT," +
                 COLUMN_ICON + " INTEGER" +
                 ");";
+
         sqLiteDatabase.execSQL(createEntryTable);
         sqLiteDatabase.execSQL(createCategoryTable);
     }

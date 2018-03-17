@@ -85,7 +85,7 @@ public class ViewVerse extends Fragment implements View.OnClickListener
                                 "\nNotes: " +
                                 "Le not" +
 //                                notes.getVerseText() +
-                                "\nTags: " +
+                                "\nTag: " +
                                 "Tag1, Tag2, Tag3",
                         Toast.LENGTH_SHORT).show();
                 break;

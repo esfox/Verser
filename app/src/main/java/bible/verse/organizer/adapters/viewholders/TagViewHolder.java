@@ -1,11 +1,10 @@
 package bible.verse.organizer.adapters.viewholders;
 
 import android.annotation.SuppressLint;
-import android.graphics.PorterDuff;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,43 +12,42 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import bible.verse.organizer.interfaces.CategoriesListItemListener;
-import bible.verse.organizer.objects.Category;
+import bible.verse.organizer.interfaces.TagsListItemListener;
+import bible.verse.organizer.objects.Tag;
 import bible.verse.organizer.organizer.R;
-import bible.verse.organizer.utilities.Color;
 
-public class CategoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
+public class TagViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
 {
     private TextView name, verseCount;
-    private ImageView icon, options;
+    private ImageView color, options;
 
-    private Category category;
+    private Tag tag;
 
-    private CategoriesListItemListener listener;
+//    private TagsListItemListener listener;
 
-    public CategoryViewHolder(View itemView, CategoriesListItemListener listener)
+    public TagViewHolder(View itemView, TagsListItemListener listener)
     {
         super(itemView);
 
-        this.listener = listener;
+//        this.listener = listener;
 
-        name = itemView.findViewById(R.id.category_item_name);
-        verseCount = itemView.findViewById(R.id.category_item_verse_count);
-        icon = itemView.findViewById(R.id.category_item_icon);
-        options = itemView.findViewById(R.id.category_item_options);
+        name = itemView.findViewById(R.id.tags_item_tag);
+        verseCount = itemView.findViewById(R.id.tags_item_count);
+        options = itemView.findViewById(R.id.tags_item_options);
+        color = itemView.findViewById(R.id.tags_item_color_indicator);
 
         itemView.setOnClickListener(this);
         options.setOnClickListener(this);
     }
 
     @SuppressLint("SetTextI18n")
-    public void bind(Category category)
+    public void bind(Tag tag)
     {
-        this.category = category;
+        this.tag = tag;
 
-        name.setText(category.getName());
-        icon.setImageResource(category.getIconResource());
-        verseCount.setText(String.valueOf(category.getVerseCount()) + " verses");
+        name.setText(tag.getName());
+        color.setColorFilter(tag.getColor());
+        verseCount.setText(String.valueOf(tag.getVerseCount()) + " verses");
     }
 
     @Override
@@ -57,7 +55,7 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder implements View.
     {
         switch(view.getId())
         {
-            case R.id.category_item_options:
+            case R.id.tags_item_options:
                 options();
                 break;
 
@@ -69,7 +67,7 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder implements View.
 
     private void clickCallback()
     {
-        listener.onCategoryItemClick(category);
+//        listener.onTagItemClick(tag);
     }
 
     @SuppressLint("RestrictedApi")
@@ -82,14 +80,14 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder implements View.
             {
                 switch(item.getItemId())
                 {
-                    case R.id.category_item_options_edit:
+                    case R.id.tag_item_options_edit:
                         Toast.makeText(itemView.getContext(),
-                            "Edit " + category.getName(), Toast.LENGTH_SHORT).show();
+                                "Edit " + tag.getName(), Toast.LENGTH_SHORT).show();
                         return true;
 
-                    case R.id.category_item_options_delete:
+                    case R.id.tag_item_options_delete:
                         Toast.makeText(itemView.getContext(),
-                            "Delete " + category.getName(), Toast.LENGTH_SHORT).show();
+                                "Delete " + tag.getName(), Toast.LENGTH_SHORT).show();
                         return true;
 
                     default:

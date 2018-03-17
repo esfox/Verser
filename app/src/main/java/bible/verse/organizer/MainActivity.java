@@ -12,6 +12,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.faithcomesbyhearing.dbt.Dbt;
+
 import java.util.List;
 
 import bible.verse.organizer.fragments.FragmentTags;
@@ -36,6 +38,8 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        Dbt.setApiKey("8a74dbcb2ba6d3d407c83a2a123f1cb5");
 
         setTheme(applyDarkTheme? R.style.AppThemeDark : R.style.AppTheme);
 
@@ -113,6 +117,7 @@ public class MainActivity extends AppCompatActivity
         Toast.makeText(this, "Database Cleared", Toast.LENGTH_SHORT).show();
     }
 
+    //TODO: Fix colors in dark theme
     @SuppressWarnings("unused")
     public void changeTheme()
     {

@@ -99,7 +99,7 @@ public class NewVerse extends Fragment implements
             selectedBook,
             selectedChapter;
 
-    private ArrayList<String> books;
+    private List<String> books;
     private int
             chapters,
             verses;
@@ -551,7 +551,7 @@ public class NewVerse extends Fragment implements
             }
         });
 
-        //List for storing selected verses
+        //Initialize list for storing selected verses
         final List<Integer> selectedVerses = new ArrayList<>();
 
         //Colors for item states
@@ -627,9 +627,6 @@ public class NewVerse extends Fragment implements
                                 Toast.LENGTH_SHORT).show();
                             break;
                         }
-
-                        for(int i = 0; i < selectedVerses.size(); i++)
-                            Log.d("verses", String.valueOf(selectedVerses.get(i)));
 
                         stringToAppend += getSelectedVerses(selectedVerses);
                         verseIndex.dismiss();
@@ -823,8 +820,6 @@ public class NewVerse extends Fragment implements
         //Set on click listener for done button
         tagsView.findViewById(R.id.new_verse_tags_done)
             .setOnClickListener(this);
-
-        //TODO: make other views (buttons, selected tags indicator) functional
     }
 
     //Setup layout for editing notes, put the view below the screen
@@ -1254,6 +1249,10 @@ public class NewVerse extends Fragment implements
         String citationString = citation.getText().toString();
         if(citationString.equals(""))
             return;
+
+//        String versesString = citationString.substring
+//            (citationString.indexOf(":") + 1, citationString.length());
+//        BibleUtils.getVerse(selectedBook, selectedChapter, versesString);
 
         verseTextProgressBar.setVisibility(View.VISIBLE);
         String url = "http://labs.bible.org/api/?type=json&formatting=plain&passage="

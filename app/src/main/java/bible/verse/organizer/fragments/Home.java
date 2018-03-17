@@ -16,16 +16,14 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
 import java.util.List;
-import java.util.UUID;
 
 import bible.verse.organizer.MainActivity;
 import bible.verse.organizer.adapters.VersesAdapter;
 import bible.verse.organizer.interfaces.VerseWebRequestListener;
-import bible.verse.organizer.objects.Category;
 import bible.verse.organizer.objects.Verse;
 import bible.verse.organizer.organizer.R;
-import bible.verse.organizer.utilities.DatabaseHandler;
 import bible.verse.organizer.utilities.VerseWebRequest;
 
 public class Home extends Fragment implements
@@ -164,6 +162,7 @@ public class Home extends Fragment implements
         versesList = layout.findViewById(R.id.home_list);
         versesList.setHasFixedSize(true);
         versesList.setLayoutManager(versesListLayoutManager);
+        versesList.setTag(layout.findViewById(R.id.home_initial_label));
 
         versesAdapter = new VersesAdapter();
         versesList.setAdapter(versesAdapter);
@@ -186,6 +185,10 @@ public class Home extends Fragment implements
     private void updateVersesList()
     {
         List<Verse> verses = ((MainActivity) getActivity()).getVerses();
+
+        boolean versesIsEmpty = verses.size() <= 0;
+        versesList.setVisibility(versesIsEmpty? View.GONE : View.VISIBLE);
+        ((View) versesList.getTag()).setVisibility(versesIsEmpty? View.VISIBLE : View.GONE);
 
         if(verses == null)
             return;

@@ -26,7 +26,7 @@ public class VersesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     {
         verses = new ArrayList<>();
 
-        makeDummyData();
+//        makeDummyData();
     }
 
     @Override

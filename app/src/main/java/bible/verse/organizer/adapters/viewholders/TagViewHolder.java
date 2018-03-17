@@ -34,7 +34,7 @@ public class TagViewHolder extends RecyclerView.ViewHolder implements View.OnCli
         name = itemView.findViewById(R.id.tags_item_tag);
         verseCount = itemView.findViewById(R.id.tags_item_count);
         options = itemView.findViewById(R.id.tags_item_options);
-        color = itemView.findViewById(R.id.tags_item_color_indicator);
+//        color = itemView.findViewById(R.id.tags_item_color_indicator);
 
         itemView.setOnClickListener(this);
         options.setOnClickListener(this);
@@ -46,7 +46,7 @@ public class TagViewHolder extends RecyclerView.ViewHolder implements View.OnCli
         this.tag = tag;
 
         name.setText(tag.getName());
-        color.setColorFilter(tag.getColor());
+//        color.setColorFilter(tag.getColor());
         verseCount.setText(String.valueOf(tag.getVerseCount()) + " verses");
     }
 

@@ -43,7 +43,7 @@ public class Tags extends Fragment implements
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
         tagsList.setLayoutManager(gridLayoutManager);
 
-        adapter = new TagsAdapter(this);
+        adapter = new TagsAdapter(makeDummyData());
         tagsList.setAdapter(adapter);
 
         FloatingActionButton add = view.findViewById(R.id.tags_add);

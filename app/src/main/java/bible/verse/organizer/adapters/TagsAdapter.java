@@ -19,9 +19,10 @@ public class TagsAdapter extends RecyclerView.Adapter<TagViewHolder>
 
     public TagsAdapter(List<Tag> tags) { this.tags = tags; }
 
-    public TagsAdapter(TagsListItemListener listener)
+    public TagsAdapter(TagsListItemListener listener, List<Tag> tags)
     {
         this.listener = listener;
+        this.tags = tags;
     }
 
     public void addTag(Tag tag)

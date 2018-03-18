@@ -13,7 +13,7 @@ public class Formatter
                     "#id{" + verse.getId() + "}" +
                     "#cit{" + verse.getVerse() + "}" +
                     "#txt{" + verse.getVerseText() + "}" +
-                    "#cat{" + verse.getCategoryName()  + "}" +
+                    "#cat{" + verse.getCategory()  + "}" +
                     "#tgs{";
 
         for (String tag : verse.getTags())

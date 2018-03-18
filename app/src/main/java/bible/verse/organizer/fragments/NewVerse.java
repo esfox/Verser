@@ -99,7 +99,7 @@ public class NewVerse extends Fragment implements
             selectedBook,
             selectedChapter;
 
-    private ArrayList<String> books;
+    private List<String> books;
     private int
             chapters,
             verses;
@@ -551,7 +551,7 @@ public class NewVerse extends Fragment implements
             }
         });
 
-        //List for storing selected verses
+        //Initialize list for storing selected verses
         final List<Integer> selectedVerses = new ArrayList<>();
 
         //Colors for item states
@@ -628,9 +628,6 @@ public class NewVerse extends Fragment implements
                             break;
                         }
 
-                        for(int i = 0; i < selectedVerses.size(); i++)
-                            Log.d("verses", String.valueOf(selectedVerses.get(i)));
-
                         stringToAppend += getSelectedVerses(selectedVerses);
                         verseIndex.dismiss();
                         break;
@@ -670,6 +667,7 @@ public class NewVerse extends Fragment implements
     }
 
     //Setup layout for selecting category
+    @SuppressLint("ClickableViewAccessibility")
     private void setupCategoriesView(final View layout, final View button)
     {
         //Button label and icon
@@ -720,7 +718,9 @@ public class NewVerse extends Fragment implements
             }
         };
 
-        final CategoriesAdapter adapter = new CategoriesAdapter(listener);
+        List<Category> categories =  ((MainActivity) getActivity()).getCategories();
+
+        final CategoriesAdapter adapter = new CategoriesAdapter(listener, categories);
         categoriesList.setAdapter(adapter);
 
         //Search functionality
@@ -823,8 +823,6 @@ public class NewVerse extends Fragment implements
         //Set on click listener for done button
         tagsView.findViewById(R.id.new_verse_tags_done)
             .setOnClickListener(this);
-
-        //TODO: make other views (buttons, selected tags indicator) functional
     }
 
     //Setup layout for editing notes, put the view below the screen
@@ -1138,7 +1136,7 @@ public class NewVerse extends Fragment implements
                     verse.setFavorited(isFavorite);
 
                     if(category != null)
-                        verse.setCategoryName(category.getId());
+                        verse.setCategory(category);
 
                     ((MainActivity) getActivity()).saveVerse(verse);
                     getActivity().getSupportFragmentManager().popBackStack();
@@ -1255,6 +1253,10 @@ public class NewVerse extends Fragment implements
         if(citationString.equals(""))
             return;
 
+//        String versesString = citationString.substring
+//            (citationString.indexOf(":") + 1, citationString.length());
+//        BibleUtils.getVerse(selectedBook, selectedChapter, versesString);
+
         verseTextProgressBar.setVisibility(View.VISIBLE);
         String url = "http://labs.bible.org/api/?type=json&formatting=plain&passage="
                 + citationString.replaceAll("\\s", "%20");
@@ -1354,24 +1356,21 @@ public class NewVerse extends Fragment implements
         if(!citationValidated || !verseTextValidated)
             return;
 
-        String categoryName;
-        if(category != null)
-            categoryName = category.getName();
-        else categoryName = "No Category";
-
         Verse verse = new Verse();
         verse.setVerse(citation);
         verse.setVerseText(verseText);
-        verse.setCategoryName(categoryName);
         verse.setTags(new String[] { "tag1", "tag2", "tag3" });
         verse.setTitle(title);
         verse.setNotes(notes);
         verse.setFavorited(isFavorite);
 
+        if(category != null)
+            verse.setCategory(category);
+
         String message =
             "Citation: " + citation + "\n" +
             "Verse Text: " + verseText + "\n" +
-            "Category: " + categoryName + "\n" +
+            "Category: " + category.getName() + "\n" +
             "Title: " + title + "\n" +
             "Notes: " + notes + "\n" +
             "Marked as favorite: " + isFavorite;

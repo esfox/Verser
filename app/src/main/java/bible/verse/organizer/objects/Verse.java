@@ -23,7 +23,7 @@ public class Verse
         id,
         verse,
         verseText,
-        categoryName,
+        categoryID,
         title,
         notes;
 
@@ -77,14 +77,14 @@ public class Verse
         this.title = title;
     }
 
-    public String getCategoryName()
+    public Category getCategory()
     {
-        return categoryName;
+        return category;
     }
 
-    public void setCategoryName(String categoryName)
+    public void setCategory(Category category)
     {
-        this.categoryName = categoryName;
+        this.category = category;
     }
 
     public String getNotes()

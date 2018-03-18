@@ -2,7 +2,6 @@ package bible.verse.organizer.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.List;
@@ -35,7 +34,7 @@ public class TagsAdapter extends RecyclerView.Adapter<TagViewHolder>
     public TagViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
         return new TagViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_tags_item, parent, false), listener);
+                .inflate(R.layout.tags_item, parent, false), listener);
     }
 
     @Override

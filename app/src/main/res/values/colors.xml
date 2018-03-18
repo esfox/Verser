@@ -22,7 +22,7 @@
     <color name="dark_colorAccent">#4CAF50</color>
     <color name="dark_colorBackground">#303030</color>
     <color name="dark_textColorPrimary">#FFF</color>
-    <color name="dark_textColorSecondary">#555555</color>
+    <color name="dark_textColorSecondary">#AAA</color>
     <color name="dark_textColorTertiary">#818181</color>
     <color name="dark_textColorLight">#FFF</color>
     <color name="dark_dividerColor">#424242</color>

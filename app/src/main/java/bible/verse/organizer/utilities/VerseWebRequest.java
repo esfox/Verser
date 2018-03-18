@@ -2,7 +2,6 @@ package bible.verse.organizer.utilities;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;

@@ -15,6 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.util.List;
+
+import bible.verse.organizer.MainActivity;
 import bible.verse.organizer.adapters.CategoriesAdapter;
 import bible.verse.organizer.interfaces.CategoriesListItemListener;
 import bible.verse.organizer.objects.Category;
@@ -53,8 +56,11 @@ public class Categories extends Fragment implements
         categoriesList.setHasFixedSize(true);
         categoriesList.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        //Get categories from database
+        List<Category> categories = ((MainActivity) getActivity()).getCategories();
+
         //Set adapter to Categories list
-        adapter = new CategoriesAdapter(this);
+        adapter = new CategoriesAdapter(this, categories);
         categoriesList.setAdapter(adapter);
 
         layout.findViewById(R.id.categories_add).setOnClickListener(this);
@@ -119,10 +125,12 @@ public class Categories extends Fragment implements
                                 newCategoryName.setError("Please enter a name for the category.");
                             else
                             {
-                                adapter.addCategory(new Category
-                                    (categoryName, R.drawable.temp_category_icon));
+                                Category category = new Category
+                                    (categoryName, R.drawable.temp_category_icon);
+                                adapter.addCategory(category);
                                 categoriesList.smoothScrollToPosition(0);
                                 dialog.dismiss();
+                                ((MainActivity) getActivity()).saveCategory(category);
                             }
                         }
                     });

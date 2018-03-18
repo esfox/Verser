@@ -12,11 +12,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.faithcomesbyhearing.dbt.Dbt;
+
 import java.util.List;
 
 import bible.verse.organizer.fragments.FragmentTags;
 import bible.verse.organizer.fragments.Home;
 import bible.verse.organizer.interfaces.OnBackPressListener;
+import bible.verse.organizer.objects.Category;
 import bible.verse.organizer.objects.Verse;
 import bible.verse.organizer.organizer.R;
 import bible.verse.organizer.utilities.DatabaseHandler;
@@ -36,6 +39,8 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        Dbt.setApiKey("8a74dbcb2ba6d3d407c83a2a123f1cb5");
 
         setTheme(applyDarkTheme? R.style.AppThemeDark : R.style.AppTheme);
 
@@ -58,21 +63,40 @@ public class MainActivity extends AppCompatActivity
             .commit();
     }
 
+    public List<Verse> getVerses()
+    {
+        verses = databaseHandler.getAllEntries();
+        return verses;
+    }
+
     public void saveVerse(Verse verse)
     {
+        //Save verse
         databaseHandler.addEntry(verse);
-        Log.i("Database", "Verse has been saved in database.");
+
+        //Update verse's category verse count
+        Category category = verse.getCategory();
+        category.updateVerseCount();
+        databaseHandler.updateCategory(category);
+
+        Log.i("Database", "Verse has been saved.");
         Toast.makeText(this, "Verse has been saved!", Toast.LENGTH_SHORT).show();
     }
 
-    public void loadVerses()
+    public List<Category> getCategories()
     {
-        verses = databaseHandler.getAllEntries();
+        return databaseHandler.getAllCategories();
+    }
+
+    public void saveCategory(Category category)
+    {
+        databaseHandler.addCategory(category);
+        Log.i("Database", "Category has been saved.");
     }
 
     public void d_showVerses()
     {
-        loadVerses();
+        verses = databaseHandler.getAllEntries();
 
         String message = "Entry Count: " + String.valueOf(verses.size()) + "\n\n";
 
@@ -82,7 +106,7 @@ public class MainActivity extends AppCompatActivity
                     "ID: " + verse.getId() + "\n" +
                             verse.getVerse() + "\n" +
                             verse.getVerseText() + "\n" +
-                            "Category: " + verse.getCategoryName() + "\n" +
+                            "Category: " + verse.getCategory().getName() + "\n" +
                             "Tag: ";
 
             for (String tag : verse.getTags())
@@ -101,18 +125,13 @@ public class MainActivity extends AppCompatActivity
                 .show();
     }
 
-    public List<Verse> getVerses()
-    {
-        loadVerses();
-        return verses;
-    }
-
     public void d_clearDatabase()
     {
         databaseHandler.clearEntriesTable();
         Toast.makeText(this, "Database Cleared", Toast.LENGTH_SHORT).show();
     }
 
+    //TODO: Fix colors in dark theme
     @SuppressWarnings("unused")
     public void changeTheme()
     {
@@ -142,7 +161,7 @@ public class MainActivity extends AppCompatActivity
 //            messageToDisplay +=
 //                "Citation: " + verse.getVerse() + "\n" +
 //                "Verse: " + verse.getVerseText() + "\n" +
-//                "Category: " + verse.getCategoryName() + "\n" +
+//                "Category: " + verse.getCategory() + "\n" +
 //                "Tag:\n";
 //
 //            for(String tag : verse.getTags())

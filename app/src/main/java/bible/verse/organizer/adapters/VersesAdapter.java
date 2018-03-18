@@ -9,6 +9,7 @@ import java.util.List;
 
 import bible.verse.organizer.adapters.viewholders.VerseOfTheDayViewHolder;
 import bible.verse.organizer.adapters.viewholders.VerseViewHolder;
+import bible.verse.organizer.objects.Category;
 import bible.verse.organizer.objects.Verse;
 import bible.verse.organizer.organizer.R;
 
@@ -26,7 +27,7 @@ public class VersesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     {
         verses = new ArrayList<>();
 
-        makeDummyData();
+//        makeDummyData();
     }
 
     @Override
@@ -95,7 +96,11 @@ public class VersesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             Verse verse = new Verse();
             verse.setVerse(String.valueOf(i+1) + "\tJohn 3:16");
             verse.setVerseText("For God so loved the world... boi.");
-            verse.setCategoryName("Dogetory");
+
+            Category category = new Category();
+            category.setName("Dogetory");
+            verse.setCategory(category);
+
             verse.setTags(new String[] { "tag-ulan", "tag-araw", "tag-pipiso" });
             verse.setTitle("Huling Kontrata");
             verse.setNotes("Fat Cakes");

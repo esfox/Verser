@@ -69,8 +69,8 @@ public class Parser
 
             //Parse Category
             Matcher categoryMatcher = categoryPattern.matcher(entry);
-            if(categoryMatcher.find())
-                verse.setCategoryName(categoryMatcher.group(1));
+//            if(categoryMatcher.find())
+//                verse.setCategory(categoryMatcher.group(1));
 
             //Parse Tag
             Matcher tagsMatcher = tagsPattern.matcher(entry);
@@ -116,7 +116,7 @@ public class Parser
 //            System.out.println(verse.getVerse());
 //            System.out.println(verse.getVerseText());
 //            System.out.println("Title: " + verse.getTitle());
-//            System.out.println("Category: " + verse.getCategoryName());
+//            System.out.println("Category: " + verse.getCategory());
 //
 //            System.out.print("Tag: ");
 //            String[] tags = verse.getTags();

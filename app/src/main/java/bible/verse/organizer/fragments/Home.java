@@ -1,5 +1,7 @@
 package bible.verse.organizer.fragments;
 
+import android.annotation.SuppressLint;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -7,9 +9,10 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.CardView;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -17,6 +20,11 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.larswerkman.lobsterpicker.LobsterPicker;
+import com.larswerkman.lobsterpicker.OnColorListener;
+import com.larswerkman.lobsterpicker.sliders.LobsterShadeSlider;
 
 import java.util.List;
 
@@ -72,7 +80,8 @@ public class Home extends Fragment implements
                 break;
 
             case R.id.debug_button:
-                ((MainActivity) getActivity()).d_showVerses();
+//                ((MainActivity) getActivity()).d_showVerses();
+                showColorPicker();
                 break;
         }
     }
@@ -238,7 +247,52 @@ public class Home extends Fragment implements
                 .commit();
     }
 
-    //TEMPORARY
+    //TEMPORARY METHODS
+
+    //TODO: Apply to tag color
+    private void showColorPicker()
+    {
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        View colorPickerView = inflater.inflate(R.layout.color_picker, null);
+
+        final View testBackround = colorPickerView.findViewById(R.id.test_background);
+        final TextView testText = colorPickerView.findViewById(R.id.test_text);
+        LobsterPicker colorPicker = colorPickerView.findViewById(R.id.color_picker);
+        LobsterShadeSlider shadeSlider = colorPickerView.findViewById(R.id.color_picker_slider);
+        colorPicker.addDecorator(shadeSlider);
+
+        OnColorListener onColorListener = new OnColorListener()
+        {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onColorChanged(int color)
+            {
+                testBackround.setBackground(new ColorDrawable(color));
+                double luminance = 1 -
+                    (0.299 * android.graphics.Color.red(color)
+                        + 0.587 * android.graphics.Color.green(color)
+                        + 0.114 * android.graphics.Color.blue(color))
+                        / 255;
+
+                testText.setText("Luminance: " + String.valueOf(luminance));
+                testText.setTextColor(luminance < 0.42?
+                    ContextCompat.getColor(getContext(), R.color.textColorPrimary) :
+                    ContextCompat.getColor(getContext(), R.color.textColorLight));
+            }
+
+            @Override public void onColorSelected(int color) {}
+        };
+
+        colorPicker.addOnColorListener(onColorListener);
+        shadeSlider.addOnColorListener(onColorListener);
+
+        new AlertDialog.Builder(getContext())
+            .setTitle("Color Test")
+            .setView(colorPickerView)
+            .setPositiveButton("Done", null)
+            .show();
+    }
+
     private void snack(String message)
     {
         Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();

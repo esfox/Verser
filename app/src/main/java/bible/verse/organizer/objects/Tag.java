@@ -11,6 +11,13 @@ public class Tag
 
     public Tag(){ id = UUID.randomUUID().toString(); }
 
+    public  Tag (String name, int color)
+    {
+        id = UUID.randomUUID().toString();
+        this.name = name;
+        this.color = color;
+    }
+
     public void setId(String id) { this.id = id ;}
 
     public String getId() {return id;}

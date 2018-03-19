@@ -1,18 +1,16 @@
 package bible.verse.organizer.fragments;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -51,13 +49,21 @@ public class Categories extends Fragment implements
             }
         });
 
+        //Initial text
+        TextView initialText = layout.findViewById(R.id.categories_initial_text);
+
         //Setup Categories list
         categoriesList = layout.findViewById(R.id.categories_list);
         categoriesList.setHasFixedSize(true);
         categoriesList.setLayoutManager(new LinearLayoutManager(getContext()));
+        categoriesList.setTag(initialText);
 
         //Get categories from database
         List<Category> categories = ((MainActivity) getActivity()).getCategories();
+
+        //Hide initial text (no saved categories yet) when there are no categories
+        if(categories.isEmpty())
+            initialText.setVisibility(View.VISIBLE);
 
         //Set adapter to Categories list
         adapter = new CategoriesAdapter(this, categories);
@@ -75,68 +81,28 @@ public class Categories extends Fragment implements
     }
 
     @Override
+    public void onCategoryAdd(Category category)
+    {
+        categoriesList.smoothScrollToPosition(0);
+        ((MainActivity) getActivity()).saveCategory(category);
+
+        TextView initialText = (TextView) categoriesList.getTag();
+        if(initialText.getVisibility() == View.VISIBLE)
+            initialText.setVisibility(View.GONE);
+    }
+
+    @Override
     public void onClick(View view)
     {
         switch(view.getId())
         {
             case R.id.categories_add:
-                addNewCategory();
+                adapter.addCategory(getContext());
                 break;
 
             case R.id.new_category_icon:
                 Toast.makeText(getContext(), "Change Icon", Toast.LENGTH_SHORT).show();
                 break;
         }
-    }
-
-    private void addNewCategory()
-    {
-        LayoutInflater inflater = LayoutInflater.from(getContext());
-        View newCategoryDialog = inflater.inflate(R.layout.dialog_new_category, null);
-
-        newCategoryDialog.findViewById(R.id.new_category_icon)
-            .setOnClickListener(this);
-
-        final TextInputLayout newCategoryName = newCategoryDialog
-                .findViewById(R.id.new_category_name);
-
-        final AlertDialog dialog = new AlertDialog.Builder(getContext())
-            .setTitle("Add New Category")
-            .setView(newCategoryDialog)
-            .setPositiveButton("Done", null)
-            .setNegativeButton("Cancel", null)
-            .create();
-
-        dialog.setOnShowListener(new DialogInterface.OnShowListener()
-        {
-            @Override
-            public void onShow(DialogInterface dialogInterface)
-            {
-                dialog.getButton(DialogInterface.BUTTON_POSITIVE)
-                    .setOnClickListener(new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View view)
-                        {
-                            String categoryName = newCategoryName
-                                .getEditText().getText().toString();
-
-                            if(categoryName.equals(""))
-                                newCategoryName.setError("Please enter a name for the category.");
-                            else
-                            {
-                                String iconIdentifier = getResources()
-                                    .getResourceEntryName(R.drawable.temp_category_icon);
-                                Category category = new Category(categoryName, iconIdentifier);
-                                adapter.addCategory(category);
-                                categoriesList.smoothScrollToPosition(0);
-                                dialog.dismiss();
-                                ((MainActivity) getActivity()).saveCategory(category);
-                            }
-                        }
-                    });
-            }
-        });
-        dialog.show();
     }
 }

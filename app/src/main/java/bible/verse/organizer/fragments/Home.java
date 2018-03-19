@@ -172,9 +172,13 @@ public class Home extends Fragment implements
         versesList = layout.findViewById(R.id.home_list);
         versesList.setHasFixedSize(true);
         versesList.setLayoutManager(versesListLayoutManager);
-        versesList.setTag(layout.findViewById(R.id.home_initial_label));
+        versesList.setTag(layout.findViewById(R.id.home_initial_text));
 
-        versesAdapter = new VersesAdapter();
+        List<Verse> verses = ((MainActivity) getActivity()).getVerses();
+        layout.findViewById(R.id.home_initial_text)
+            .setVisibility(verses.isEmpty()? View.VISIBLE : View.GONE);
+
+        versesAdapter = new VersesAdapter(verses);
         versesList.setAdapter(versesAdapter);
 
         if(verseOfTheDay != null)
@@ -188,23 +192,6 @@ public class Home extends Fragment implements
                 versesList.scrollToPosition(versesAdapter.getItemCount() - 1);
             }
         });
-
-        updateVersesList();
-    }
-
-    private void updateVersesList()
-    {
-        List<Verse> verses = ((MainActivity) getActivity()).getVerses();
-
-        boolean versesIsEmpty = verses.size() <= 0;
-        versesList.setVisibility(versesIsEmpty? View.GONE : View.VISIBLE);
-        ((View) versesList.getTag()).setVisibility(versesIsEmpty? View.VISIBLE : View.GONE);
-
-        if(verses == null)
-            return;
-
-        for(Verse verse : verses)
-            versesAdapter.addVerse(verse);
     }
 
     private void showVerseOfTheDay()

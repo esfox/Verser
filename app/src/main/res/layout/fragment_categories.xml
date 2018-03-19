@@ -45,4 +45,15 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <TextView
+        android:id="@+id/categories_initial_text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textColor="?android:attr/textColorTertiary"
+        android:textSize="18sp"
+        android:text="You have no saved categories yet."
+        android:visibility="gone"
+        tools:ignore="HardcodedText"/>
+
 </android.support.design.widget.CoordinatorLayout>

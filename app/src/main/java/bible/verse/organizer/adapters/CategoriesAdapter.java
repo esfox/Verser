@@ -1,10 +1,16 @@
 package bible.verse.organizer.adapters;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,10 +39,62 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoryViewHolder> 
         this.categories = categoriesDefaultList;
     }
 
-    public void addCategory(Category category)
+    public void addCategory(final Context context)
     {
-        categories.add(category);
-        notifyItemInserted(categories.size() - 1);
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View newCategoryDialog = inflater.inflate(R.layout.dialog_new_category, null);
+
+        newCategoryDialog.findViewById(R.id.new_category_icon)
+            .setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    Toast.makeText(context, "Change Icon", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        final TextInputLayout newCategoryName = newCategoryDialog
+            .findViewById(R.id.new_category_name);
+
+        final AlertDialog dialog = new AlertDialog.Builder(context)
+            .setTitle("Add New Category")
+            .setView(newCategoryDialog)
+            .setPositiveButton("Done", null)
+            .setNegativeButton("Cancel", null)
+            .create();
+
+        dialog.setOnShowListener(new DialogInterface.OnShowListener()
+        {
+            @Override
+            public void onShow(DialogInterface dialogInterface)
+            {
+                dialog.getButton(DialogInterface.BUTTON_POSITIVE)
+                    .setOnClickListener(new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View view)
+                        {
+                            String categoryName = newCategoryName
+                                .getEditText().getText().toString();
+
+                            if(categoryName.equals(""))
+                                newCategoryName.setError("Please enter a name for the category.");
+                            else
+                            {
+                                String iconIdentifier = context.getResources()
+                                    .getResourceEntryName(R.drawable.temp_category_icon);
+                                Category category = new Category(categoryName, iconIdentifier);
+                                categories.add(category);
+                                notifyItemInserted(categories.size() - 1);
+                                dialog.dismiss();
+                                listener.onCategoryAdd(category);
+                            }
+                        }
+                    });
+            }
+        });
+        dialog.show();
     }
 
     public void updateCategories(List<Category> categories)

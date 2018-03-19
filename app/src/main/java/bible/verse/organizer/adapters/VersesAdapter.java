@@ -23,9 +23,9 @@ public class VersesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private boolean verseOfTheDayIsLoaded;
 
-    public VersesAdapter()
+    public VersesAdapter(List<Verse> verses)
     {
-        verses = new ArrayList<>();
+        this.verses = verses;
 
 //        makeDummyData();
     }
@@ -76,11 +76,11 @@ public class VersesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         return verseOfTheDayIsLoaded? verses.size() + 1 : verses.size();
     }
 
-    public void addVerse(Verse verse)
-    {
-        verses.add(verse);
-        notifyItemInserted(verses.size() - 1);
-    }
+//    public void addVerse(Verse verse)
+//    {
+//        verses.add(verse);
+//        notifyItemInserted(verses.size() - 1);
+//    }
 
     public void showVerseOfTheDay(Verse verse)
     {

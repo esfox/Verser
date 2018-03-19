@@ -235,8 +235,8 @@ public class DatabaseHandler extends SQLiteOpenHelper
         Verse verse = new Verse();
 
         verse.setId(cursor.getString(cursor.getColumnIndex(COLUMN_UUID)));
-        verse.setTitle(cursor.getString(cursor.getColumnIndex(COLUMN_TITLE)));
         verse.setVerse(cursor.getString(cursor.getColumnIndex(COLUMN_VERSE)));
+        verse.setVerseText(cursor.getString(cursor.getColumnIndex(COLUMN_VERSE_TEXT)));
 
         Category category = getCategory(cursor.getString(cursor.getColumnIndex(COLUMN_CATEGORY)));
         verse.setCategory(category);
@@ -245,10 +245,10 @@ public class DatabaseHandler extends SQLiteOpenHelper
         String[] tags = tagString.split(",");
         verse.setTags(tags);
 
-        verse.setVerseText(cursor.getString(cursor.getColumnIndex(COLUMN_VERSE_TEXT)));
+        verse.setTitle(cursor.getString(cursor.getColumnIndex(COLUMN_TITLE)));
+        verse.setNotes(cursor.getString(cursor.getColumnIndex(COLUMN_NOTES)));
         verse.setFavorited
             (Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(COLUMN_ISFAVORITE))));
-        verse.setNotes(cursor.getString(cursor.getColumnIndex(COLUMN_NOTES)));
 
         return verse;
     }
@@ -269,18 +269,20 @@ public class DatabaseHandler extends SQLiteOpenHelper
     {
         ContentValues values = new ContentValues();
         values.put(COLUMN_UUID, verse.getId());
-        values.put(COLUMN_TITLE, verse.getTitle());
-        values.put(COLUMN_CATEGORY, verse.getCategory().getId());
         values.put(COLUMN_VERSE, verse.getVerse());
+        values.put(COLUMN_VERSE_TEXT, verse.getVerseText());
+
+        if(verse.getCategory() != null)
+            values.put(COLUMN_CATEGORY, verse.getCategory().getId());
 
         StringBuilder tags = new StringBuilder();
         for(String tag: verse.getTags())
             tags.append(tag).append(",");
 
         values.put(COLUMN_TAGS, tags. toString());
-        values.put(COLUMN_VERSE_TEXT, verse.getVerseText());
-        values.put(COLUMN_ISFAVORITE, String.valueOf(verse.isFavorite()));
+        values.put(COLUMN_TITLE, verse.getTitle());
         values.put(COLUMN_NOTES, verse.getNotes());
+        values.put(COLUMN_ISFAVORITE, String.valueOf(verse.isFavorite()));
 
         return values;
     }
@@ -292,7 +294,6 @@ public class DatabaseHandler extends SQLiteOpenHelper
         values.put(COLUMN_NAME, category.getName());
         values.put(COLUMN_ICON, category.getIconIdentifier());
         values.put(COLUMN_VERSE_COUNT, category.getVerseCount());
-
         return values;
     }
 }

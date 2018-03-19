@@ -56,7 +56,6 @@ public class MainActivity extends AppCompatActivity
     private void launchHomeFragment()
     {
         //Create class (static fields) for Fragment tags
-        //TODO: Create class (static fields) for Fragment tags
         getSupportFragmentManager()
             .beginTransaction()
             .replace(R.id.parent_layout, new Home(), FragmentTags.HOME)
@@ -76,8 +75,11 @@ public class MainActivity extends AppCompatActivity
 
         //Update verse's category verse count
         Category category = verse.getCategory();
-        category.updateVerseCount();
-        databaseHandler.updateCategory(category);
+        if(category != null)
+        {
+            category.updateVerseCount();
+            databaseHandler.updateCategory(category);
+        }
 
         Log.i("Database", "Verse has been saved.");
         Toast.makeText(this, "Verse has been saved!", Toast.LENGTH_SHORT).show();
@@ -94,6 +96,7 @@ public class MainActivity extends AppCompatActivity
         Log.i("Database", "Category has been saved.");
     }
 
+    @SuppressWarnings("StringConcatenationInLoop")
     public void d_showVerses()
     {
         verses = databaseHandler.getAllEntries();
@@ -128,6 +131,7 @@ public class MainActivity extends AppCompatActivity
     public void d_clearDatabase()
     {
         databaseHandler.clearEntriesTable();
+        databaseHandler.clearCategoriesTable();
         Toast.makeText(this, "Database Cleared", Toast.LENGTH_SHORT).show();
     }
 

@@ -667,7 +667,6 @@ public class NewVerse extends Fragment implements
     }
 
     //Setup layout for selecting category
-    @SuppressLint("ClickableViewAccessibility")
     private void setupCategoriesView(final View layout, final View button)
     {
         //Button label and icon
@@ -677,10 +676,14 @@ public class NewVerse extends Fragment implements
         //Clear category button
         final View clearButton = layout.findViewById(R.id.new_verse_category_clear);
 
+        //Categories view layout
         categoriesView = layout.findViewById(R.id.new_verse_categories_view);
 
         //Set view y position to be the screen height (hidden below screen)
         categoriesView.setY(screenHeight);
+
+        //Initial text (no saved categories yet)
+        final TextView initialText = layout.findViewById(R.id.new_verse_categories_initial_text);
 
         //Toolbar & Search EditText ViewSwitcher
         final ViewSwitcher viewSwitcher = categoriesView.findViewById
@@ -694,7 +697,7 @@ public class NewVerse extends Fragment implements
             (R.id.new_verse_categories_search_input);
 
         //Setup categories list
-        RecyclerView categoriesList = layout.findViewById(R.id.new_verse_categories_list);
+        final RecyclerView categoriesList = layout.findViewById(R.id.new_verse_categories_list);
         categoriesList.setHasFixedSize(true);
         categoriesList.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -720,10 +723,25 @@ public class NewVerse extends Fragment implements
 
                 toggleKeyboard(searchInput, false);
             }
+
+            @Override
+            public void onCategoryAdd(Category category)
+            {
+                categoriesList.smoothScrollToPosition(0);
+                ((MainActivity) getActivity()).saveCategory(category);
+                if(initialText.getVisibility() == View.VISIBLE)
+                    initialText.setVisibility(View.GONE);
+            }
         };
 
+        //Get categories from Database
         List<Category> categories =  ((MainActivity) getActivity()).getCategories();
 
+        //Hide initial text (no saved categories yet) when there are no categories
+        if(categories.isEmpty())
+            initialText.setVisibility(View.VISIBLE);
+
+        //Category list adapter
         final CategoriesAdapter adapter = new CategoriesAdapter(listener, categories);
         categoriesList.setAdapter(adapter);
 
@@ -744,7 +762,7 @@ public class NewVerse extends Fragment implements
         });
 
         //Click listener for categories-related buttons
-        View.OnClickListener onClickListener = new View.OnClickListener()
+        final View.OnClickListener onClickListener = new View.OnClickListener()
         {
             @SuppressLint("SetTextI18n")
             @Override
@@ -784,6 +802,10 @@ public class NewVerse extends Fragment implements
                         if(!searchInput.getText().toString().equals(""))
                             searchInput.setText("");
                         break;
+
+                    case R.id.new_verse_categories_add:
+                        adapter.addCategory(getContext());
+                        break;
                 }
 
                 //Set boolean as tag to ViewSwitcher
@@ -799,6 +821,10 @@ public class NewVerse extends Fragment implements
 
         //Category search cancel button
         categoriesView.findViewById(R.id.new_verse_categories_search_cancel)
+            .setOnClickListener(onClickListener);
+
+        //Category add button
+        categoriesView.findViewById(R.id.new_verse_categories_add)
             .setOnClickListener(onClickListener);
 
         //Enable dragging the toolbar

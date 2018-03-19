@@ -1,8 +1,7 @@
 package bible.verse.organizer.adapters.viewholders;
 
 import android.annotation.SuppressLint;
-import android.graphics.PorterDuff;
-import android.support.v4.content.ContextCompat;
+import android.content.res.Resources;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.RecyclerView;
@@ -16,7 +15,6 @@ import android.widget.Toast;
 import bible.verse.organizer.interfaces.CategoriesListItemListener;
 import bible.verse.organizer.objects.Category;
 import bible.verse.organizer.organizer.R;
-import bible.verse.organizer.utilities.Color;
 
 public class CategoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
 {
@@ -48,8 +46,13 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder implements View.
         this.category = category;
 
         name.setText(category.getName());
-        icon.setImageResource(category.getIconResource());
         verseCount.setText(String.valueOf(category.getVerseCount()) + " verses");
+
+        String packageName = itemView.getContext().getPackageName();
+        Resources resources = itemView.getContext().getResources();
+        int iconID = resources.getIdentifier
+            (category.getIconIdentifier(), "drawable", packageName);
+        icon.setImageResource(iconID);
     }
 
     @Override

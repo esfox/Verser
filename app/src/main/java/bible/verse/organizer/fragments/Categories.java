@@ -125,8 +125,9 @@ public class Categories extends Fragment implements
                                 newCategoryName.setError("Please enter a name for the category.");
                             else
                             {
-                                Category category = new Category
-                                    (categoryName, R.drawable.temp_category_icon);
+                                String iconIdentifier = getResources()
+                                    .getResourceEntryName(R.drawable.temp_category_icon);
+                                Category category = new Category(categoryName, iconIdentifier);
                                 adapter.addCategory(category);
                                 categoriesList.smoothScrollToPosition(0);
                                 dialog.dismiss();

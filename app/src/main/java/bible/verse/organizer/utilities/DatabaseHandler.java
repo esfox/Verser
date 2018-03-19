@@ -60,7 +60,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 COLUMN_UUID + " TEXT," +
                 COLUMN_NAME + " TEXT," +
-                COLUMN_ICON + " INTEGER," +
+                COLUMN_ICON + " TEXT," +
                 COLUMN_VERSE_COUNT + " INTEGER" +
                 ");";
 
@@ -77,13 +77,15 @@ public class DatabaseHandler extends SQLiteOpenHelper
 
     public void addEntry(Verse verse)
     {
-        getWritableDatabase().insert(TABLE_ENTRIES, null, getVerseValues(verse));
+        getWritableDatabase().insert
+            (TABLE_ENTRIES, null, getVerseValues(verse));
         getWritableDatabase().close();
     }
 
     public void addCategory (Category category)
     {
-        getWritableDatabase().insert(TABLE_CATEGORIES, null, getCategoryValues(category));
+        getWritableDatabase().insert
+            (TABLE_CATEGORIES, null, getCategoryValues(category));
         getWritableDatabase().close();
     }
 
@@ -237,10 +239,8 @@ public class DatabaseHandler extends SQLiteOpenHelper
         verse.setVerse(cursor.getString(cursor.getColumnIndex(COLUMN_VERSE)));
 
         Category category = getCategory(cursor.getString(cursor.getColumnIndex(COLUMN_CATEGORY)));
-
-        Log.d("Category", category.getName());
-
         verse.setCategory(category);
+
         String tagString = cursor.getString(cursor.getColumnIndex(COLUMN_TAGS));
         String[] tags = tagString.split(",");
         verse.setTags(tags);
@@ -259,7 +259,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
 
         category.setId(cursor.getString(cursor.getColumnIndex(COLUMN_UUID)));
         category.setName(cursor.getString(cursor.getColumnIndex(COLUMN_NAME)));
-        category.setIconResource(cursor.getInt(cursor.getColumnIndex(COLUMN_ICON)));
+        category.setIconIdentifier(cursor.getString(cursor.getColumnIndex(COLUMN_ICON)));
         category.setVerseCount(cursor.getInt(cursor.getColumnIndex(COLUMN_VERSE_COUNT)));
 
         return category;
@@ -290,7 +290,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
         ContentValues values = new ContentValues();
         values.put(COLUMN_UUID, category.getId());
         values.put(COLUMN_NAME, category.getName());
-        values.put(COLUMN_ICON, category.getIconResource());
+        values.put(COLUMN_ICON, category.getIconIdentifier());
         values.put(COLUMN_VERSE_COUNT, category.getVerseCount());
 
         return values;

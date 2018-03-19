@@ -9,7 +9,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
@@ -33,6 +32,7 @@ import bible.verse.organizer.adapters.VersesAdapter;
 import bible.verse.organizer.interfaces.VerseWebRequestListener;
 import bible.verse.organizer.objects.Verse;
 import bible.verse.organizer.organizer.R;
+import bible.verse.organizer.utilities.Color;
 import bible.verse.organizer.utilities.VerseWebRequest;
 
 public class Home extends Fragment implements
@@ -80,8 +80,8 @@ public class Home extends Fragment implements
                 break;
 
             case R.id.debug_button:
-//                ((MainActivity) getActivity()).d_showVerses();
-                showColorPicker();
+                ((MainActivity) getActivity()).d_showVerses();
+//                showColorPicker();
                 break;
         }
     }
@@ -248,8 +248,6 @@ public class Home extends Fragment implements
     }
 
     //TEMPORARY METHODS
-
-    //TODO: Apply to tag color
     private void showColorPicker()
     {
         LayoutInflater inflater = LayoutInflater.from(getContext());
@@ -275,9 +273,7 @@ public class Home extends Fragment implements
                         / 255;
 
                 testText.setText("Luminance: " + String.valueOf(luminance));
-                testText.setTextColor(luminance < 0.42?
-                    ContextCompat.getColor(getContext(), R.color.textColorPrimary) :
-                    ContextCompat.getColor(getContext(), R.color.textColorLight));
+                testText.setTextColor(Color.getAdaptedTextColor(getContext(), color));
             }
 
             @Override public void onColorSelected(int color) {}

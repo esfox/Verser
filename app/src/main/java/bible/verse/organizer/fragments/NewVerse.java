@@ -708,7 +708,11 @@ public class NewVerse extends Fragment implements
 
                 toggleCategoriesView(false);
                 label.setText(category.getName());
-                icon.setImageResource(category.getIconResource());
+
+                int iconID = getResources().getIdentifier
+                    (category.getIconIdentifier(), "drawable",
+                        getContext().getPackageName());
+                icon.setImageResource(iconID);
                 clearButton.setVisibility(View.VISIBLE);
 
                 if(!searchInput.getText().toString().equals(""))

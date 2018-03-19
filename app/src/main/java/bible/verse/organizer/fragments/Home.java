@@ -9,7 +9,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
@@ -81,8 +80,8 @@ public class Home extends Fragment implements
                 break;
 
             case R.id.debug_button:
-//                ((MainActivity) getActivity()).d_showVerses();
-                showColorPicker();
+                ((MainActivity) getActivity()).d_showVerses();
+//                showColorPicker();
                 break;
         }
     }
@@ -249,8 +248,6 @@ public class Home extends Fragment implements
     }
 
     //TEMPORARY METHODS
-
-    //TODO: Apply to tag color
     private void showColorPicker()
     {
         LayoutInflater inflater = LayoutInflater.from(getContext());

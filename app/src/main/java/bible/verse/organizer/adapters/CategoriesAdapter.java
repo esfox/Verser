@@ -109,7 +109,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoryViewHolder> 
             int verseCount = (i + 1) * 10;
             int drawable = R.drawable.temp_category_icon;
 
-            Category category = new Category(name, drawable);
+            Category category = new Category(name, "temp_category_icon");
             category.setVerseCount(verseCount);
             categoriesDefaultList.add(category);
         }

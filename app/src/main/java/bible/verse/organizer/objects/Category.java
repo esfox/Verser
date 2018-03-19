@@ -7,18 +7,18 @@ public class Category
     private String id;
     private String name;
     private int verseCount;
-    private int iconResource;
+    private String iconIdentifier;
 
     public Category()
     {
         id = UUID.randomUUID().toString();
     }
 
-    public Category(String name, int iconResource)
+    public Category(String name, String iconResourceName)
     {
         id = UUID.randomUUID().toString();
         this.name = name;
-        this.iconResource = iconResource;
+        this.iconIdentifier = iconResourceName;
     }
 
     public String getId()
@@ -56,13 +56,13 @@ public class Category
         verseCount++;
     }
 
-    public int getIconResource()
+    public String getIconIdentifier()
     {
-        return iconResource;
+        return iconIdentifier;
     }
 
-    public void setIconResource(int iconResource)
+    public void setIconIdentifier(String iconResourceName)
     {
-        this.iconResource = iconResource;
+        this.iconIdentifier = iconResourceName;
     }
 }

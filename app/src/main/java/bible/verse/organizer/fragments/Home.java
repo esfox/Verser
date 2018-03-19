@@ -33,6 +33,7 @@ import bible.verse.organizer.adapters.VersesAdapter;
 import bible.verse.organizer.interfaces.VerseWebRequestListener;
 import bible.verse.organizer.objects.Verse;
 import bible.verse.organizer.organizer.R;
+import bible.verse.organizer.utilities.Color;
 import bible.verse.organizer.utilities.VerseWebRequest;
 
 public class Home extends Fragment implements
@@ -275,9 +276,7 @@ public class Home extends Fragment implements
                         / 255;
 
                 testText.setText("Luminance: " + String.valueOf(luminance));
-                testText.setTextColor(luminance < 0.42?
-                    ContextCompat.getColor(getContext(), R.color.textColorPrimary) :
-                    ContextCompat.getColor(getContext(), R.color.textColorLight));
+                testText.setTextColor(Color.getAdaptedTextColor(getContext(), color));
             }
 
             @Override public void onColorSelected(int color) {}

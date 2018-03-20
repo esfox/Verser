@@ -5,4 +5,5 @@ import bible.verse.organizer.objects.Tag;
 public interface TagsListItemListener
 {
     void onTagItemClick(Tag tag);
+    void onAddTag(Tag tag);
 }

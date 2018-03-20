@@ -29,7 +29,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoryViewHolder> 
 
     private CategoriesListItemListener listener;
 
-    public CategoriesAdapter(CategoriesListItemListener listener, List<Category> categories)
+    public CategoriesAdapter(List<Category> categories, CategoriesListItemListener listener)
     {
         categoriesDefaultList = categories;
         this.listener = listener;
@@ -82,13 +82,16 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoryViewHolder> 
                                 newCategoryName.setError("Please enter a name for the category.");
                             else
                             {
+                                dialog.dismiss();
+
                                 String iconIdentifier = context.getResources()
                                     .getResourceEntryName(R.drawable.temp_category_icon);
                                 Category category = new Category(categoryName, iconIdentifier);
                                 categories.add(category);
-                                notifyItemInserted(categories.size() - 1);
-                                dialog.dismiss();
-                                listener.onCategoryAdd(category);
+
+                                int lastIndex = categories.size() - 1;
+                                notifyItemInserted(lastIndex);
+                                listener.onAddCategory(category, lastIndex);
                             }
                         }
                     });

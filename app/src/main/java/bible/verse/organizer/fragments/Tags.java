@@ -22,6 +22,7 @@ import bible.verse.organizer.adapters.TagsAdapter;
 import bible.verse.organizer.interfaces.TagsListItemListener;
 import bible.verse.organizer.objects.Tag;
 import bible.verse.organizer.organizer.R;
+import bible.verse.organizer.utilities.Color;
 
 public class Tags extends Fragment implements
         TagsListItemListener,
@@ -40,11 +41,11 @@ public class Tags extends Fragment implements
 
         tagsList = view.findViewById(R.id.tags_list);
         tagsList.setHasFixedSize(true);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
-        tagsList.setLayoutManager(gridLayoutManager);
+        tagsList.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
-        adapter = new TagsAdapter(makeDummyData());
+        adapter = new TagsAdapter(makeDummyData(), this);
         tagsList.setAdapter(adapter);
+        tagsList.scrollToPosition(0);
 
         FloatingActionButton add = view.findViewById(R.id.tags_add);
         add.setOnClickListener(this);
@@ -57,7 +58,7 @@ public class Tags extends Fragment implements
         switch(view.getId())
         {
             case R.id.tags_add:
-                addNewTag();
+                adapter.addTag(getContext());
                 break;
 
             case R.id.new_tag_icon:
@@ -72,51 +73,10 @@ public class Tags extends Fragment implements
         Snackbar.make(getView(), "Go to " + tag.getName(), Snackbar.LENGTH_SHORT).show();
     }
 
-    private void addNewTag()
+    @Override
+    public void onAddTag(Tag tag)
     {
-        LayoutInflater inflater = LayoutInflater.from(getContext());
-        View newTagDialog = inflater.inflate(R.layout.dialog_new_tag, null);
-
-        newTagDialog.findViewById(R.id.new_tag_icon)
-                .setOnClickListener(this);
-
-        final TextInputLayout newTagName = newTagDialog
-                .findViewById(R.id.new_tag_name);
-
-        final AlertDialog dialog = new AlertDialog.Builder(getContext())
-                .setTitle("Add New Tag")
-                .setView(newTagDialog)
-                .setPositiveButton("Done", null)
-                .setNegativeButton("Cancel", null)
-                .create();
-
-        dialog.setOnShowListener(new DialogInterface.OnShowListener()
-        {
-            @Override
-            public void onShow(DialogInterface dialogInterface)
-            {
-                dialog.getButton(DialogInterface.BUTTON_POSITIVE)
-                        .setOnClickListener(new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View view)
-                            {
-                                String tagName = newTagName
-                                        .getEditText().getText().toString();
-
-                                if(tagName.equals(""))
-                                    newTagName.setError("Please enter a name for the tag.");
-                                else
-                                {
-                                    adapter.addTag(new Tag ());
-                                    tagsList.smoothScrollToPosition(0);
-                                    dialog.dismiss();
-                                }
-                            }
-                        });
-            }
-        });
-        dialog.show();
+        tagsList.smoothScrollToPosition(0);
     }
 
     private List<Tag> makeDummyData ()
@@ -127,7 +87,7 @@ public class Tags extends Fragment implements
         {
             Tag tag = new Tag();
 
-            tag.setName("Tagatag");
+            tag.setName("Tag " + String.valueOf(i+1));
             tag.setVerseCount(10);
             tag.setColor(R.color.colorAccent);
 

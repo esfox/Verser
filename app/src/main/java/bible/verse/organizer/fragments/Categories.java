@@ -55,8 +55,13 @@ public class Categories extends Fragment implements
         //Setup Categories list
         categoriesList = layout.findViewById(R.id.categories_list);
         categoriesList.setHasFixedSize(true);
-        categoriesList.setLayoutManager(new LinearLayoutManager(getContext()));
         categoriesList.setTag(initialText);
+
+        //Reverse layout manager
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setReverseLayout(true);
+        layoutManager.setStackFromEnd(true);
+        categoriesList.setLayoutManager(layoutManager);
 
         //Get categories from database
         List<Category> categories = ((MainActivity) getActivity()).getCategories();
@@ -66,7 +71,7 @@ public class Categories extends Fragment implements
             initialText.setVisibility(View.VISIBLE);
 
         //Set adapter to Categories list
-        adapter = new CategoriesAdapter(this, categories);
+        adapter = new CategoriesAdapter(categories, this);
         categoriesList.setAdapter(adapter);
 
         layout.findViewById(R.id.categories_add).setOnClickListener(this);
@@ -81,9 +86,9 @@ public class Categories extends Fragment implements
     }
 
     @Override
-    public void onCategoryAdd(Category category)
+    public void onAddCategory(Category category, int lastIndex)
     {
-        categoriesList.smoothScrollToPosition(0);
+        categoriesList.smoothScrollToPosition(lastIndex);
         ((MainActivity) getActivity()).saveCategory(category);
 
         TextView initialText = (TextView) categoriesList.getTag();

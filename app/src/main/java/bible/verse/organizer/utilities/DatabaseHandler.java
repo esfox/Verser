@@ -16,23 +16,23 @@ import bible.verse.organizer.objects.Verse;
 public class DatabaseHandler extends SQLiteOpenHelper
 {
     private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "verserdatabase.db";
+    private static final String DATABASE_NAME = "database.db";
 
-    private static final String TABLE_ENTRIES = "entries";
-    private static final String COLUMN_ID = "_id";
-    private static final String COLUMN_UUID = "uuid";
-    private static final String COLUMN_VERSE = "verse";
-    private static final String COLUMN_VERSE_TEXT = "verse_text";
-    private static final String COLUMN_CATEGORY = "category";
-    private static final String COLUMN_TAGS = "tags";
-    private static final String COLUMN_TITLE = "title";
-    private static final String COLUMN_NOTES = "notes";
-    private static final String COLUMN_ISFAVORITE = "is_Favorite";
+    private static final String TABLE_VERSES = "verses";
+    private static final String VERSES_ID = "_id";
+    private static final String VERSES_UUID = "uuid";
+    private static final String VERSES_VERSE = "verse";
+    private static final String VERSES_VERSE_TEXT = "verse_text";
+    private static final String VERSES_CATEGORY = "category";
+    private static final String VERSES_TAGS = "tags";
+    private static final String VERSES_TITLE = "title";
+    private static final String VERSES_NOTES = "notes";
+    private static final String VERSES_ISFAVORITE = "is_Favorite";
 
     private static final String TABLE_CATEGORIES = "categories";
-    private static final String COLUMN_NAME = "name";
-    private static final String COLUMN_ICON = "icon";
-    private static final String COLUMN_VERSE_COUNT = "verse_count";
+    private static final String CATEGORIES_NAME = "name";
+    private static final String CATEGORIES_ICON = "icon";
+    private static final String CATEGORIES_VERSE_COUNT = "verse_count";
 
     public DatabaseHandler(Context context)
     {
@@ -44,24 +44,24 @@ public class DatabaseHandler extends SQLiteOpenHelper
     {
         Log.d("SQL", "Sumlog");
 
-        String createEntryTable = "CREATE TABLE " + TABLE_ENTRIES + "(" +
-                COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                COLUMN_UUID + " TEXT," +
-                COLUMN_VERSE + " TEXT," +
-                COLUMN_VERSE_TEXT + " TEXT," +
-                COLUMN_CATEGORY + " TEXT," +
-                COLUMN_TAGS + " TEXT," +
-                COLUMN_TITLE + " TEXT," +
-                COLUMN_NOTES + " TEXT," +
-                COLUMN_ISFAVORITE + " INTEGER" +
+        String createEntryTable = "CREATE TABLE " + TABLE_VERSES + "(" +
+                VERSES_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                VERSES_UUID + " TEXT," +
+                VERSES_VERSE + " TEXT," +
+                VERSES_VERSE_TEXT + " TEXT," +
+                VERSES_CATEGORY + " TEXT," +
+                VERSES_TAGS + " TEXT," +
+                VERSES_TITLE + " TEXT," +
+                VERSES_NOTES + " TEXT," +
+                VERSES_ISFAVORITE + " INTEGER" +
                 ");";
 
         String createCategoryTable = "CREATE TABLE " + TABLE_CATEGORIES + "(" +
-                COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                COLUMN_UUID + " TEXT," +
-                COLUMN_NAME + " TEXT," +
-                COLUMN_ICON + " TEXT," +
-                COLUMN_VERSE_COUNT + " INTEGER" +
+                VERSES_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                VERSES_UUID + " TEXT," +
+            CATEGORIES_NAME + " TEXT," +
+            CATEGORIES_ICON + " TEXT," +
+            CATEGORIES_VERSE_COUNT + " INTEGER" +
                 ");";
 
         sqLiteDatabase.execSQL(createEntryTable);
@@ -71,14 +71,14 @@ public class DatabaseHandler extends SQLiteOpenHelper
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1)
     {
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_ENTRIES);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_VERSES);
         onCreate(sqLiteDatabase);
     }
 
     public void addEntry(Verse verse)
     {
         getWritableDatabase().insert
-            (TABLE_ENTRIES, null, getVerseValues(verse));
+            (TABLE_VERSES, null, getVerseValues(verse));
         getWritableDatabase().close();
     }
 
@@ -91,15 +91,15 @@ public class DatabaseHandler extends SQLiteOpenHelper
 
     public void deleteEntry(Verse verse)
     {
-        getWritableDatabase().delete(TABLE_ENTRIES,
-                COLUMN_UUID + "=?", new String[] {verse.getId()});
+        getWritableDatabase().delete(TABLE_VERSES,
+                VERSES_UUID + "=?", new String[] {verse.getId()});
         getWritableDatabase().close();
     }
 
     public void deleteCategory (Category category)
     {
         getWritableDatabase().delete(TABLE_CATEGORIES,
-                COLUMN_UUID + "=?", new String[] {category.getId()});
+                VERSES_UUID + "=?", new String[] {category.getId()});
         getWritableDatabase().close();
     }
 
@@ -108,8 +108,8 @@ public class DatabaseHandler extends SQLiteOpenHelper
         Verse verse = new Verse();
         String query =
                 "SELECT *" +
-                " FROM " + TABLE_ENTRIES +
-                " WHERE " + COLUMN_UUID + "=\'" + id + "\'";
+                " FROM " + TABLE_VERSES +
+                " WHERE " + VERSES_UUID + "=\'" + id + "\'";
 
         Cursor cursor = getWritableDatabase().rawQuery(query, null);
 
@@ -126,7 +126,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
         String query =
                 "SELECT *" +
                 " FROM " + TABLE_CATEGORIES +
-                " WHERE " + COLUMN_UUID + "=\'" + id + "\'";
+                " WHERE " + VERSES_UUID + "=\'" + id + "\'";
 
         Cursor cursor = getWritableDatabase().rawQuery(query, null);
 
@@ -139,15 +139,15 @@ public class DatabaseHandler extends SQLiteOpenHelper
 
     public void updateEntry (Verse verse)
     {
-        getWritableDatabase().update(TABLE_ENTRIES, getVerseValues(verse),
-                COLUMN_UUID + "=?", new String[] {verse.getId()});
+        getWritableDatabase().update(TABLE_VERSES, getVerseValues(verse),
+                VERSES_UUID + "=?", new String[] {verse.getId()});
         getWritableDatabase().close();
     }
 
     public void updateCategory (Category category)
     {
         getWritableDatabase().update(TABLE_CATEGORIES, getCategoryValues(category),
-                COLUMN_UUID + "=?", new String[] { category.getId() });
+                VERSES_UUID + "=?", new String[] { category.getId() });
         getWritableDatabase().close();
     }
 
@@ -156,13 +156,13 @@ public class DatabaseHandler extends SQLiteOpenHelper
         List<Verse> verses = new ArrayList<>();
 
         String query = "SELECT *" +
-                " FROM " + TABLE_ENTRIES +
+                " FROM " + TABLE_VERSES +
                 " WHERE " +
-                COLUMN_UUID + " + " +
-                COLUMN_VERSE + " + " +
-                COLUMN_TITLE + " + " +
-                COLUMN_CATEGORY + " + " +
-                COLUMN_TAGS + " + " +
+                VERSES_UUID + " + " +
+                VERSES_VERSE + " + " +
+                VERSES_TITLE + " + " +
+                VERSES_CATEGORY + " + " +
+                VERSES_TAGS + " + " +
                 " LIKE \'%" + criteria + "%\'";
 
         Cursor cursor = getWritableDatabase().rawQuery(query, null);
@@ -181,8 +181,8 @@ public class DatabaseHandler extends SQLiteOpenHelper
         String query = "SELECT *" +
                 " FROM " + TABLE_CATEGORIES +
                 " WHERE " +
-                COLUMN_UUID + " + " +
-                COLUMN_NAME + " LIKE \'%" + criteria + "%\'";
+                VERSES_UUID + " + " +
+            CATEGORIES_NAME + " LIKE \'%" + criteria + "%\'";
 
         Cursor cursor = getWritableDatabase().rawQuery(query, null);
 
@@ -197,7 +197,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
     {
         List<Verse> verses = new ArrayList<>();
 
-        String query = "SELECT * FROM " + TABLE_ENTRIES;
+        String query = "SELECT * FROM " + TABLE_VERSES;
 
         Cursor cursor = getWritableDatabase().rawQuery(query, null);
 
@@ -225,7 +225,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
 
     public void clearEntriesTable()
     {
-        getWritableDatabase().delete(TABLE_ENTRIES, null, null);
+        getWritableDatabase().delete(TABLE_VERSES, null, null);
     }
 
     public void clearCategoriesTable() { getWritableDatabase().delete(TABLE_CATEGORIES, null, null); }
@@ -234,21 +234,21 @@ public class DatabaseHandler extends SQLiteOpenHelper
     {
         Verse verse = new Verse();
 
-        verse.setId(cursor.getString(cursor.getColumnIndex(COLUMN_UUID)));
-        verse.setVerse(cursor.getString(cursor.getColumnIndex(COLUMN_VERSE)));
-        verse.setVerseText(cursor.getString(cursor.getColumnIndex(COLUMN_VERSE_TEXT)));
+        verse.setId(cursor.getString(cursor.getColumnIndex(VERSES_UUID)));
+        verse.setVerse(cursor.getString(cursor.getColumnIndex(VERSES_VERSE)));
+        verse.setVerseText(cursor.getString(cursor.getColumnIndex(VERSES_VERSE_TEXT)));
 
-        Category category = getCategory(cursor.getString(cursor.getColumnIndex(COLUMN_CATEGORY)));
+        Category category = getCategory(cursor.getString(cursor.getColumnIndex(VERSES_CATEGORY)));
         verse.setCategory(category);
 
-        String tagString = cursor.getString(cursor.getColumnIndex(COLUMN_TAGS));
+        String tagString = cursor.getString(cursor.getColumnIndex(VERSES_TAGS));
         String[] tags = tagString.split(",");
         verse.setTags(tags);
 
-        verse.setTitle(cursor.getString(cursor.getColumnIndex(COLUMN_TITLE)));
-        verse.setNotes(cursor.getString(cursor.getColumnIndex(COLUMN_NOTES)));
+        verse.setTitle(cursor.getString(cursor.getColumnIndex(VERSES_TITLE)));
+        verse.setNotes(cursor.getString(cursor.getColumnIndex(VERSES_NOTES)));
         verse.setFavorited
-            (Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(COLUMN_ISFAVORITE))));
+            (Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(VERSES_ISFAVORITE))));
 
         return verse;
     }
@@ -257,10 +257,10 @@ public class DatabaseHandler extends SQLiteOpenHelper
     {
         Category category = new Category();
 
-        category.setId(cursor.getString(cursor.getColumnIndex(COLUMN_UUID)));
-        category.setName(cursor.getString(cursor.getColumnIndex(COLUMN_NAME)));
-        category.setIconIdentifier(cursor.getString(cursor.getColumnIndex(COLUMN_ICON)));
-        category.setVerseCount(cursor.getInt(cursor.getColumnIndex(COLUMN_VERSE_COUNT)));
+        category.setId(cursor.getString(cursor.getColumnIndex(VERSES_UUID)));
+        category.setName(cursor.getString(cursor.getColumnIndex(CATEGORIES_NAME)));
+        category.setIconIdentifier(cursor.getString(cursor.getColumnIndex(CATEGORIES_ICON)));
+        category.setVerseCount(cursor.getInt(cursor.getColumnIndex(CATEGORIES_VERSE_COUNT)));
 
         return category;
     }
@@ -268,21 +268,21 @@ public class DatabaseHandler extends SQLiteOpenHelper
     private ContentValues getVerseValues(Verse verse)
     {
         ContentValues values = new ContentValues();
-        values.put(COLUMN_UUID, verse.getId());
-        values.put(COLUMN_VERSE, verse.getVerse());
-        values.put(COLUMN_VERSE_TEXT, verse.getVerseText());
+        values.put(VERSES_UUID, verse.getId());
+        values.put(VERSES_VERSE, verse.getVerse());
+        values.put(VERSES_VERSE_TEXT, verse.getVerseText());
 
         if(verse.getCategory() != null)
-            values.put(COLUMN_CATEGORY, verse.getCategory().getId());
+            values.put(VERSES_CATEGORY, verse.getCategory().getId());
 
         StringBuilder tags = new StringBuilder();
         for(String tag: verse.getTags())
             tags.append(tag).append(",");
 
-        values.put(COLUMN_TAGS, tags. toString());
-        values.put(COLUMN_TITLE, verse.getTitle());
-        values.put(COLUMN_NOTES, verse.getNotes());
-        values.put(COLUMN_ISFAVORITE, String.valueOf(verse.isFavorite()));
+        values.put(VERSES_TAGS, tags. toString());
+        values.put(VERSES_TITLE, verse.getTitle());
+        values.put(VERSES_NOTES, verse.getNotes());
+        values.put(VERSES_ISFAVORITE, String.valueOf(verse.isFavorite()));
 
         return values;
     }
@@ -290,10 +290,10 @@ public class DatabaseHandler extends SQLiteOpenHelper
     private ContentValues getCategoryValues(Category category)
     {
         ContentValues values = new ContentValues();
-        values.put(COLUMN_UUID, category.getId());
-        values.put(COLUMN_NAME, category.getName());
-        values.put(COLUMN_ICON, category.getIconIdentifier());
-        values.put(COLUMN_VERSE_COUNT, category.getVerseCount());
+        values.put(VERSES_UUID, category.getId());
+        values.put(CATEGORIES_NAME, category.getName());
+        values.put(CATEGORIES_ICON, category.getIconIdentifier());
+        values.put(CATEGORIES_VERSE_COUNT, category.getVerseCount());
         return values;
     }
 }

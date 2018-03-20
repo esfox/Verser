@@ -699,7 +699,12 @@ public class NewVerse extends Fragment implements
         //Setup categories list
         final RecyclerView categoriesList = layout.findViewById(R.id.new_verse_categories_list);
         categoriesList.setHasFixedSize(true);
-        categoriesList.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        //Reverse layout manager
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setReverseLayout(true);
+        layoutManager.setStackFromEnd(true);
+        categoriesList.setLayoutManager(layoutManager);
 
         //Setup categories adapter and listener for the adapter
         CategoriesListItemListener listener = new CategoriesListItemListener()
@@ -725,9 +730,9 @@ public class NewVerse extends Fragment implements
             }
 
             @Override
-            public void onCategoryAdd(Category category)
+            public void onAddCategory(Category category, int lastIndex)
             {
-                categoriesList.smoothScrollToPosition(0);
+                categoriesList.smoothScrollToPosition(lastIndex);
                 ((MainActivity) getActivity()).saveCategory(category);
                 if(initialText.getVisibility() == View.VISIBLE)
                     initialText.setVisibility(View.GONE);
@@ -742,7 +747,7 @@ public class NewVerse extends Fragment implements
             initialText.setVisibility(View.VISIBLE);
 
         //Category list adapter
-        final CategoriesAdapter adapter = new CategoriesAdapter(listener, categories);
+        final CategoriesAdapter adapter = new CategoriesAdapter(categories, listener);
         categoriesList.setAdapter(adapter);
 
         //Search functionality
@@ -828,8 +833,8 @@ public class NewVerse extends Fragment implements
             .setOnClickListener(onClickListener);
 
         //Enable dragging the toolbar
-        SwipeTouchListener swipeTouchListener = new SwipeTouchListener(categoriesView);
-        viewSwitcher.setOnTouchListener(swipeTouchListener);
+//        SwipeTouchListener swipeTouchListener = new SwipeTouchListener(categoriesView);
+//        viewSwitcher.setOnTouchListener(swipeTouchListener);
 
         //Set on click listener for cancel button
         categoriesView.findViewById(R.id.new_verse_categories_cancel)

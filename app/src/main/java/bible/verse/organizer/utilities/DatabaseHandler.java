@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bible.verse.organizer.objects.Category;
+import bible.verse.organizer.objects.Tag;
 import bible.verse.organizer.objects.Verse;
 
 public class DatabaseHandler extends SQLiteOpenHelper
@@ -18,9 +19,10 @@ public class DatabaseHandler extends SQLiteOpenHelper
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "database.db";
 
+    private static final String ID = "_id";
+    private static final String UUID = "uuid";
+
     private static final String TABLE_VERSES = "verses";
-    private static final String VERSES_ID = "_id";
-    private static final String VERSES_UUID = "uuid";
     private static final String VERSES_VERSE = "verse";
     private static final String VERSES_VERSE_TEXT = "verse_text";
     private static final String VERSES_CATEGORY = "category";
@@ -34,6 +36,11 @@ public class DatabaseHandler extends SQLiteOpenHelper
     private static final String CATEGORIES_ICON = "icon";
     private static final String CATEGORIES_VERSE_COUNT = "verse_count";
 
+    private static final String TABLE_TAGS = "tags";
+    private static final String TAGS_NAME = "name";
+    private static final String TAGS_COLOR = "color";
+    private static final String TAGS_VERSE_COUNT = "verse_count";
+
     public DatabaseHandler(Context context)
     {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -45,8 +52,8 @@ public class DatabaseHandler extends SQLiteOpenHelper
         Log.d("SQL", "Sumlog");
 
         String createEntryTable = "CREATE TABLE " + TABLE_VERSES + "(" +
-                VERSES_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                VERSES_UUID + " TEXT," +
+                ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                UUID + " TEXT," +
                 VERSES_VERSE + " TEXT," +
                 VERSES_VERSE_TEXT + " TEXT," +
                 VERSES_CATEGORY + " TEXT," +
@@ -57,15 +64,24 @@ public class DatabaseHandler extends SQLiteOpenHelper
                 ");";
 
         String createCategoryTable = "CREATE TABLE " + TABLE_CATEGORIES + "(" +
-                VERSES_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                VERSES_UUID + " TEXT," +
+                ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                UUID + " TEXT," +
             CATEGORIES_NAME + " TEXT," +
             CATEGORIES_ICON + " TEXT," +
             CATEGORIES_VERSE_COUNT + " INTEGER" +
                 ");";
 
+        String createTagTable = "CREATE TABLE " + TABLE_TAGS + "(" +
+                ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                UUID + " TEXT," +
+                TAGS_NAME + " TEXT," +
+                TAGS_COLOR + " INTEGER," +
+                TAGS_VERSE_COUNT + " INTEGER" +
+                ");";
+
         sqLiteDatabase.execSQL(createEntryTable);
         sqLiteDatabase.execSQL(createCategoryTable);
+        sqLiteDatabase.execSQL(createTagTable);
     }
 
     @Override
@@ -89,17 +105,31 @@ public class DatabaseHandler extends SQLiteOpenHelper
         getWritableDatabase().close();
     }
 
+    public void addTag (Tag tag)
+    {
+        getWritableDatabase().insert
+                (TABLE_TAGS, null, getTagValues(tag));
+        getWritableDatabase().close();
+    }
+
     public void deleteEntry(Verse verse)
     {
         getWritableDatabase().delete(TABLE_VERSES,
-                VERSES_UUID + "=?", new String[] {verse.getId()});
+                UUID + "=?", new String[] { verse.getId() });
         getWritableDatabase().close();
     }
 
     public void deleteCategory (Category category)
     {
         getWritableDatabase().delete(TABLE_CATEGORIES,
-                VERSES_UUID + "=?", new String[] {category.getId()});
+                UUID + "=?", new String[] { category.getId() });
+        getWritableDatabase().close();
+    }
+
+    public void deleteTag (Tag tag)
+    {
+        getWritableDatabase().delete(TABLE_CATEGORIES,
+                UUID + "=?", new String[] { tag.getId() });
         getWritableDatabase().close();
     }
 
@@ -109,7 +139,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
         String query =
                 "SELECT *" +
                 " FROM " + TABLE_VERSES +
-                " WHERE " + VERSES_UUID + "=\'" + id + "\'";
+                " WHERE " + UUID + "=\'" + id + "\'";
 
         Cursor cursor = getWritableDatabase().rawQuery(query, null);
 
@@ -126,7 +156,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
         String query =
                 "SELECT *" +
                 " FROM " + TABLE_CATEGORIES +
-                " WHERE " + VERSES_UUID + "=\'" + id + "\'";
+                " WHERE " + UUID + "=\'" + id + "\'";
 
         Cursor cursor = getWritableDatabase().rawQuery(query, null);
 
@@ -137,17 +167,41 @@ public class DatabaseHandler extends SQLiteOpenHelper
         return category;
     }
 
+    public Tag getTag (String id)
+    {
+        Tag tag = new Tag();
+        String query =
+                "SELECT *" +
+                        " FROM " + TABLE_CATEGORIES +
+                        " WHERE " + UUID + "=\'" + id + "\'";
+
+        Cursor cursor = getWritableDatabase().rawQuery(query, null);
+
+        if(cursor.moveToFirst())
+            tag = transferSQLtoTag(cursor);
+
+        getWritableDatabase().close();
+        return tag;
+    }
+
     public void updateEntry (Verse verse)
     {
         getWritableDatabase().update(TABLE_VERSES, getVerseValues(verse),
-                VERSES_UUID + "=?", new String[] {verse.getId()});
+                UUID + "=?", new String[] {verse.getId()});
         getWritableDatabase().close();
     }
 
     public void updateCategory (Category category)
     {
         getWritableDatabase().update(TABLE_CATEGORIES, getCategoryValues(category),
-                VERSES_UUID + "=?", new String[] { category.getId() });
+                UUID + "=?", new String[] { category.getId() });
+        getWritableDatabase().close();
+    }
+
+    public void updateTag (Tag tag)
+    {
+        getWritableDatabase().update(TABLE_TAGS, getTagValues(tag),
+                UUID + "=?", new String[] { tag.getId() });
         getWritableDatabase().close();
     }
 
@@ -158,7 +212,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
         String query = "SELECT *" +
                 " FROM " + TABLE_VERSES +
                 " WHERE " +
-                VERSES_UUID + " + " +
+                UUID + " + " +
                 VERSES_VERSE + " + " +
                 VERSES_TITLE + " + " +
                 VERSES_CATEGORY + " + " +
@@ -181,7 +235,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
         String query = "SELECT *" +
                 " FROM " + TABLE_CATEGORIES +
                 " WHERE " +
-                VERSES_UUID + " + " +
+                UUID + " + " +
             CATEGORIES_NAME + " LIKE \'%" + criteria + "%\'";
 
         Cursor cursor = getWritableDatabase().rawQuery(query, null);
@@ -191,6 +245,25 @@ public class DatabaseHandler extends SQLiteOpenHelper
 
         getWritableDatabase().close();
         return categories;
+    }
+
+    public List<Tag> searchTags (String criteria)
+    {
+        List<Tag> tags = new ArrayList<>();
+
+        String query = "SELECT *" +
+                " FROM " + TABLE_TAGS +
+                " WHERE " +
+                UUID + " + " +
+                TAGS_NAME + " LIKE \'%" + criteria + "%\'";
+
+        Cursor cursor = getWritableDatabase().rawQuery(query, null);
+
+        while(cursor.moveToNext())
+            tags.add(transferSQLtoTag(cursor));
+
+        getWritableDatabase().close();
+        return tags;
     }
 
     public List<Verse> getAllEntries()
@@ -223,6 +296,21 @@ public class DatabaseHandler extends SQLiteOpenHelper
         return categories;
     }
 
+    public List<Tag> getAllTags()
+    {
+        List<Tag> tags = new ArrayList<>();
+
+        String query = "SELECT * FROM " + TABLE_TAGS;
+
+        Cursor cursor = getWritableDatabase().rawQuery(query, null);
+
+        while(cursor.moveToNext())
+            tags.add(transferSQLtoTag(cursor));
+
+        getWritableDatabase().close();
+        return tags;
+    }
+
     public void clearEntriesTable()
     {
         getWritableDatabase().delete(TABLE_VERSES, null, null);
@@ -230,11 +318,13 @@ public class DatabaseHandler extends SQLiteOpenHelper
 
     public void clearCategoriesTable() { getWritableDatabase().delete(TABLE_CATEGORIES, null, null); }
 
+    public void clearTagsTable() { getWritableDatabase().delete(TABLE_TAGS, null, null); }
+
     private Verse transferSQLtoVerse(Cursor cursor)
     {
         Verse verse = new Verse();
 
-        verse.setId(cursor.getString(cursor.getColumnIndex(VERSES_UUID)));
+        verse.setId(cursor.getString(cursor.getColumnIndex(UUID)));
         verse.setVerse(cursor.getString(cursor.getColumnIndex(VERSES_VERSE)));
         verse.setVerseText(cursor.getString(cursor.getColumnIndex(VERSES_VERSE_TEXT)));
 
@@ -257,7 +347,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
     {
         Category category = new Category();
 
-        category.setId(cursor.getString(cursor.getColumnIndex(VERSES_UUID)));
+        category.setId(cursor.getString(cursor.getColumnIndex(UUID)));
         category.setName(cursor.getString(cursor.getColumnIndex(CATEGORIES_NAME)));
         category.setIconIdentifier(cursor.getString(cursor.getColumnIndex(CATEGORIES_ICON)));
         category.setVerseCount(cursor.getInt(cursor.getColumnIndex(CATEGORIES_VERSE_COUNT)));
@@ -265,10 +355,22 @@ public class DatabaseHandler extends SQLiteOpenHelper
         return category;
     }
 
+    private Tag transferSQLtoTag (Cursor cursor)
+    {
+        Tag tag = new Tag();
+
+        tag.setId(cursor.getString(cursor.getColumnIndex(UUID)));
+        tag.setName(cursor.getString(cursor.getColumnIndex(TAGS_NAME)));
+        tag.setColor(Integer.parseInt(cursor.getString(cursor.getColumnIndex(TAGS_COLOR))));
+        tag.setVerseCount(cursor.getInt(cursor.getColumnIndex(TAGS_VERSE_COUNT)));
+
+        return tag;
+    }
+
     private ContentValues getVerseValues(Verse verse)
     {
         ContentValues values = new ContentValues();
-        values.put(VERSES_UUID, verse.getId());
+        values.put(UUID, verse.getId());
         values.put(VERSES_VERSE, verse.getVerse());
         values.put(VERSES_VERSE_TEXT, verse.getVerseText());
 
@@ -290,10 +392,20 @@ public class DatabaseHandler extends SQLiteOpenHelper
     private ContentValues getCategoryValues(Category category)
     {
         ContentValues values = new ContentValues();
-        values.put(VERSES_UUID, category.getId());
+        values.put(UUID, category.getId());
         values.put(CATEGORIES_NAME, category.getName());
         values.put(CATEGORIES_ICON, category.getIconIdentifier());
         values.put(CATEGORIES_VERSE_COUNT, category.getVerseCount());
+        return values;
+    }
+
+    private ContentValues getTagValues(Tag tag)
+    {
+        ContentValues values = new ContentValues();
+        values.put(UUID, tag.getId());
+        values.put(TAGS_NAME, tag.getName());
+        values.put(TAGS_COLOR, tag.getColor());
+        values.put(TAGS_VERSE_COUNT, tag.getVerseCount());
         return values;
     }
 }

@@ -6,4 +6,5 @@ public class FragmentTags
     public static final String NEW_VERSE = "New Verse";
     public static final String CATEGORIES = "Categories";
     public static final String TAGS = "Tags";
+    public static final String VIEW_VERSE = "View Verse";
 }

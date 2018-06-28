@@ -337,7 +337,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
 
         verse.setTitle(cursor.getString(cursor.getColumnIndex(VERSES_TITLE)));
         verse.setNotes(cursor.getString(cursor.getColumnIndex(VERSES_NOTES)));
-        verse.setFavorited
+        verse.setFavorite
             (Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(VERSES_ISFAVORITE))));
 
         return verse;

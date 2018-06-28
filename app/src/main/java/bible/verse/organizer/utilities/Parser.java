@@ -98,7 +98,7 @@ public class Parser
             //Parse favorited
             Matcher favoritedMatcher = favoritedPattern.matcher(entry);
             if(favoritedMatcher.find())
-                verse.setFavorited(Boolean.parseBoolean(favoritedMatcher.group(1)));
+                verse.setFavorite(Boolean.parseBoolean(favoritedMatcher.group(1)));
 
             //Add verse object to list
             verses.add(verse);

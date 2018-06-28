@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import bible.verse.organizer.objects.Verse;
 import bible.verse.organizer.organizer.R;
 import bible.verse.organizer.utilities.Color;
+import bible.verse.organizer.utilities.DatabaseHandler;
 
 public class ViewVerse extends Fragment implements View.OnClickListener
 {
@@ -25,6 +27,8 @@ public class ViewVerse extends Fragment implements View.OnClickListener
 
     private View[] tagButtons;
 
+    private Toolbar toolbar;
+
     private TextView title,
                      text,
                      category,
@@ -32,7 +36,10 @@ public class ViewVerse extends Fragment implements View.OnClickListener
 
     private ImageView star;
 
+    private Verse verse;
     private boolean isFavorite;
+
+    private DatabaseHandler databaseHandler;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
@@ -40,8 +47,8 @@ public class ViewVerse extends Fragment implements View.OnClickListener
         View layout = inflater.inflate(R.layout.fragment_view_verse, container, false);
 
         //TODO: Setup toolbar and assign verse citation as title
-
-        //Button initialization
+        toolbar = layout.findViewById(R.id.view_verse_toolbar);
+                //Button initialization
         editButton = layout.findViewById(R.id.view_verse_edit);
         viewNotesButton = layout.findViewById(R.id.view_verse_view_notes);
         deleteButton = layout.findViewById(R.id.view_verse_delete);
@@ -65,6 +72,9 @@ public class ViewVerse extends Fragment implements View.OnClickListener
 
         //ImageView Initializations
         star = layout.findViewById(R.id.view_verse_star);
+
+        setData();
+
         return layout;
     }
 
@@ -90,29 +100,48 @@ public class ViewVerse extends Fragment implements View.OnClickListener
                         Toast.LENGTH_SHORT).show();
                 break;
             case R.id.view_verse_delete:
-                Toast.makeText(getContext(), "Delete", Toast.LENGTH_SHORT).show();
+                delete();
                 break;
             case R.id.view_verse_favorite:
-                Toast.makeText(getContext(), "Favorite", Toast.LENGTH_SHORT).show();
+                toggleFavorite();
                 break;
         }
     }
 
-    public void setData (Verse verse)
+    private void setData()
     {
-        this.title.setText(verse.getTitle());
-        this.text.setText(verse.getVerseText());
+        toolbar.setTitle(verse.getVerse());
+        title.setText(verse.getTitle());
+        text.setText(verse.getVerseText());
 //        this.title.setVerseText(title);
-        this.category.setText(verse.getCategory().getName());
+        category.setText(verse.getCategory().getName());
 //        this.notes.setVerseText(notes);
 
-        this.isFavorite = verse.isFavorite();
+        isFavorite = verse.isFavorite();
         toggleStarColor();
     }
 
-    private void toggleFavorite ()
+    public void setVerse(Verse verse)
+    {
+        this.verse = verse;
+    }
+
+    private void delete ()
+    {
+//        getActivity().getSupportFragmentManager()
+//                .beginTransaction()
+//                .replace(R.id.parent_layout, new Home(), FragmentTags.HOME)
+//                .addToBackStack(FragmentTags.HOME)
+//                .commit();
+//
+//        databaseHandler.deleteEntry(verse);
+    }
+
+    private void toggleFavorite()
     {
         isFavorite = !isFavorite;
+        verse.setFavorite(isFavorite);
+//        databaseHandler.updateEntry(verse);
         toggleStarColor();
     }
 

@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import bible.verse.organizer.adapters.viewholders.VerseOfTheDayViewHolder;
@@ -104,7 +103,7 @@ public class VersesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             verse.setTags(new String[] { "tag-ulan", "tag-araw", "tag-pipiso" });
             verse.setTitle("Huling Kontrata");
             verse.setNotes("Fat Cakes");
-            verse.setFavorited(true);
+            verse.setFavorite(true);
 
             verses.add(verse);
         }

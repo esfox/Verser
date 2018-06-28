@@ -30,6 +30,7 @@ import java.util.List;
 import bible.verse.organizer.MainActivity;
 import bible.verse.organizer.adapters.VersesAdapter;
 import bible.verse.organizer.interfaces.VerseWebRequestListener;
+import bible.verse.organizer.objects.Category;
 import bible.verse.organizer.objects.Verse;
 import bible.verse.organizer.organizer.R;
 import bible.verse.organizer.utilities.Color;
@@ -80,7 +81,8 @@ public class Home extends Fragment implements
                 break;
 
             case R.id.debug_button:
-                ((MainActivity) getActivity()).d_showVerses();
+                viewTheVerse();
+//                ((MainActivity) getActivity()).d_showVerses();
 //                showColorPicker();
                 break;
         }
@@ -235,6 +237,49 @@ public class Home extends Fragment implements
     }
 
     //TEMPORARY METHODS
+
+    /*
+
+    1 - create instance of fragment class
+    2 - call "setVerse()" method of fragment class and provide object parameter
+    3 - get instance of SupportFragmentManager
+    4 - call .beginTransaction()
+    5 - call .replace()
+    6 - add to backstack
+    7 - commit transaction
+
+    Citation
+        - Verse Text
+        - Category
+        - Tag
+        - Title
+        - Notes
+        - Is Favorite
+     */
+
+    private void viewTheVerse()
+    {
+        ViewVerse viewVerse = new ViewVerse();
+
+        Category category = new Category();
+        category.setName("Wonderful word");
+
+        Verse verse = new Verse();
+        verse.setVerse("Joshua 1:8");
+        verse.setVerseText("Keep this Book of the Law always on your lips; meditate on it day and night, so that you may be careful to do everything written in it. Then you will.");
+        verse.setCategory(category);
+        verse.setTags( new String[] {"Tag 1", "Tag 2"});
+        verse.setTitle("The Word");
+
+        viewVerse.setVerse(verse);
+
+        getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.parent_layout, viewVerse, FragmentTags.VIEW_VERSE)
+                .addToBackStack(FragmentTags.VIEW_VERSE)
+                .commit();
+    }
+
     private void showColorPicker()
     {
         LayoutInflater inflater = LayoutInflater.from(getContext());

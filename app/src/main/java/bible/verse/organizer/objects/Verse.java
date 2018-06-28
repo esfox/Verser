@@ -112,7 +112,7 @@ public class Verse
         return favorited;
     }
 
-    public void setFavorited(boolean favorited)
+    public void setFavorite(boolean favorited)
     {
         this.favorited = favorited;
     }

@@ -1168,7 +1168,7 @@ public class NewVerse extends Fragment implements
                     verse.setTags(new String[] { "tag1", "tag2", "tag3" });
                     verse.setTitle(title);
                     verse.setNotes(notes);
-                    verse.setFavorited(isFavorite);
+                    verse.setFavorite(isFavorite);
 
                     if(category != null)
                         verse.setCategory(category);
@@ -1397,7 +1397,7 @@ public class NewVerse extends Fragment implements
         verse.setTags(new String[] { "tag1", "tag2", "tag3" });
         verse.setTitle(title);
         verse.setNotes(notes);
-        verse.setFavorited(isFavorite);
+        verse.setFavorite(isFavorite);
 
         if(category != null)
             verse.setCategory(category);
